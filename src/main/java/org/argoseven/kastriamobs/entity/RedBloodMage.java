@@ -7,7 +7,6 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.mob.FlyingEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,6 +16,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.argoseven.kastriamobs.goals.SonicBeam;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -29,7 +29,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class RedBloodMage extends HostileEntity implements IAnimatable {
-    private final String prefix = "";
+    private final String animation_prefix = "";
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private boolean swinging;
     private long lastSwing;
@@ -49,11 +49,11 @@ public class RedBloodMage extends HostileEntity implements IAnimatable {
     @Override
     protected void initGoals() {
         // Priority 1: Melee Attack
-        this.goalSelector.add(2, new MeleeAttackGoal(this, 1.1D, false));
+        this.goalSelector.add(2, new MeleeAttackGoal(this, 1.3,true));
         this.goalSelector.add(5, new WanderAroundGoal(this, (double)1.0F));
         // Priority 2-6: Target goals
-        this.targetSelector.add(3, new ActiveTargetGoal<>(this, VillagerEntity.class, false));
-        this.targetSelector.add(1, new RevengeGoal(this));
+        this.targetSelector.add(1, new ActiveTargetGoal<>(this, VillagerEntity.class, true));
+        this.targetSelector.add(2, new RevengeGoal(this));
 
         // Priority 7-8: Movement goals
         this.goalSelector.add(6, new SwimGoal(this));
@@ -69,18 +69,6 @@ public class RedBloodMage extends HostileEntity implements IAnimatable {
                 .add(EntityAttributes.GENERIC_ARMOR, 20.0D)
                 .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, 0.7D)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.1D);
-    }
-
-    // Custom damage handling - immune to arrows and fall damage
-    @Override
-    public boolean damage(DamageSource source, float amount) {
-        if (source.getSource() instanceof PersistentProjectileEntity) {
-            return false;
-        }
-        if (source == DamageSource.FALL) {
-            return false;
-        }
-        return super.damage(source, amount);
     }
 
     // Sound events using your available sounds
@@ -117,13 +105,13 @@ public class RedBloodMage extends HostileEntity implements IAnimatable {
     // Animation methods
     private <E extends IAnimatable> PlayState movementPredicate(AnimationEvent<E> event) {
         if ((event.isMoving())) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(prefix + "walk", ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "walk", ILoopType.EDefaultLoopTypes.LOOP));
         } else if (this.isDead()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(prefix +"death", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix +"death", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         } else if (this.isAttacking() && event.isMoving()) {
             return PlayState.STOP;
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(prefix + "idle", ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "idle", ILoopType.EDefaultLoopTypes.LOOP));
         }
         return PlayState.CONTINUE;
     }
@@ -140,7 +128,7 @@ public class RedBloodMage extends HostileEntity implements IAnimatable {
 
         if (this.swinging && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
             event.getController().markNeedsReload();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(prefix + "attack", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "attack", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         }
         return PlayState.CONTINUE;
     }

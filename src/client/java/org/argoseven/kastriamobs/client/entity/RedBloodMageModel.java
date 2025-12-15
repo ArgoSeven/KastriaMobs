@@ -12,28 +12,17 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 public class RedBloodMageModel extends AnimatedGeoModel<RedBloodMage> {
     @Override
     public Identifier getModelResource(RedBloodMage redbloodmage) {
-        return new Identifier(KastriaMobs.MOD_ID,"geo/red_blood_mage.geo.json");
+        return new Identifier(KastriaMobs.MOD_ID,"geo/stalker.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(RedBloodMage eldenFap) {
-        return new Identifier(KastriaMobs.MOD_ID,"textures/entity/red_blood_mage.png");
+    public Identifier getTextureResource(RedBloodMage redbloodmage) {
+        return new Identifier(KastriaMobs.MOD_ID,"textures/entity/stalker.png");
     }
 
     @Override
-    public Identifier getAnimationResource(RedBloodMage eldenFap) {
-        return new Identifier(KastriaMobs.MOD_ID,"animations/red_blood_mage_anim.json");
+    public Identifier getAnimationResource(RedBloodMage redbloodmage) {
+        return new Identifier(KastriaMobs.MOD_ID,"animations/stalker_anim.json");
     }
 
-    @Override
-    public void setCustomAnimations(RedBloodMage animatable, int instanceId, AnimationEvent animationEvent) {
-        super.setCustomAnimations(animatable, instanceId, animationEvent);
-        IBone head = this.getAnimationProcessor().getBone("head");
-
-        EntityModelData extraData = (EntityModelData) animationEvent.getExtraDataOfType(EntityModelData.class).get(0);
-        if (head != null) {
-            head.setRotationX((float) (extraData.headPitch * 0.017453292519943295));
-            head.setRotationY((float) (extraData.netHeadYaw * 0.017453292519943295));
-        }
-    }
 }

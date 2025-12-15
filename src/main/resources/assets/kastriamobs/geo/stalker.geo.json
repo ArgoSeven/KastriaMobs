@@ -1,0 +1,77 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "moveall",
+					"pivot": [0, 24, 0]
+				},
+				{
+					"name": "head",
+					"parent": "moveall",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [-1.35202, 29.82944, -0.4], "size": [6, 4, 0], "uv": [40, 32]},
+						{"origin": [-4, 24, -4], "size": [8, 8, 8], "uv": [0, 0]},
+						{"origin": [0, 31, 3], "size": [6, 4, 0], "uv": [40, 24]},
+						{"origin": [-2, 24, 2], "size": [0, 4, 6], "uv": [32, 0]},
+						{"origin": [3, 31, 0], "size": [0, 4, 6], "uv": [0, 32]}
+					]
+				},
+				{
+					"name": "body",
+					"parent": "moveall",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [-4, 12, -2], "size": [8, 12, 4], "uv": [0, 16]}
+					]
+				},
+				{
+					"name": "left_arm",
+					"parent": "moveall",
+					"pivot": [5, 22, 0],
+					"mirror": true,
+					"cubes": [
+						{"origin": [4, 12, -1], "size": [2, 12, 2], "uv": [12, 32], "mirror": false}
+					]
+				},
+				{
+					"name": "right_arm",
+					"parent": "moveall",
+					"pivot": [-5, 22, 0],
+					"cubes": [
+						{"origin": [-6, 12, -1], "size": [2, 12, 2], "uv": [32, 27]},
+						{"origin": [-11.43871, 13.77799, -0.32973], "size": [5.6, 11, 0], "inflate": -0.002, "uv": [24, 16]},
+						{"origin": [-9.33871, 9.77799, -0.32973], "size": [4, 7, 0], "inflate": -0.001, "uv": [40, 36]}
+					]
+				},
+				{
+					"name": "left_leg",
+					"parent": "moveall",
+					"pivot": [2, 12, 0.1],
+					"mirror": true,
+					"cubes": [
+						{"origin": [1, 0, -1], "size": [2, 12, 2], "uv": [36, 10], "mirror": false}
+					]
+				},
+				{
+					"name": "right_leg",
+					"parent": "moveall",
+					"pivot": [-2, 12, 0.1],
+					"cubes": [
+						{"origin": [-3, 0, -1], "size": [2, 12, 2], "uv": [24, 27]}
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,21 +1,33 @@
 package org.argoseven.kastriamobs.entity;
 
+import net.minecraft.block.AbstractSkullBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.argoseven.kastriamobs.goals.SonicBoom;
+import org.argoseven.kastriamobs.goals.SummonShulker;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -27,8 +39,8 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class Bard extends HostileEntity implements IAnimatable {
-    private final String prefix = "animation.skin.";
+public class Bard extends HostileEntity implements IAnimatable, RangedAttackMob {
+    private final String animation_prefix = "animation.skin.";
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private boolean swinging;
     private long lastSwing;
@@ -47,11 +59,12 @@ public class Bard extends HostileEntity implements IAnimatable {
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(2, new WanderAroundGoal(this, (double)1.0F));
-        this.targetSelector.add(1, new RevengeGoal(this));
-        this.goalSelector.add(3, new SwimGoal(this));
-        this.goalSelector.add(2, new MeleeAttackGoal(this, 1.1D, false));
-        this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.add(1, new SonicBoom(this));
+        this.goalSelector.add(2,  new MeleeAttackGoal(this, 1, true));
+        this.goalSelector.add(2, new WanderAroundGoal(this, 0.6));
+        this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 3.0F, 1.0F));
+        this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
+        this.targetSelector.add(2, new RevengeGoal(this));
     }
 
     public static DefaultAttributeContainer.Builder setAttribute() {
@@ -111,13 +124,13 @@ public class Bard extends HostileEntity implements IAnimatable {
     // Animation methods
     private <E extends IAnimatable> PlayState movementPredicate(AnimationEvent<E> event) {
         if ((event.isMoving())) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(prefix + "walk", ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "walk", ILoopType.EDefaultLoopTypes.LOOP));
         } else if (this.isDead()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(prefix +"idle", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix +"idle", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         } else if (this.isAttacking() && event.isMoving()) {
             return PlayState.STOP;
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(prefix + "idle", ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "idle", ILoopType.EDefaultLoopTypes.LOOP));
         }
         return PlayState.CONTINUE;
     }
@@ -134,7 +147,7 @@ public class Bard extends HostileEntity implements IAnimatable {
 
         if (this.swinging && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
             event.getController().markNeedsReload();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(prefix + "attack", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "attack", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         }
         return PlayState.CONTINUE;
     }
@@ -155,4 +168,42 @@ public class Bard extends HostileEntity implements IAnimatable {
     public AnimationFactory getFactory() {
         return this.factory;
     }
+
+    @Override
+    protected ActionResult interactMob(PlayerEntity pPlayer, Hand pHand) {
+        ItemStack item = pPlayer.getStackInHand(pHand);
+        if (item != null && !item.isEmpty() && !this.world.isClient()) {
+            if (item.getItem() instanceof ArmorItem) {
+                ArmorItem ai = (ArmorItem)item.getItem();
+                this.equipStack(ai.getSlotType(), item);
+            } else if (item.getItem() instanceof BlockItem && ((BlockItem)item.getItem()).getBlock() instanceof AbstractSkullBlock) {
+                this.equipStack(EquipmentSlot.HEAD, item);
+            } else {
+                this.setStackInHand(pHand, item);
+            }
+
+            pPlayer.sendMessage(Text.literal("Equipped item: " + item.getItem().getTranslationKey() + "!"));
+            return ActionResult.SUCCESS;
+        } else {
+            return super.interactMob(pPlayer, pHand);
+        }
+    }
+
+    @Override
+    public void attack(LivingEntity target, float pullProgress) {
+        ItemStack itemStack = this.getArrowType(this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
+        PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress);
+        double d = target.getX() - this.getX();
+        double e = target.getBodyY(0.3333333333333333) - persistentProjectileEntity.getY();
+        double f = target.getZ() - this.getZ();
+        double g = Math.sqrt(d * d + f * f);
+        persistentProjectileEntity.setVelocity(d, e + g * (double)0.2F, f, 1.6F, (float)(14 - this.world.getDifficulty().getId() * 4));
+        this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+        this.world.spawnEntity(persistentProjectileEntity);
+    }
+
+    protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier) {
+        return ProjectileUtil.createArrowProjectile(this, arrow, damageModifier);
+    }
+
 }
