@@ -26,8 +26,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.argoseven.kastriamobs.goals.SonicBoom;
-import org.argoseven.kastriamobs.goals.SummonShulker;
+import org.argoseven.kastriamobs.goals.HollowseerGoal;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -59,7 +58,7 @@ public class Bard extends HostileEntity implements IAnimatable, RangedAttackMob 
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(1, new SonicBoom(this));
+        this.goalSelector.add(1, new HollowseerGoal(this));
         this.goalSelector.add(2,  new MeleeAttackGoal(this, 1, true));
         this.goalSelector.add(2, new WanderAroundGoal(this, 0.6));
         this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 3.0F, 1.0F));

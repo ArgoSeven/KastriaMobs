@@ -4,17 +4,26 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import org.argoseven.kastriamobs.KastriaMobs;
+
+import java.util.List;
 
 public class SonicBoom extends Goal {
     private final MobEntity caster;
     private int cooldown;
     private int maxCooldown =  60;
+    private int maxRange = 7;
 
 
     public SonicBoom(MobEntity caster) {
@@ -24,7 +33,7 @@ public class SonicBoom extends Goal {
     @Override
     public boolean canStart() {
         LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target);
+        return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.canSee(target) && (caster.distanceTo(target) < maxRange + 1);
     }
 
     @Override
@@ -48,23 +57,37 @@ public class SonicBoom extends Goal {
 
     protected void fireSonicBoom() {
         LivingEntity target = caster.getTarget();
-        if (target == null) return;
+        float distanceFromTarget = caster.distanceTo(target);
+        if (target == null || distanceFromTarget > maxRange + 1) return;
 
-        Vec3d vec3d = caster.getPos().add((double)0.0F, (double)1.6F, (double)0.0F);
-        Vec3d vec3d3 = target.getEyePos().subtract(vec3d).normalize();
+        ServerWorld serverWorld = (ServerWorld) caster.world;
+        Vec3d startPos = caster.getPos().add(0,1.5,0);
 
+        Box searchBox = new Box(startPos.x - maxRange, startPos.y - 1, startPos.z - maxRange, startPos.x + maxRange, startPos.y + 1, startPos.z + maxRange);
+
+        //KastriaMobs.debugvisualizeBox(serverWorld , searchBox);
+
+        List<LivingEntity> hits = serverWorld.getEntitiesByClass(
+                LivingEntity.class,
+                searchBox,
+                e -> e.getClass() !=caster.getClass()
+        );
 
         if (!caster.world.isClient) {
-            ServerWorld serverWorld = (ServerWorld) caster.world;
             serverWorld.spawnParticles(ParticleTypes.SONIC_BOOM,caster.getX(), caster.getY() + 1.5, caster.getZ(), 1, (double)0.0F, (double)0.0F, (double)0.0F, (double)0.0F);
         }
 
-        caster.playSound(SoundEvents.ENTITY_CAT_HISS, 1.0F, 1.0F);
-        target.damage(DamageSource.sonicBoom(caster), 10.0F);
-        Vec3d direction = target.getPos().subtract(caster.getPos()).normalize();
-
-        target.addVelocity(direction.x * 3, direction.y, direction.z * 3);
-        target.velocityModified = true;
+        caster.playSound(SoundEvents.ENTITY_WARDEN_SONIC_BOOM, 1.0F, 1.0F);
+        for (LivingEntity hit : hits) {
+            Vec3d direction = hit.getEyePos().subtract(startPos).normalize();
+            hit.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 20, 1, false, false));
+            hit.damage(DamageSource.sonicBoom(caster), 10.0F);
+            double knockResistance = target.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
+            double verticalKnock = (double)0.5F * ((double)1.0F - knockResistance);
+            double horizontalKnock = (double)2.5F * ((double)1.0F - knockResistance);
+            hit.addVelocity(0 * horizontalKnock, direction.getY() * verticalKnock, direction.getZ() * horizontalKnock);
+            hit.velocityModified = true;
+        }
     }
 }
 

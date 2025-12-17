@@ -27,6 +27,10 @@ public class BardRender extends ExtendedGeoEntityRenderer<Bard> {
     protected ItemStack chestplateItem;
     protected ItemStack leggingsItem;
     protected ItemStack bootsItem;
+    static private final String rightArm = "right_arm";
+    static private final String leftArm = "left_arm";
+    static private final String leftleg = "left_leg";
+    static private final String rightLeg = "right_leg";
 
     public BardRender(EntityRendererFactory.Context renderManager) {
         super(renderManager, new BardModel());
@@ -62,8 +66,8 @@ public class BardRender extends ExtendedGeoEntityRenderer<Bard> {
     protected ItemStack getHeldItemForBone(String s, Bard bard) {
         ItemStack var10000;
         switch (s) {
-            case "LeftArm" -> var10000 = bard.isLeftHanded() ? this.mainHandItem : this.offHandItem;
-            case "RightArm" -> var10000 = bard.isLeftHanded() ? this.offHandItem : this.mainHandItem;
+            case leftArm -> var10000 = bard.isLeftHanded() ? this.mainHandItem : this.offHandItem;
+            case rightArm -> var10000 = bard.isLeftHanded() ? this.offHandItem : this.mainHandItem;
             default -> var10000 = null;
         }
 
@@ -74,8 +78,8 @@ public class BardRender extends ExtendedGeoEntityRenderer<Bard> {
     protected ModelTransformation.Mode getCameraTransformForItemAtBone(ItemStack itemStack, String s) {
         ModelTransformation.Mode var10000;
         switch (s) {
-            case "LeftArm":
-            case "RightArm":
+            case leftArm:
+            case rightArm:
                 var10000 = ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND;
                 break;
             default:
@@ -94,11 +98,13 @@ public class BardRender extends ExtendedGeoEntityRenderer<Bard> {
     protected void preRenderItem(MatrixStack matrixStack, ItemStack itemStack, String s, Bard bard, IBone iBone) {
         if (itemStack == this.mainHandItem) {
             matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90.0F));
+            matrixStack.translate((double)0.10F, (double) 0F, (double)-0.5F);
             if (itemStack.getItem() instanceof ShieldItem) {
                 matrixStack.translate((double)0.0F, (double)0.125F, (double)-0.25F);
             }
         } else if (itemStack == this.offHandItem) {
             matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90.0F));
+            matrixStack.translate((double)-0.10F, (double) 0F, (double)-0.5F);
             if (itemStack.getItem() instanceof ShieldItem) {
                 matrixStack.translate((double)0.0F, (double)0.125F, (double)0.25F);
                 matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F));

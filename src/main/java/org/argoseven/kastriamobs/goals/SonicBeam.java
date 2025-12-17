@@ -5,7 +5,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
@@ -14,7 +13,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.argoseven.kastriamobs.KastriaMobs;
 
@@ -34,7 +32,7 @@ public class SonicBeam extends Goal {
     @Override
     public boolean canStart() {
         LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.canSee(target);
+        return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.canSee(target) && (caster.distanceTo(target) < maxRange + 1);
     }
 
     @Override
@@ -58,57 +56,71 @@ public class SonicBeam extends Goal {
 
     protected void fireSonicBoom() {
         LivingEntity target = caster.getTarget();
-        if (target == null) return;
+        float distanceFromTarget = caster.distanceTo(target);
+        if (target == null || distanceFromTarget > maxRange + 1) return;
 
-        Vec3d vec3d = caster.getPos().add((double)0.0F, (double)1.6F, (double)0.0F);
-        Vec3d vec3d2 = target.getEyePos().subtract(vec3d);
-        Vec3d vec3d3 = vec3d2.normalize();
-        List<LivingEntity> hits = List.of();
-
+        ServerWorld serverWorld = (ServerWorld) caster.world;
+        Vec3d startPos = caster.getPos().add(0.0, 1.6, 0.0);
+        Vec3d direction = target.getEyePos().subtract(startPos).normalize();
         Vec3d lookVec = caster.getRotationVec(1.0F);
+        Vec3d eyePos = caster.getCameraPosVec(1.0F);
+
         caster.swingHand(Hand.MAIN_HAND);
-        //caster.addVelocity(vec3d3.getX() * 0.2, 0.0, vec3d3.getZ() * 0.2);
         caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
 
-        for(int i = 1; i < maxRange + 1; ++i) {
-            Vec3d vec3d4 = vec3d.add(vec3d3.multiply((double)i));
-            if (!caster.world.isClient) {
-                ServerWorld serverWorld = (ServerWorld) caster.world;
-                serverWorld.spawnParticles(ParticleTypes.SONIC_BOOM,vec3d4.x, vec3d4.y, vec3d4.z, 1, (double)0.0F, (double)0.0F, (double)0.0F, (double)0.0F);
-            }
+        // Spawn particles along beam path
+        for (int i = 1; i <= maxRange; i++) {
+            Vec3d particlePos = startPos.add(direction.multiply(i));
+            if (!caster.world.isClient) {serverWorld.spawnParticles(ParticleTypes.SONIC_BOOM, particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);}
         }
 
-        double radius = 1.0; // beam thickness
-        Vec3d eyePos = caster.getCameraPosVec(1.0F);
-        // direction the entity is looking
-        Vec3d endPos = eyePos.add(lookVec.multiply(7));
-        Box searchBox = new Box(eyePos, endPos).expand(radius);
+        //Box searchBox = new Box(eyePos, endPos).expand(1);
+        Box searchBox = caster.getBoundingBox().stretch(lookVec.multiply(maxRange));
 
+        //wKastriaMobs.debugvisualizeBox(serverWorld, searchBox);
 
-        if (!caster.world.isClient) {
-            ServerWorld serverWorld = (ServerWorld) caster.world;
-            hits = serverWorld.getEntitiesByClass(LivingEntity.class, searchBox, e -> {
-                Vec3d toEntity = e.getPos().subtract(eyePos).normalize();
-                return e != caster && lookVec.dotProduct(toEntity) > 0.9;
-            });
-            KastriaMobs.debugvisualizeBox(serverWorld, searchBox);
-        }
+        List<LivingEntity> hits = serverWorld.getEntitiesByClass(
+                LivingEntity.class,
+                searchBox,
+                e -> e != caster && isEntityInTheCone(eyePos, lookVec, e)
+        );
 
-
-
-        if (!hits.isEmpty()) {
-            for (LivingEntity hit : hits) {
-                hit.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 20,  1, false,false));
-            }
-        }
 
         caster.playSound(SoundEvents.ENTITY_WARDEN_SONIC_BOOM, 3.0F, 1.0F);
-        //target.damage(DamageSource.sonicBoom(caster), 10.0F);
-        //double d = (double)0.5F * ((double)1.0F - target.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE));
-        //double e = (double)2.5F * ((double)1.0F - target.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE));
-        //target.addVelocity(vec3d3.getX() * e, vec3d3.getY() * d, vec3d3.getZ() * e);
-        //target.velocityModified = true;
+        for (LivingEntity hit : hits) {
+            hit.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 20, 1, false, false));
+            hit.damage(DamageSource.sonicBoom(caster), 10.0F);
+            double knockResistance = target.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
+            double verticalKnock = (double)0.5F * ((double)1.0F - knockResistance);
+            double horizontalKnock = (double)2.5F * ((double)1.0F - knockResistance);
+            Vec3d d = hit.getEyePos().subtract(startPos).normalize();
+            hit.addVelocity(d.getX() * horizontalKnock, d.getY() * verticalKnock, d.getZ() * horizontalKnock);
+            hit.velocityModified = true;
+        }
+
     }
 
+
+    private boolean isEntityInTheCone(Vec3d eyePos, Vec3d lookVec, LivingEntity target) {
+        Vec3d toEntity = target.getPos().subtract(eyePos);
+        double dot = lookVec.dotProduct(toEntity);
+        double lenSq = toEntity.lengthSquared();
+        if (dot < 1.0E-4) return false;
+        // 0.70 ~45° 0.50 60°
+        return dot * dot > lenSq * (0.60 * 0.60);
+    }
+
+    private boolean isEntityInTheBeam(Vec3d eyePos, Vec3d lookVec, LivingEntity target) {
+        Box entityBox = target.getBoundingBox().expand(0.5); // expand for leniency
+        KastriaMobs.debugvisualizeBox((ServerWorld) target.world, entityBox);
+        return entityBox.raycast(eyePos, eyePos.add(lookVec.multiply(maxRange))).isPresent();
+    }
+
+
+    /*
+    *        searchBox = new Box(
+                Math.min(start.x, end.x), Math.min(start.y, end.y), Math.min(start.z, end.z),
+                Math.max(start.x, end.x), Math.max(start.y, end.y), Math.max(start.z, end.z)
+        );*/
 }
 
