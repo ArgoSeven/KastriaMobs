@@ -1,22 +1,25 @@
-package org.argoseven.kastriamobs.goals;
+package org.argoseven.kastriamobs.goals.unsued;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.mob.EvokerEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.EvokerFangsEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
+import org.argoseven.kastriamobs.entity.CursedBullet;
 
-public class EvokeFangs extends Goal {
+public class HollowseerGoal extends Goal {
     private final MobEntity caster;
     private int cooldown;
-
-    public EvokeFangs(MobEntity caster) {
+    private  int maxCooldown = 40;
+    public HollowseerGoal(MobEntity caster) {
         this.caster = caster;
     }
 
@@ -41,7 +44,7 @@ public class EvokeFangs extends Goal {
     public void tick() {
         if (--cooldown <= 0) {
             castSpell();
-            cooldown = 40; // repeat every 40 ticks
+            cooldown = maxCooldown;
         }
     }
 
@@ -55,7 +58,6 @@ public class EvokeFangs extends Goal {
                 target.getX() - caster.getX());
 
         if (caster.squaredDistanceTo(target) < 9.0D) {
-            // close-range fangs
             for (int i = 0; i < 5; ++i) {
                 float g = angle + i * (float) Math.PI * 0.4F;
                 conjureFangs(caster.getX() + MathHelper.cos(g) * 1.5D,
@@ -63,13 +65,18 @@ public class EvokeFangs extends Goal {
                         minY, maxY, g, 0);
             }
         } else {
-            // line of fangs
-            for (int i = 0; i < 16; ++i) {
-                double h = 1.25D * (i + 1);
-                conjureFangs(caster.getX() + MathHelper.cos(angle) * h,
-                        caster.getZ() + MathHelper.sin(angle) * h,
-                        minY, maxY, angle, i);
+            caster.getLookControl().lookAt(target, 180.0F, 180.0F);
+            double d = caster.squaredDistanceTo(target);
+            if (d < (double)400.0F) {
+                if (this.cooldown <= 0) {
+                    this.cooldown = maxCooldown + caster.getRandom().nextInt() * maxCooldown / 2;
+                    caster.world.spawnEntity(new CursedBullet(caster.world, caster, target, caster.getMovementDirection().getAxis(), new StatusEffectInstance(StatusEffects.WITHER, 20)));
+                    caster.playSound(SoundEvents.ENTITY_SHULKER_SHOOT, 2.0F, (caster.getRandom().nextFloat() - caster.getRandom().nextFloat()) * 0.2F + 1.0F);
+                }
+            } else {
+                caster.setTarget((LivingEntity)null);
             }
+            super.tick();
         }
     }
 

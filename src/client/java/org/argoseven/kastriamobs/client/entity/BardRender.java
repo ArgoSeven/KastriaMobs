@@ -96,17 +96,15 @@ public class BardRender extends ExtendedGeoEntityRenderer<Bard> {
 
     @Override
     protected void preRenderItem(MatrixStack matrixStack, ItemStack itemStack, String s, Bard bard, IBone iBone) {
+        matrixStack.translate((double)0.0F, (double) -0.6F, (double)0.0F);
         if (itemStack == this.mainHandItem) {
             matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90.0F));
-            matrixStack.translate((double)0.10F, (double) 0F, (double)-0.5F);
             if (itemStack.getItem() instanceof ShieldItem) {
                 matrixStack.translate((double)0.0F, (double)0.125F, (double)-0.25F);
             }
         } else if (itemStack == this.offHandItem) {
             matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90.0F));
-            matrixStack.translate((double)-0.10F, (double) 0F, (double)-0.5F);
             if (itemStack.getItem() instanceof ShieldItem) {
-                matrixStack.translate((double)0.0F, (double)0.125F, (double)0.25F);
                 matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
             }
         }

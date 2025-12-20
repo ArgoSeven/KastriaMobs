@@ -12,17 +12,17 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 public class CursedBruteModel extends AnimatedGeoModel<CursedBrute> {
     @Override
     public Identifier getModelResource(CursedBrute eldenFap) {
-        return new Identifier(KastriaMobs.MOD_ID,"geo/plaguebrute.geo.json");
+        return new Identifier(KastriaMobs.MOD_ID,"geo/bastion.geo.json");
     }
 
     @Override
     public Identifier getTextureResource(CursedBrute cursedbrute) {
-        return new Identifier(KastriaMobs.MOD_ID,"textures/entity/plaguebrute.png");
+        return new Identifier(KastriaMobs.MOD_ID,"textures/entity/bastion.png");
     }
 
     @Override
     public Identifier getAnimationResource(CursedBrute eldenFap) {
-        return new Identifier(KastriaMobs.MOD_ID,"animations/plaguebrute_anim.json");
+        return new Identifier(KastriaMobs.MOD_ID,"animations/bastion_anim.json");
     }
 
     @Override

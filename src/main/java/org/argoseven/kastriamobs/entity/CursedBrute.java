@@ -7,16 +7,14 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.mob.EvokerEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.argoseven.kastriamobs.goals.EvokeFangs;
+import org.argoseven.kastriamobs.goals.unsued.HollowseerGoal;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -28,11 +26,12 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class CursedBrute extends HostileEntity implements IAnimatable {
+public class CursedBrute extends HostileEntity implements IAnimatable  {
     private final String animation_prefix = "";
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private boolean swinging;
     private long lastSwing;
+    private int deathTicks = 0;
 
 
     public CursedBrute(EntityType<? extends HostileEntity> entityType, World world) {
@@ -50,8 +49,8 @@ public class CursedBrute extends HostileEntity implements IAnimatable {
     protected void initGoals() {
         // Priority 1: Melee Attack
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.1D, false));
-        this.goalSelector.add(2, new WanderAroundGoal(this, (double)1.0F));
-        this.goalSelector.add(1, new EvokeFangs(this));
+        this.goalSelector.add(5, new WanderAroundGoal(this, (double)1.0F));
+        this.goalSelector.add(1, new HollowseerGoal(this));
         // Priority 2-6: Target goals
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
         this.targetSelector.add(1, new RevengeGoal(this));
@@ -64,7 +63,7 @@ public class CursedBrute extends HostileEntity implements IAnimatable {
 
     public static DefaultAttributeContainer.Builder setAttribute() {
         return HostileEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 40.0D)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 4.0D)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 5.0D)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 30.0D)
@@ -107,12 +106,16 @@ public class CursedBrute extends HostileEntity implements IAnimatable {
 
     // Animation methods
     private <E extends IAnimatable> PlayState movementPredicate(AnimationEvent<E> event) {
+
+        if (this.isDead()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix +"death", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
+            return  PlayState.CONTINUE;
+        }
+
         if ((event.isMoving())) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "walk", ILoopType.EDefaultLoopTypes.LOOP));
-        } else if (this.isDead()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix +"death", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-        } else if (this.isAttacking() && event.isMoving()) {
-            return PlayState.STOP;
+        }else if (this.isAttacking() && event.isMoving()) {
+            return PlayState.CONTINUE;
         } else {
             event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "idle", ILoopType.EDefaultLoopTypes.LOOP));
         }
@@ -120,20 +123,23 @@ public class CursedBrute extends HostileEntity implements IAnimatable {
     }
 
     private <E extends IAnimatable> PlayState attackingPredicate(AnimationEvent<E> event) {
-        if (this.getHandSwingProgress(event.getPartialTick()) > 0.0F && !this.swinging) {
-            this.swinging = true;
-            this.lastSwing = this.world.getTime();
-        }
+        if(!this.isDead()) {
+            if (this.getHandSwingProgress(event.getPartialTick()) > 0.0F && !this.swinging) {
+                this.swinging = true;
+                this.lastSwing = this.world.getTime();
+            }
 
-        if (this.swinging && this.lastSwing + 15L <= this.world.getTime()) {
-            this.swinging = false;
-        }
+            if (this.swinging && this.lastSwing + 15L <= this.world.getTime()) {
+                this.swinging = false;
+            }
 
-        if (this.swinging && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
-            event.getController().markNeedsReload();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "attack", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            if (this.swinging && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
+                event.getController().markNeedsReload();
+                event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "attack", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            }
+            return PlayState.CONTINUE;
         }
-        return PlayState.CONTINUE;
+        return PlayState.STOP;
     }
 
     @Override
@@ -152,4 +158,13 @@ public class CursedBrute extends HostileEntity implements IAnimatable {
     public AnimationFactory getFactory() {
         return this.factory;
     }
+
+    @Override
+    protected void updatePostDeath() {
+        this.deathTicks++;
+        if (this.deathTicks >= 30 && !this.world.isClient()) {
+            this.remove(RemovalReason.KILLED);
+        }
+    }
+
 }

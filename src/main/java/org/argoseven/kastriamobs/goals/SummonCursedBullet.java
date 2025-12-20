@@ -2,26 +2,33 @@ package org.argoseven.kastriamobs.goals;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.ShulkerEntity;
-import net.minecraft.entity.projectile.ShulkerBulletEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.world.Difficulty;
+import org.argoseven.kastriamobs.KastriaMobs;
+import org.argoseven.kastriamobs.entity.CursedBullet;
 
-public class SummonShulker extends Goal {
+public class SummonCursedBullet extends Goal {
     private final MobEntity caster;
     private int cooldown;
     private int maxCooldown =  60;
+    private int rangeOfActivation = 7;
+    private int maxRangeofAattack  = 20;
 
 
-    public SummonShulker(MobEntity caster) {
+
+    public SummonCursedBullet(MobEntity caster) {
         this.caster = caster;
     }
 
     @Override
     public boolean canStart() {
         LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target);
+        return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.squaredDistanceTo(target) > KastriaMobs.getSquared(rangeOfActivation);
     }
 
     @Override
@@ -45,21 +52,19 @@ public class SummonShulker extends Goal {
 
     protected void summonBullets() {
         if (caster.world.getDifficulty() != Difficulty.PEACEFUL) {
-            --this.cooldown;
             LivingEntity livingEntity = caster.getTarget();
             if (livingEntity != null) {
                 caster.getLookControl().lookAt(livingEntity, 180.0F, 180.0F);
                 double d = caster.squaredDistanceTo(livingEntity);
-                if (d < (double)400.0F) {
+                if (d < KastriaMobs.getSquared(maxRangeofAattack)) {
                     if (this.cooldown <= 0) {
-                        this.cooldown = 20 + caster.getRandom().nextInt() * 20 / 2;
-                        caster.world.spawnEntity(new ShulkerBulletEntity(caster.world, caster, livingEntity, caster.getMovementDirection().getAxis()));
+                        this.cooldown = maxCooldown + caster.getRandom().nextInt() * maxCooldown / 2;
+                        caster.world.spawnEntity(new CursedBullet(caster.world, caster, livingEntity, caster.getMovementDirection().getAxis(), new StatusEffectInstance(StatusEffects.LEVITATION, 10)));
                         caster.playSound(SoundEvents.ENTITY_SHULKER_SHOOT, 2.0F, (caster.getRandom().nextFloat() - caster.getRandom().nextFloat()) * 0.2F + 1.0F);
                     }
                 } else {
                     caster.setTarget((LivingEntity)null);
                 }
-
                 super.tick();
             }
         }

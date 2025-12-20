@@ -21,6 +21,7 @@ public class CursedBullet extends ShulkerBulletEntity {
 
     public CursedBullet(World world, LivingEntity owner, Entity target, Direction.Axis axis, StatusEffectInstance statusEffectInstance) {
         super(world, owner, target, axis);
+        this.refreshPositionAndAngles(owner.getX(), owner.getEyeY(), owner.getZ(), owner.getYaw(), owner.getPitch());
         this.statusEffects = statusEffectInstance;
     }
 

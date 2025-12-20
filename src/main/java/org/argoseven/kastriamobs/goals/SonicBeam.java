@@ -23,6 +23,9 @@ public class SonicBeam extends Goal {
     private int cooldown = 0;
     private int maxCooldown =  60;
     private int maxRange = 7;
+    private float damage = 10.0f;
+    private float vertialKnocConstant = 0.5F;
+    private float horiziontalKnocConstant = 2.5F;
 
 
     public SonicBeam(MobEntity caster) {
@@ -32,7 +35,7 @@ public class SonicBeam extends Goal {
     @Override
     public boolean canStart() {
         LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.canSee(target) && (caster.distanceTo(target) < maxRange + 1);
+        return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.canSee(target) && (caster.squaredDistanceTo(target) < maxRange + 1);
     }
 
     @Override
@@ -89,10 +92,10 @@ public class SonicBeam extends Goal {
         caster.playSound(SoundEvents.ENTITY_WARDEN_SONIC_BOOM, 3.0F, 1.0F);
         for (LivingEntity hit : hits) {
             hit.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 20, 1, false, false));
-            hit.damage(DamageSource.sonicBoom(caster), 10.0F);
+            hit.damage(DamageSource.sonicBoom(caster), damage);
             double knockResistance = target.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
-            double verticalKnock = (double)0.5F * ((double)1.0F - knockResistance);
-            double horizontalKnock = (double)2.5F * ((double)1.0F - knockResistance);
+            double verticalKnock = (double)vertialKnocConstant * ((double)1.0F - knockResistance);
+            double horizontalKnock = (double)horiziontalKnocConstant * ((double)1.0F - knockResistance);
             Vec3d d = hit.getEyePos().subtract(startPos).normalize();
             hit.addVelocity(d.getX() * horizontalKnock, d.getY() * verticalKnock, d.getZ() * horizontalKnock);
             hit.velocityModified = true;
@@ -116,11 +119,5 @@ public class SonicBeam extends Goal {
         return entityBox.raycast(eyePos, eyePos.add(lookVec.multiply(maxRange))).isPresent();
     }
 
-
-    /*
-    *        searchBox = new Box(
-                Math.min(start.x, end.x), Math.min(start.y, end.y), Math.min(start.z, end.z),
-                Math.max(start.x, end.x), Math.max(start.y, end.y), Math.max(start.z, end.z)
-        );*/
 }
 

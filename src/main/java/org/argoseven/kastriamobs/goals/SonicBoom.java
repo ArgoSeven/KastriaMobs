@@ -23,7 +23,11 @@ public class SonicBoom extends Goal {
     private final MobEntity caster;
     private int cooldown;
     private int maxCooldown =  60;
-    private int maxRange = 7;
+    private int maxRange = 5;
+    private float damage = 10.0f;
+    private float vertialKnocConstant = 0.5F;
+    private float horiziontalKnocConstant = 2.5F;
+
 
 
     public SonicBoom(MobEntity caster) {
@@ -65,7 +69,7 @@ public class SonicBoom extends Goal {
 
         Box searchBox = new Box(startPos.x - maxRange, startPos.y - 1, startPos.z - maxRange, startPos.x + maxRange, startPos.y + 1, startPos.z + maxRange);
 
-        //KastriaMobs.debugvisualizeBox(serverWorld , searchBox);
+        KastriaMobs.debugvisualizeBox(serverWorld , searchBox);
 
         List<LivingEntity> hits = serverWorld.getEntitiesByClass(
                 LivingEntity.class,
@@ -81,10 +85,10 @@ public class SonicBoom extends Goal {
         for (LivingEntity hit : hits) {
             Vec3d direction = hit.getEyePos().subtract(startPos).normalize();
             hit.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 20, 1, false, false));
-            hit.damage(DamageSource.sonicBoom(caster), 10.0F);
+            hit.damage(DamageSource.sonicBoom(caster), damage);
             double knockResistance = target.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
-            double verticalKnock = (double)0.5F * ((double)1.0F - knockResistance);
-            double horizontalKnock = (double)2.5F * ((double)1.0F - knockResistance);
+            double verticalKnock = (double)vertialKnocConstant * ((double)1.0F - knockResistance);
+            double horizontalKnock = (double) horiziontalKnocConstant * ((double)1.0F - knockResistance);
             hit.addVelocity(0 * horizontalKnock, direction.getY() * verticalKnock, direction.getZ() * horizontalKnock);
             hit.velocityModified = true;
         }

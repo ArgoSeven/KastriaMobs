@@ -1189,7 +1189,7 @@
             }
         },
         "death": {
-            "loop": true,
+            "loop": "hold_on_last_frame",
             "animation_length": 1.5,
             "bones": {
                 "right_leg": {

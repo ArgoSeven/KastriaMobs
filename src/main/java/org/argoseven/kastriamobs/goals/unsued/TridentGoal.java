@@ -1,4 +1,4 @@
-package org.argoseven.kastriamobs.goals;
+package org.argoseven.kastriamobs.goals.unsued;
 
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.ProjectileAttackGoal;

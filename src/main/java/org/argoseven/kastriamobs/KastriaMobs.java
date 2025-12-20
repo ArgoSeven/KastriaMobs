@@ -20,9 +20,13 @@ public class KastriaMobs implements ModInitializer {
         RegistryModdedEntity.register();
     }
 
+    public static double getSquared(double range){
+        return range * range;
+    }
 
     public static void debugvisualizeBox(ServerWorld world, Box box) {
         DefaultParticleType particleType = ParticleTypes.END_ROD;
+
         double minX = box.minX;
         double minY = box.minY;
         double minZ = box.minZ;

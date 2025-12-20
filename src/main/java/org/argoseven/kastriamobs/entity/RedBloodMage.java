@@ -106,7 +106,7 @@ public class RedBloodMage extends HostileEntity implements IAnimatable {
         if ((event.isMoving())) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "walk", ILoopType.EDefaultLoopTypes.LOOP));
         } else if (this.isDead()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix +"death", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix +"death", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
         } else if (this.isAttacking() && event.isMoving()) {
             return PlayState.STOP;
         } else {
