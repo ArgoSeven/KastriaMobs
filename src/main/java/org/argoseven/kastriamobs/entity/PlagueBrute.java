@@ -26,7 +26,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class CursedBrute extends HostileEntity implements IAnimatable  {
+public class PlagueBrute extends HostileEntity implements IAnimatable  {
     private final String animation_prefix = "";
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private boolean swinging;
@@ -34,7 +34,7 @@ public class CursedBrute extends HostileEntity implements IAnimatable  {
     private int deathTicks = 0;
 
 
-    public CursedBrute(EntityType<? extends HostileEntity> entityType, World world) {
+    public PlagueBrute(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
         this.setCanPickUpLoot(false);
     }

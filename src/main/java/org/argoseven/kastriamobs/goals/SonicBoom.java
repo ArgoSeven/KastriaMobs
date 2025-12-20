@@ -15,6 +15,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
 
 import java.util.List;
@@ -22,16 +23,31 @@ import java.util.List;
 public class SonicBoom extends Goal {
     private final MobEntity caster;
     private int cooldown;
-    private int maxCooldown =  60;
-    private int maxRange = 5;
-    private float damage = 10.0f;
-    private float vertialKnocConstant = 0.5F;
-    private float horiziontalKnocConstant = 2.5F;
+    private final int maxCooldown;
+    private final float maxRange;
+    private final float damage;
+    private final float vertialKnocConstant;
+    private final float horiziontalKnocConstant;
 
 
 
-    public SonicBoom(MobEntity caster) {
+    public SonicBoom(MobEntity caster, int maxCooldown, float maxRange, float damage, float verticalKnocConstant, float horizontalKnocConstant) {
         this.caster = caster;
+        this.maxCooldown = maxCooldown;
+        this.maxRange = maxRange;
+        this.damage = damage;
+        this.vertialKnocConstant = verticalKnocConstant;
+        this.horiziontalKnocConstant = horizontalKnocConstant;
+    }
+
+
+    public SonicBoom(MobEntity caster, Config.SonicAttackConfig sonicAttack){
+        this.caster = caster;
+        this.maxCooldown = sonicAttack.max_cooldown;
+        this.maxRange = sonicAttack.max_range;
+        this.damage = sonicAttack.damage;
+        this.vertialKnocConstant = sonicAttack.vertical_knock_constant;
+        this.horiziontalKnocConstant = sonicAttack.horizontal_knock_constant;
     }
 
     @Override

@@ -3,14 +3,25 @@ package org.argoseven.kastriamobs.goals;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.math.MathHelper;
+import org.argoseven.kastriamobs.Config;
 
 public class EvokeCircleFangs extends AbstractEvokeFangs {
-    private int numberOfFangs = 5;
-    private int numberOfCircles = 3;
-    private float radiusStep = 1F;
+    private int numberOfFangs;
+    private int numberOfCircles;
+    private float radiusStep;
 
-    public EvokeCircleFangs(MobEntity caster) {
-        super(caster, 2, 20);
+    public EvokeCircleFangs(MobEntity caster, int activationRange, int maxCooldown, int numberOfFangs, int numberOfCircles , float radiusStep) {
+        super(caster, activationRange, maxCooldown);
+        this.numberOfFangs = numberOfFangs;
+        this.numberOfCircles = numberOfCircles;
+        this.radiusStep = radiusStep;
+    }
+
+    public EvokeCircleFangs(MobEntity caster, Config.FangAttackConfig fangAttackConfig) {
+        super(caster, fangAttackConfig.range_of_activation, fangAttackConfig.max_cooldown);
+         numberOfFangs = fangAttackConfig.number_of_fangs;
+         numberOfCircles = fangAttackConfig.number_of_circles;
+         radiusStep = fangAttackConfig.radius_step;
     }
 
     @Override

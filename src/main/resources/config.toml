@@ -1,0 +1,103 @@
+version = 0.1
+
+[bastion]
+generic_max_health = 40.0
+generic_movement_speed = 0.25
+generic_attack_damage = 5.0
+generic_follow_range = 30.0
+generic_armor = 20.0
+generic_armor_toughness = 0.7
+generic_knockback_resistance = 0.1
+
+[blindwrath]
+generic_max_health = 40.0
+generic_movement_speed = 0.25
+generic_attack_damage = 5.0
+generic_follow_range = 30.0
+generic_armor = 20.0
+generic_armor_toughness = 0.7
+generic_knockback_resistance = 0.1
+
+[blindwrath.sonicbeam]
+only_hit_player = true
+max_cooldown = 60
+max_range = 7
+damage = 10.0
+vertical_knock_constant = 0.5
+horizontal_knock_constant = 2.5
+
+[hollowseer]
+generic_max_health = 40.0
+generic_movement_speed = 0.25
+generic_attack_damage = 5.0
+generic_follow_range = 30.0
+generic_armor = 20.0
+generic_armor_toughness = 0.7
+generic_knockback_resistance = 0.1
+
+[hollowseer.evoker_fang_beam]
+number_of_fangs = 5
+number_of_circles = 3
+radius_step = 1.0
+
+[hollowseer.cursed_bullet]
+max_cooldown = 60
+range_of_activation = 7
+max_range_of_attack = 20
+
+[plaguebrute]
+generic_max_health = 40.0
+generic_movement_speed = 0.25
+generic_attack_damage = 5.0
+generic_follow_range = 30.0
+generic_armor = 20.0
+generic_armor_toughness = 0.7
+generic_knockback_resistance = 0.1
+
+[plaguebrute.sonicboom]
+only_hit_player = true
+max_cooldown = 60
+max_range = 7
+damage = 10.0
+vertical_knock_constant = 0.5
+horizontal_knock_constant = 2.5
+
+[raver]
+generic_max_health = 40.0
+generic_movement_speed = 0.25
+generic_attack_damage = 5.0
+generic_follow_range = 30.0
+generic_armor = 20.0
+generic_armor_toughness = 0.7
+generic_knockback_resistance = 0.1
+
+[raver.evoker_fang_circle]
+number_of_fangs = 5
+number_of_circles = 3
+radius_step = 1.0
+
+[red_blood_mage]
+generic_max_health = 40.0
+generic_movement_speed = 0.25
+generic_attack_damage = 5.0
+generic_follow_range = 30.0
+generic_armor = 20.0
+generic_armor_toughness = 0.7
+generic_knockback_resistance = 0.1
+
+[red_blood_mage.blood_beam]
+only_hit_player = true
+max_cooldown = 20
+max_range = 10
+damage= 5
+attraction_strength= 1.5
+
+
+[stalker]
+generic_max_health = 40.0
+generic_movement_speed = 0.25
+generic_attack_damage = 5.0
+generic_follow_range = 30.0
+generic_armor = 20.0
+generic_armor_toughness = 0.7
+generic_knockback_resistance = 0.1

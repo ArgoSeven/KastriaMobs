@@ -13,11 +13,9 @@ import net.minecraft.item.ShieldItem;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 import org.argoseven.kastriamobs.entity.Bard;
-import org.argoseven.kastriamobs.entity.CursedBrute;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.renderers.geo.ExtendedGeoEntityRenderer;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 
 public class BardRender extends ExtendedGeoEntityRenderer<Bard> {

@@ -3,12 +3,19 @@ package org.argoseven.kastriamobs.goals;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.math.MathHelper;
+import org.argoseven.kastriamobs.Config;
 
 public class EvokeLineFangs extends AbstractEvokeFangs {
     private int numberOfFangs = 8;
 
-    public EvokeLineFangs(MobEntity caster) {
-        super(caster, 8, 20);
+    public EvokeLineFangs(MobEntity caster, int activationRange, int maxCooldown, int numberOfFangs) {
+        super(caster, activationRange, maxCooldown);
+        this.numberOfFangs = numberOfFangs;
+    }
+
+    public EvokeLineFangs(MobEntity caster, Config.FangAttackConfig fangAttackConfig) {
+        super(caster, fangAttackConfig.range_of_activation, fangAttackConfig.max_cooldown);
+        numberOfFangs = fangAttackConfig.number_of_fangs;
     }
 
     @Override

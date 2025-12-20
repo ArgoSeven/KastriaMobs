@@ -6,7 +6,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import org.argoseven.kastriamobs.entity.CursedBrute;
 import org.argoseven.kastriamobs.entity.RedBloodMage;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 

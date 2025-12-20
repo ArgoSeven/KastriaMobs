@@ -1,13 +1,14 @@
 package org.argoseven.kastriamobs.goals;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
@@ -16,36 +17,34 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
+import org.argoseven.kastriamobs.ModParticles;
 
 import java.util.List;
 
-public class SonicBeam extends Goal {
+public class BloodBeam extends Goal {
     private final MobEntity caster;
     private int cooldown = 0;
     private final int maxCooldown;
     private final float maxRange;
     private final float damage;
-    private final float vertialKnocConstant;
-    private final float horiziontalKnocConstant;
+    private final float attractionStrength;
 
 
-    public SonicBeam(MobEntity caster, int maxCooldown, float maxRange, float damage, float verticalKnocConstant, float horizontalKnocConstant) {
+    public BloodBeam(MobEntity caster, int maxCooldown, float maxRange, float damage, float attractionStrength) {
         this.caster = caster;
         this.maxCooldown = maxCooldown;
         this.maxRange = maxRange;
         this.damage = damage;
-        this.vertialKnocConstant = verticalKnocConstant;
-        this.horiziontalKnocConstant = horizontalKnocConstant;
+        this.attractionStrength = attractionStrength;
     }
 
 
-    public SonicBeam(MobEntity caster, Config.SonicAttackConfig beamConfig){
+    public BloodBeam(MobEntity caster, Config.BloodBeamConfig beamConfig){
         this.caster = caster;
         this.maxCooldown = beamConfig.max_cooldown;
         this.maxRange = beamConfig.max_range;
         this.damage = beamConfig.damage;
-        this.vertialKnocConstant = beamConfig.vertical_knock_constant;
-        this.horiziontalKnocConstant = beamConfig.horizontal_knock_constant;
+        this.attractionStrength = beamConfig.attraction_strength;
     }
 
     @Override
@@ -68,12 +67,12 @@ public class SonicBeam extends Goal {
     @Override
     public void tick() {
         if (--cooldown <= 0) {
-            fireSonicBoom();
+            fireBloodBeam();
             cooldown = maxCooldown;
         }
     }
 
-    protected void fireSonicBoom() {
+    protected void fireBloodBeam() {
         LivingEntity target = caster.getTarget();
         float distanceFromTarget = caster.distanceTo(target);
         if (target == null || distanceFromTarget > maxRange + 1) return;
@@ -87,16 +86,17 @@ public class SonicBeam extends Goal {
         caster.swingHand(Hand.MAIN_HAND);
         caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
 
-        // Spawn particles along beam path
-        for (int i = 1; i <= maxRange; i++) {
+        BlockStateParticleEffect bloodEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.getDefaultState());
+        for (double i = 1; i <= maxRange; i+= 0.5) {
             Vec3d particlePos = startPos.add(direction.multiply(i));
-            if (!caster.world.isClient) {serverWorld.spawnParticles(ParticleTypes.SONIC_BOOM, particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);}
+            if (!caster.world.isClient) {
+                serverWorld.spawnParticles(ModParticles.BLOOD_BEAM_PARTICLE, particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);
+                serverWorld.spawnParticles(bloodEffect, particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);
+            }
         }
 
-        //Box searchBox = new Box(eyePos, endPos).expand(1);
         Box searchBox = caster.getBoundingBox().stretch(lookVec.multiply(maxRange));
 
-        //wKastriaMobs.debugvisualizeBox(serverWorld, searchBox);
 
         List<LivingEntity> hits = serverWorld.getEntitiesByClass(
                 LivingEntity.class,
@@ -109,11 +109,10 @@ public class SonicBeam extends Goal {
         for (LivingEntity hit : hits) {
             hit.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 20, 1, false, false));
             hit.damage(DamageSource.sonicBoom(caster), damage);
-            double knockResistance = target.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
-            double verticalKnock = (double)vertialKnocConstant * ((double)1.0F - knockResistance);
-            double horizontalKnock = (double)horiziontalKnocConstant * ((double)1.0F - knockResistance);
-            Vec3d d = hit.getEyePos().subtract(startPos).normalize();
-            hit.addVelocity(d.getX() * horizontalKnock, d.getY() * verticalKnock, d.getZ() * horizontalKnock);
+
+            // Calculate the attraction vector
+            Vec3d attraction = startPos.subtract(hit.getEyePos()).normalize();
+            hit.addVelocity(attraction.getX() * attractionStrength, attraction.getY() * attractionStrength, attraction.getZ() * attractionStrength);
             hit.velocityModified = true;
         }
 

@@ -10,14 +10,15 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
+import org.argoseven.kastriamobs.Config;
 
 public abstract class AbstractEvokeFangs extends Goal {
     protected final MobEntity caster;
-    protected double activationRange;
     protected int cooldown = 0;
     protected int maxCooldown;
+    protected float activationRange;
 
-    public AbstractEvokeFangs(MobEntity caster, double activationRange, int maxCooldown) {
+    public AbstractEvokeFangs(MobEntity caster, float activationRange, int maxCooldown) {
         this.caster = caster;
         this.activationRange  = activationRange;
         this.maxCooldown = maxCooldown;

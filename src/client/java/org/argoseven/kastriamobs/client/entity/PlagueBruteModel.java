@@ -2,31 +2,31 @@ package org.argoseven.kastriamobs.client.entity;
 
 import net.minecraft.util.Identifier;
 import org.argoseven.kastriamobs.KastriaMobs;
-import org.argoseven.kastriamobs.entity.CursedBrute;
+import org.argoseven.kastriamobs.entity.PlagueBrute;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 
-public class CursedBruteModel extends AnimatedGeoModel<CursedBrute> {
+public class PlagueBruteModel extends AnimatedGeoModel<PlagueBrute> {
     @Override
-    public Identifier getModelResource(CursedBrute eldenFap) {
-        return new Identifier(KastriaMobs.MOD_ID,"geo/bastion.geo.json");
+    public Identifier getModelResource(PlagueBrute plagueBrute ) {
+        return new Identifier(KastriaMobs.MOD_ID,"geo/plaguebrute.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(CursedBrute cursedbrute) {
-        return new Identifier(KastriaMobs.MOD_ID,"textures/entity/bastion.png");
+    public Identifier getTextureResource(PlagueBrute plagueBrute) {
+        return new Identifier(KastriaMobs.MOD_ID,"textures/entity/plaguebrute.png");
     }
 
     @Override
-    public Identifier getAnimationResource(CursedBrute eldenFap) {
-        return new Identifier(KastriaMobs.MOD_ID,"animations/bastion_anim.json");
+    public Identifier getAnimationResource(PlagueBrute plagueBrute) {
+        return new Identifier(KastriaMobs.MOD_ID,"animations/plaguebrute_anim.json");
     }
 
     @Override
-    public void setCustomAnimations(CursedBrute animatable, int instanceId, AnimationEvent animationEvent) {
+    public void setCustomAnimations(PlagueBrute animatable, int instanceId, AnimationEvent animationEvent) {
         super.setCustomAnimations(animatable, instanceId, animationEvent);
         IBone head = this.getAnimationProcessor().getBone("head");
 

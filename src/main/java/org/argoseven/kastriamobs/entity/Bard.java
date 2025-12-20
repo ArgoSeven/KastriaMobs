@@ -12,6 +12,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
@@ -26,7 +27,11 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.argoseven.kastriamobs.Config;
+import org.argoseven.kastriamobs.KastriaMobs;
+import org.argoseven.kastriamobs.goals.BloodBeam;
 import org.argoseven.kastriamobs.goals.EvokeCircleFangs;
+import org.argoseven.kastriamobs.goals.SonicBeam;
 import org.argoseven.kastriamobs.goals.unsued.OldEvokeCircleFangs;
 import org.argoseven.kastriamobs.goals.SummonCursedBullet;
 import software.bernie.geckolib3.core.AnimationState;
@@ -41,10 +46,11 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class Bard extends HostileEntity implements IAnimatable, RangedAttackMob {
-    private final String animation_prefix = "animation.skin.";
+    private final String animation_prefix = "";
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private boolean swinging;
     private long lastSwing;
+    private static Config.Blindwrath bardConfig  = KastriaMobs.config.blindwrath;
 
 
     public Bard(EntityType<? extends HostileEntity> entityType, World world) {
@@ -61,26 +67,25 @@ public class Bard extends HostileEntity implements IAnimatable, RangedAttackMob 
     @Override
     protected void initGoals() {
         this.goalSelector.add(1,  new MeleeAttackGoal(this, 1, true));
-        this.goalSelector.add(2,  new EvokeCircleFangs(this));
+        this.goalSelector.add(2,  new BloodBeam( this, 20, 10, 1,1));
         this.goalSelector.add(3, new WanderAroundGoal(this, 0.6));
         this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 3.0F, 1.0F));
-        this.goalSelector.add(2,  new SummonCursedBullet(this));
+        this.goalSelector.add(2,  new SummonCursedBullet(this, 40, 10 ,20));
         this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.add(2, new RevengeGoal(this));
     }
 
     public static DefaultAttributeContainer.Builder setAttribute() {
         return HostileEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 40.0D)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 5.0D)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 30.0D)
-                .add(EntityAttributes.GENERIC_ARMOR, 20.0D)
-                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, 0.7D)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.1D);
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, bardConfig.generic_max_health)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, bardConfig.generic_movement_speed)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, bardConfig.generic_attack_damage)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, bardConfig.generic_follow_range)
+                .add(EntityAttributes.GENERIC_ARMOR, bardConfig.generic_armor)
+                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, bardConfig.generic_armor_toughness)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, bardConfig.generic_knockback_resistance);
     }
 
-    // Custom damage handling - immune to arrows and fall damage
     @Override
     public boolean damage(DamageSource source, float amount) {
         if (source.getSource() instanceof PersistentProjectileEntity) {
