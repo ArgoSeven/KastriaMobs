@@ -16,7 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
-import org.argoseven.kastriamobs.goals.unsued.HollowseerGoal;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;

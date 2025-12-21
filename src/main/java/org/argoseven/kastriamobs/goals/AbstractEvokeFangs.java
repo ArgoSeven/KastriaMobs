@@ -10,7 +10,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
-import org.argoseven.kastriamobs.Config;
 
 public abstract class AbstractEvokeFangs extends Goal {
     protected final MobEntity caster;

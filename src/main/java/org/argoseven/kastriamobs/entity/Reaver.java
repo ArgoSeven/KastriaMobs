@@ -17,8 +17,6 @@ import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
 import org.argoseven.kastriamobs.goals.EvokeCircleFangs;
-import org.argoseven.kastriamobs.goals.EvokeLineFangs;
-import org.argoseven.kastriamobs.goals.SummonCursedBullet;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
