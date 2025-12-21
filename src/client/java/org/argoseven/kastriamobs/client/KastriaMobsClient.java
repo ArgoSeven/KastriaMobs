@@ -4,10 +4,13 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import org.argoseven.kastriamobs.ModParticles;
-import org.argoseven.kastriamobs.client.entity.BardRender;
-import org.argoseven.kastriamobs.client.entity.PlagueRender;
 import org.argoseven.kastriamobs.RegistryModdedEntity;
-import org.argoseven.kastriamobs.client.entity.RedBloodMageRender;
+import org.argoseven.kastriamobs.client.entity.*;
+import org.argoseven.kastriamobs.client.entity.BastionRender;
+import org.argoseven.kastriamobs.client.entity.BlindwrathRender;
+import org.argoseven.kastriamobs.client.entity.HollowseerRender;
+import org.argoseven.kastriamobs.client.entity.ReaverRender;
+import org.argoseven.kastriamobs.client.entity.StalkerRender;
 import org.argoseven.kastriamobs.client.particles.BloodBeamParticle;
 import org.argoseven.kastriamobs.client.particles.Notes;
 
@@ -17,9 +20,14 @@ public class KastriaMobsClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(RegistryModdedEntity.CURSED_BRUTE, PlagueRender::new);
+        EntityRendererRegistry.register(RegistryModdedEntity.PLAGUEBRUTE, PlagueRender::new);
         EntityRendererRegistry.register(RegistryModdedEntity.RED_BLOOD_DMAGE, RedBloodMageRender::new);
         EntityRendererRegistry.register(RegistryModdedEntity.BARD, BardRender::new);
+        EntityRendererRegistry.register(RegistryModdedEntity.BASTION, BastionRender::new);
+        EntityRendererRegistry.register(RegistryModdedEntity.BLINDWRATH, BlindwrathRender::new);
+        EntityRendererRegistry.register(RegistryModdedEntity.HOLLOWSEER, HollowseerRender::new);
+        EntityRendererRegistry.register(RegistryModdedEntity.REAVER, ReaverRender::new);
+        EntityRendererRegistry.register(RegistryModdedEntity.STALKER, StalkerRender::new);
 
         ParticleFactoryRegistry.getInstance().register(ModParticles.BLOOD_BEAM_PARTICLE, BloodBeamParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.NOTES_PARTICLE, Notes.Factory::new);

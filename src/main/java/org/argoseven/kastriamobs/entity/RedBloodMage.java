@@ -10,12 +10,14 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.argoseven.kastriamobs.Config;
+import org.argoseven.kastriamobs.KastriaMobs;
+import org.argoseven.kastriamobs.goals.BloodBeam;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -32,6 +34,7 @@ public class RedBloodMage extends HostileEntity implements IAnimatable {
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private boolean swinging;
     private long lastSwing;
+    private static Config.RedBloodMage redBloodMageConfig = KastriaMobs.config.red_blood_mage;
 
 
     public RedBloodMage(EntityType<? extends HostileEntity> entityType, World world) {
@@ -48,26 +51,28 @@ public class RedBloodMage extends HostileEntity implements IAnimatable {
     @Override
     protected void initGoals() {
         // Priority 1: Melee Attack
-        this.goalSelector.add(2, new MeleeAttackGoal(this, 1.3,true));
-        this.goalSelector.add(5, new WanderAroundGoal(this, (double)1.0F));
+        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.3,true));
+        this.goalSelector.add(2, new WanderAroundGoal(this, (double)1.0F));
+        this.goalSelector.add(3, new BloodBeam(this, redBloodMageConfig.blood_beam));
+
         // Priority 2-6: Target goals
         this.targetSelector.add(1, new ActiveTargetGoal<>(this, VillagerEntity.class, true));
         this.targetSelector.add(2, new RevengeGoal(this));
 
         // Priority 7-8: Movement goals
-        this.goalSelector.add(6, new SwimGoal(this));
-        this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.add(4, new SwimGoal(this));
+        this.goalSelector.add(5, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
     }
 
     public static DefaultAttributeContainer.Builder setAttribute() {
         return HostileEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 40.0D)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 5.0D)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 30.0D)
-                .add(EntityAttributes.GENERIC_ARMOR, 20.0D)
-                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, 0.7D)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.1D);
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, redBloodMageConfig.generic_max_health)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, redBloodMageConfig.generic_movement_speed)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, redBloodMageConfig.generic_attack_damage)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, redBloodMageConfig.generic_follow_range)
+                .add(EntityAttributes.GENERIC_ARMOR, redBloodMageConfig.generic_armor)
+                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, redBloodMageConfig.generic_armor_toughness)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, redBloodMageConfig.generic_knockback_resistance);
     }
 
     // Sound events using your available sounds

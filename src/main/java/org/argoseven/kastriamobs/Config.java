@@ -11,7 +11,7 @@ public class Config {
     public Blindwrath blindwrath;
     public Hollowseer hollowseer;
     public Plaguebrute plaguebrute;
-    public Raver raver;
+    public Reaver reaver;
     public RedBloodMage red_blood_mage;
     public Stalker stalker;
 
@@ -75,7 +75,7 @@ public class Config {
         public CursedBulletConfig cursed_bullet;
     }
 
-    public static class Raver extends EntityStatsConfig {
+    public static class Reaver extends EntityStatsConfig {
         public FangAttackConfig evoker_fang_circle;
     }
 

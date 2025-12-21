@@ -16,8 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
-import org.argoseven.kastriamobs.goals.EvokeCircleFangs;
-import org.argoseven.kastriamobs.goals.SonicBoom;
 import org.argoseven.kastriamobs.goals.unsued.HollowseerGoal;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -30,16 +28,16 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class PlagueBrute extends HostileEntity implements IAnimatable  {
+public class Bastion extends HostileEntity implements IAnimatable  {
     private final String animation_prefix = "";
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private boolean swinging;
     private long lastSwing;
     private int deathTicks = 0;
-    private static Config.Plaguebrute plaguebruteConfig  = KastriaMobs.config.plaguebrute;
+    private static Config.Bastion bastionConfig  = KastriaMobs.config.bastion;
 
 
-    public PlagueBrute(EntityType<? extends HostileEntity> entityType, World world) {
+    public Bastion(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
         this.setCanPickUpLoot(false);
     }
@@ -55,26 +53,24 @@ public class PlagueBrute extends HostileEntity implements IAnimatable  {
         // Priority 1: Melee Attack
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.1D, false));
         this.goalSelector.add(2, new WanderAroundGoal(this, (double)1.0F));
-        this.goalSelector.add(3, new SonicBoom(this, plaguebruteConfig.sonicboom));
-
         // Priority 2-6: Target goals
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
         this.targetSelector.add(1, new RevengeGoal(this));
 
-
-        this.goalSelector.add(4, new SwimGoal(this));
-        this.goalSelector.add(5, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
+        // Priority 7-8: Movement goals
+        this.goalSelector.add(3, new SwimGoal(this));
+        this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
     }
 
     public static DefaultAttributeContainer.Builder setAttribute() {
         return HostileEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, plaguebruteConfig.generic_max_health)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, plaguebruteConfig.generic_movement_speed)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, plaguebruteConfig.generic_attack_damage)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, plaguebruteConfig.generic_follow_range)
-                .add(EntityAttributes.GENERIC_ARMOR, plaguebruteConfig.generic_armor)
-                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, plaguebruteConfig.generic_armor_toughness)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, plaguebruteConfig.generic_knockback_resistance);
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, bastionConfig.generic_max_health)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, bastionConfig.generic_movement_speed)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, bastionConfig.generic_attack_damage)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, bastionConfig.generic_follow_range)
+                .add(EntityAttributes.GENERIC_ARMOR, bastionConfig.generic_armor)
+                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, bastionConfig.generic_armor_toughness)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, bastionConfig.generic_knockback_resistance);
     }
 
 
