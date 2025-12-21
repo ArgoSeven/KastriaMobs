@@ -35,7 +35,6 @@ public class Hollowseer extends HostileEntity implements IAnimatable  {
     private boolean swinging;
     private long lastSwing;
     private int deathTicks = 0;
-    private static Config.Hollowseer hollowseerConfig  = KastriaMobs.config.hollowseer;
 
     public Hollowseer(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
@@ -53,11 +52,11 @@ public class Hollowseer extends HostileEntity implements IAnimatable  {
         // Priority 1: Melee Attack
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.1D, false));
         this.goalSelector.add(2, new WanderAroundGoal(this, (double)1.0F));
-        this.goalSelector.add(3, new SummonCursedBullet(this, hollowseerConfig.cursed_bullet));
-        this.goalSelector.add(4, new EvokeLineFangs(this, hollowseerConfig.evoker_fang_beam));
+        this.goalSelector.add(3, new SummonCursedBullet(this, Config.data.hollowseer.cursed_bullet));
+        this.goalSelector.add(4, new EvokeLineFangs(this, Config.data.hollowseer.evoker_fang_beam));
 
         // Priority 2-6: Target goals
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
+        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.add(1, new RevengeGoal(this));
 
         // Priority 7-8: Movement goals
@@ -67,13 +66,13 @@ public class Hollowseer extends HostileEntity implements IAnimatable  {
 
     public static DefaultAttributeContainer.Builder setAttribute() {
         return HostileEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, hollowseerConfig.generic_max_health)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, hollowseerConfig.generic_movement_speed)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, hollowseerConfig.generic_attack_damage)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, hollowseerConfig.generic_follow_range)
-                .add(EntityAttributes.GENERIC_ARMOR, hollowseerConfig.generic_armor)
-                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, hollowseerConfig.generic_armor_toughness)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, hollowseerConfig.generic_knockback_resistance);
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, Config.data.hollowseer.generic_max_health)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, Config.data.hollowseer.generic_movement_speed)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, Config.data.hollowseer.generic_attack_damage)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, Config.data.hollowseer.generic_follow_range)
+                .add(EntityAttributes.GENERIC_ARMOR, Config.data.hollowseer.generic_armor)
+                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, Config.data.hollowseer.generic_armor_toughness)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, Config.data.hollowseer.generic_knockback_resistance);
     }
 
 

@@ -15,7 +15,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
-import org.argoseven.kastriamobs.KastriaMobs;
 import org.argoseven.kastriamobs.goals.SonicBeam;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -34,7 +33,6 @@ public class Blindwrath extends HostileEntity implements IAnimatable  {
     private boolean swinging;
     private long lastSwing;
     private int deathTicks = 0;
-    private static Config.Blindwrath blindwrathConfig  = KastriaMobs.config.blindwrath;
 
 
     public Blindwrath(EntityType<? extends HostileEntity> entityType, World world) {
@@ -52,11 +50,11 @@ public class Blindwrath extends HostileEntity implements IAnimatable  {
     protected void initGoals() {
         // Priority 1: Melee Attack
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.1D, false));
-        this.goalSelector.add(2, new SonicBeam(this, blindwrathConfig.sonicbeam));
+        this.goalSelector.add(2, new SonicBeam(this, Config.data.blindwrath.sonicbeam));
         this.goalSelector.add(3, new WanderAroundGoal(this, (double)1.0F));
 
         // Priority 2-6: Target goals
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
+        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.add(1, new RevengeGoal(this));
 
         // Priority 7-8: Movement goals
@@ -66,13 +64,13 @@ public class Blindwrath extends HostileEntity implements IAnimatable  {
 
     public static DefaultAttributeContainer.Builder setAttribute() {
         return HostileEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, blindwrathConfig.generic_max_health)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, blindwrathConfig.generic_movement_speed)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, blindwrathConfig.generic_attack_damage)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, blindwrathConfig.generic_follow_range)
-                .add(EntityAttributes.GENERIC_ARMOR, blindwrathConfig.generic_armor)
-                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, blindwrathConfig.generic_armor_toughness)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, blindwrathConfig.generic_knockback_resistance);
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, Config.data.blindwrath.generic_max_health)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, Config.data.blindwrath.generic_movement_speed)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, Config.data.blindwrath.generic_attack_damage)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, Config.data.blindwrath.generic_follow_range)
+                .add(EntityAttributes.GENERIC_ARMOR, Config.data.blindwrath.generic_armor)
+                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, Config.data.blindwrath.generic_armor_toughness)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, Config.data.blindwrath.generic_knockback_resistance);
     }
 
 

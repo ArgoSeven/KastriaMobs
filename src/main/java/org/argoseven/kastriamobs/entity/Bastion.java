@@ -15,7 +15,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
-import org.argoseven.kastriamobs.KastriaMobs;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -33,9 +32,6 @@ public class Bastion extends HostileEntity implements IAnimatable  {
     private boolean swinging;
     private long lastSwing;
     private int deathTicks = 0;
-    private static Config.Bastion bastionConfig  = KastriaMobs.config.bastion;
-
-
     public Bastion(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
         this.setCanPickUpLoot(false);
@@ -53,7 +49,7 @@ public class Bastion extends HostileEntity implements IAnimatable  {
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.1D, false));
         this.goalSelector.add(2, new WanderAroundGoal(this, (double)1.0F));
         // Priority 2-6: Target goals
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
+        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.add(1, new RevengeGoal(this));
 
         // Priority 7-8: Movement goals
@@ -63,15 +59,14 @@ public class Bastion extends HostileEntity implements IAnimatable  {
 
     public static DefaultAttributeContainer.Builder setAttribute() {
         return HostileEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, bastionConfig.generic_max_health)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, bastionConfig.generic_movement_speed)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, bastionConfig.generic_attack_damage)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, bastionConfig.generic_follow_range)
-                .add(EntityAttributes.GENERIC_ARMOR, bastionConfig.generic_armor)
-                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, bastionConfig.generic_armor_toughness)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, bastionConfig.generic_knockback_resistance);
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, Config.data.bastion.generic_max_health)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, Config.data.bastion.generic_movement_speed)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, Config.data.bastion.generic_attack_damage)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, Config.data.bastion.generic_follow_range)
+                .add(EntityAttributes.GENERIC_ARMOR, Config.data.bastion.generic_armor)
+                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, Config.data.bastion.generic_armor_toughness)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, Config.data.bastion.generic_knockback_resistance);
     }
-
 
     // Sound events using your available sounds
     @Override
@@ -93,6 +88,7 @@ public class Bastion extends HostileEntity implements IAnimatable  {
     protected void playStepSound(BlockPos pos, BlockState state) {
         this.playSound(SoundEvents.ENTITY_WARDEN_STEP, 0.15F, 1.0F);
     }
+
 
     @Override
     public void playAmbientSound() {

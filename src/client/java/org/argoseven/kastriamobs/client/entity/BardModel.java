@@ -12,28 +12,21 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 public class BardModel extends AnimatedGeoModel<Bard> {
     @Override
     public Identifier getModelResource(Bard bard) {
-        return new Identifier(KastriaMobs.MOD_ID,"geo/red_blood_mage.geo.json");
+        return new Identifier(KastriaMobs.MOD_ID,"geo/bard.geo.json");
     }
 
     @Override
     public Identifier getTextureResource(Bard bard) {
-        return new Identifier(KastriaMobs.MOD_ID,"textures/entity/red_blood_mage.png");
+        return new Identifier(KastriaMobs.MOD_ID,"textures/entity/bard.png");
     }
 
     @Override
     public Identifier getAnimationResource(Bard bard) {
-        return new Identifier(KastriaMobs.MOD_ID,"animations/red_blood_mage_anim.json");
+        return new Identifier(KastriaMobs.MOD_ID,"animations/bard_anim.json");
     }
 
     @Override
     public void setCustomAnimations(Bard animatable, int instanceId, AnimationEvent animationEvent) {
         super.setCustomAnimations(animatable, instanceId, animationEvent);
-        IBone head = this.getAnimationProcessor().getBone("head");
-
-        EntityModelData extraData = (EntityModelData) animationEvent.getExtraDataOfType(EntityModelData.class).get(0);
-        if (head != null) {
-            head.setRotationX((float) (extraData.headPitch * 0.017453292519943295));
-            head.setRotationY((float) (extraData.netHeadYaw * 0.017453292519943295));
-        }
     }
 }

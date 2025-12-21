@@ -1,12 +1,18 @@
 package org.argoseven.kastriamobs;
 
+import com.moandjiezana.toml.Toml;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static org.argoseven.kastriamobs.KastriaMobs.configPath;
+
 public class Config {
-    public String version;
+    public static Config data;
+    public Double version;
     public Bastion bastion;
     public Blindwrath blindwrath;
     public Hollowseer hollowseer;
@@ -99,5 +105,9 @@ public class Config {
         }
         KastriaMobs.LOGGER.info("Config loaded successfully");
         return path;
+    }
+
+    public static void init(){
+        data = new Toml().read(new File(checkConfig(configPath).toUri())).to(Config.class);
     }
 }

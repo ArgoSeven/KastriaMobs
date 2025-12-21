@@ -34,7 +34,6 @@ public class RedBloodMage extends HostileEntity implements IAnimatable {
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private boolean swinging;
     private long lastSwing;
-    private static Config.RedBloodMage redBloodMageConfig = KastriaMobs.config.red_blood_mage;
 
 
     public RedBloodMage(EntityType<? extends HostileEntity> entityType, World world) {
@@ -53,10 +52,10 @@ public class RedBloodMage extends HostileEntity implements IAnimatable {
         // Priority 1: Melee Attack
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.3,true));
         this.goalSelector.add(2, new WanderAroundGoal(this, (double)1.0F));
-        this.goalSelector.add(3, new BloodBeam(this, redBloodMageConfig.blood_beam));
+        this.goalSelector.add(3, new BloodBeam(this, Config.data.red_blood_mage.blood_beam));
 
         // Priority 2-6: Target goals
-        this.targetSelector.add(1, new ActiveTargetGoal<>(this, VillagerEntity.class, true));
+        this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.add(2, new RevengeGoal(this));
 
         // Priority 7-8: Movement goals
@@ -66,13 +65,13 @@ public class RedBloodMage extends HostileEntity implements IAnimatable {
 
     public static DefaultAttributeContainer.Builder setAttribute() {
         return HostileEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, redBloodMageConfig.generic_max_health)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, redBloodMageConfig.generic_movement_speed)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, redBloodMageConfig.generic_attack_damage)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, redBloodMageConfig.generic_follow_range)
-                .add(EntityAttributes.GENERIC_ARMOR, redBloodMageConfig.generic_armor)
-                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, redBloodMageConfig.generic_armor_toughness)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, redBloodMageConfig.generic_knockback_resistance);
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, Config.data.red_blood_mage.generic_max_health)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, Config.data.red_blood_mage.generic_movement_speed)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, Config.data.red_blood_mage.generic_attack_damage)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, Config.data.red_blood_mage.generic_follow_range)
+                .add(EntityAttributes.GENERIC_ARMOR, Config.data.red_blood_mage.generic_armor)
+                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, Config.data.red_blood_mage.generic_armor_toughness)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, Config.data.red_blood_mage.generic_knockback_resistance);
     }
 
     // Sound events using your available sounds

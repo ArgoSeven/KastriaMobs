@@ -33,7 +33,6 @@ public class Stalker extends HostileEntity implements IAnimatable  {
     private boolean swinging;
     private long lastSwing;
     private int deathTicks = 0;
-    private static Config.Stalker stalkerConfig  = KastriaMobs.config.stalker;
 
 
     public Stalker(EntityType<? extends HostileEntity> entityType, World world) {
@@ -54,7 +53,7 @@ public class Stalker extends HostileEntity implements IAnimatable  {
         this.goalSelector.add(2, new WanderAroundGoal(this, (double)1.0F));
 
         // Priority 2-6: Target goals
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
+        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.add(1, new RevengeGoal(this));
 
         // Priority 7-8: Movement goals
@@ -64,13 +63,13 @@ public class Stalker extends HostileEntity implements IAnimatable  {
 
     public static DefaultAttributeContainer.Builder setAttribute() {
         return HostileEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, stalkerConfig.generic_max_health)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, stalkerConfig.generic_movement_speed)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, stalkerConfig.generic_attack_damage)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, stalkerConfig.generic_follow_range)
-                .add(EntityAttributes.GENERIC_ARMOR, stalkerConfig.generic_armor)
-                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, stalkerConfig.generic_armor_toughness)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, stalkerConfig.generic_knockback_resistance);
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, Config.data.stalker.generic_max_health)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, Config.data.stalker.generic_movement_speed)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, Config.data.stalker.generic_attack_damage)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, Config.data.stalker.generic_follow_range)
+                .add(EntityAttributes.GENERIC_ARMOR, Config.data.stalker.generic_armor)
+                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, Config.data.stalker.generic_armor_toughness)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, Config.data.stalker.generic_knockback_resistance);
     }
 
 

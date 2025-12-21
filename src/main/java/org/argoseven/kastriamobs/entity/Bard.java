@@ -27,7 +27,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
-import org.argoseven.kastriamobs.KastriaMobs;
 import org.argoseven.kastriamobs.goals.BloodBeam;
 import org.argoseven.kastriamobs.goals.SummonCursedBullet;
 import software.bernie.geckolib3.core.AnimationState;
@@ -46,7 +45,6 @@ public class Bard extends HostileEntity implements IAnimatable, RangedAttackMob 
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private boolean swinging;
     private long lastSwing;
-    private static Config.Blindwrath bardConfig  = KastriaMobs.config.blindwrath;
 
 
     public Bard(EntityType<? extends HostileEntity> entityType, World world) {
@@ -73,13 +71,13 @@ public class Bard extends HostileEntity implements IAnimatable, RangedAttackMob 
 
     public static DefaultAttributeContainer.Builder setAttribute() {
         return HostileEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, bardConfig.generic_max_health)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, bardConfig.generic_movement_speed)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, bardConfig.generic_attack_damage)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, bardConfig.generic_follow_range)
-                .add(EntityAttributes.GENERIC_ARMOR, bardConfig.generic_armor)
-                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, bardConfig.generic_armor_toughness)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, bardConfig.generic_knockback_resistance);
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, Config.data.blindwrath.generic_max_health)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, Config.data.blindwrath.generic_movement_speed)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, Config.data.blindwrath.generic_attack_damage)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, Config.data.blindwrath.generic_follow_range)
+                .add(EntityAttributes.GENERIC_ARMOR, Config.data.blindwrath.generic_armor)
+                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, Config.data.blindwrath.generic_armor_toughness)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, Config.data.blindwrath.generic_knockback_resistance);
     }
 
     @Override
@@ -112,6 +110,14 @@ public class Bard extends HostileEntity implements IAnimatable, RangedAttackMob 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
         this.playSound(SoundEvents.BLOCK_DEEPSLATE_STEP, 0.15F, 1.0F);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.getTarget()!=null && this.getTarget() instanceof  PlayerEntity player){
+            player.sendMessage(Text.of(String.valueOf(Config.data.blindwrath.generic_movement_speed)),true);
+        }
     }
 
     @Override

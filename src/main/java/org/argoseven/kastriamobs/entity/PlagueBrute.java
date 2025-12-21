@@ -34,7 +34,6 @@ public class PlagueBrute extends HostileEntity implements IAnimatable  {
     private boolean swinging;
     private long lastSwing;
     private int deathTicks = 0;
-    private static Config.Plaguebrute plaguebruteConfig  = KastriaMobs.config.plaguebrute;
 
 
     public PlagueBrute(EntityType<? extends HostileEntity> entityType, World world) {
@@ -53,10 +52,10 @@ public class PlagueBrute extends HostileEntity implements IAnimatable  {
         // Priority 1: Melee Attack
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.1D, false));
         this.goalSelector.add(2, new WanderAroundGoal(this, (double)1.0F));
-        this.goalSelector.add(3, new SonicBoom(this, plaguebruteConfig.sonicboom));
+        this.goalSelector.add(3, new SonicBoom(this, Config.data.plaguebrute.sonicboom));
 
         // Priority 2-6: Target goals
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
+        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.add(1, new RevengeGoal(this));
 
 
@@ -66,13 +65,13 @@ public class PlagueBrute extends HostileEntity implements IAnimatable  {
 
     public static DefaultAttributeContainer.Builder setAttribute() {
         return HostileEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, plaguebruteConfig.generic_max_health)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, plaguebruteConfig.generic_movement_speed)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, plaguebruteConfig.generic_attack_damage)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, plaguebruteConfig.generic_follow_range)
-                .add(EntityAttributes.GENERIC_ARMOR, plaguebruteConfig.generic_armor)
-                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, plaguebruteConfig.generic_armor_toughness)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, plaguebruteConfig.generic_knockback_resistance);
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, Config.data.plaguebrute.generic_max_health)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, Config.data.plaguebrute.generic_movement_speed)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, Config.data.plaguebrute.generic_attack_damage)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, Config.data.plaguebrute.generic_follow_range)
+                .add(EntityAttributes.GENERIC_ARMOR, Config.data.plaguebrute.generic_armor)
+                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, Config.data.plaguebrute.generic_armor_toughness)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, Config.data.plaguebrute.generic_knockback_resistance);
     }
 
 
