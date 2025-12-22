@@ -101,7 +101,7 @@ public class BloodBeam extends Goal {
         List<LivingEntity> hits = serverWorld.getEntitiesByClass(
                 LivingEntity.class,
                 searchBox,
-                e -> e != caster && isEntityInTheCone(eyePos, lookVec, e)
+                e -> e != caster && !e.isTeammate(caster) && isEntityInTheCone(eyePos, lookVec, e)
         );
 
 

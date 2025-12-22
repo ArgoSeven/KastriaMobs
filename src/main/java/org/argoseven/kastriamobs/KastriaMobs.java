@@ -13,7 +13,7 @@ import net.minecraft.resource.ResourceType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
-import org.argoseven.kastriamobs.entity.Bard;
+import org.argoseven.kastriamobs.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,7 @@ public class KastriaMobs implements ModInitializer {
             public void reload(ResourceManager manager) {
                 LOGGER.info("FRATM");
                 Config.init();
-                FabricDefaultAttributeRegistry.register(RegistryModdedEntity.BARD, Bard.setAttribute());
+                RegistryModdedEntity.register();
             }
         });
     }

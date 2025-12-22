@@ -6,9 +6,9 @@ import net.minecraft.util.math.MathHelper;
 import org.argoseven.kastriamobs.Config;
 
 public class EvokeCircleFangs extends AbstractEvokeFangs {
-    private int numberOfFangs;
-    private int numberOfCircles;
-    private float radiusStep;
+    private final int numberOfFangs;
+    private final int numberOfCircles;
+    private final float radiusStep;
 
     public EvokeCircleFangs(MobEntity caster, int activationRange, int maxCooldown, int numberOfFangs, int numberOfCircles , float radiusStep) {
         super(caster, activationRange, maxCooldown);

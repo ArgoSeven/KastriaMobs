@@ -50,7 +50,7 @@ public class SonicBoom extends Goal {
     @Override
     public boolean canStart() {
         LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.canSee(target) && (caster.distanceTo(target) < maxRange + 1);
+        return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.canSee(target) && (caster.distanceTo(target) < KastriaMobs.getSquared(maxRange) + 1);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class SonicBoom extends Goal {
         List<LivingEntity> hits = serverWorld.getEntitiesByClass(
                 LivingEntity.class,
                 searchBox,
-                e -> e.getClass() !=caster.getClass()
+                e -> e.getClass() !=caster.getClass() && !e.isTeammate(caster)
         );
 
         if (!caster.world.isClient) {

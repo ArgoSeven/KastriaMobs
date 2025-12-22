@@ -10,6 +10,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
+import org.argoseven.kastriamobs.KastriaMobs;
 
 public abstract class AbstractEvokeFangs extends Goal {
     protected final MobEntity caster;
@@ -26,7 +27,7 @@ public abstract class AbstractEvokeFangs extends Goal {
     @Override
     public boolean canStart() {
         LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target) && caster.squaredDistanceTo(target) < activationRange * activationRange;
+        return target != null && target.isAlive() && this.caster.canTarget(target) && caster.squaredDistanceTo(target) < KastriaMobs.getSquared(activationRange) + 1;
     }
 
     @Override
@@ -57,7 +58,7 @@ public abstract class AbstractEvokeFangs extends Goal {
         float angle = (float) MathHelper.atan2(target.getZ() - caster.getZ(),
                 target.getX() - caster.getX());
 
-        if (caster.squaredDistanceTo(target) < activationRange * activationRange) {
+        if (caster.squaredDistanceTo(target) < KastriaMobs.getSquared(activationRange)) {
            spawnPattern(target, minY, maxY, angle);
         }
     }

@@ -27,7 +27,7 @@ public class CursedBullet extends ShulkerBulletEntity {
 
     @Override
     protected boolean canHit(Entity entity) {
-        return super.canHit(entity) && this.getOwner() != entity;
+        return super.canHit(entity) && this.getOwner() != entity && !entity.isTeammate(this);
     }
 
     @Override

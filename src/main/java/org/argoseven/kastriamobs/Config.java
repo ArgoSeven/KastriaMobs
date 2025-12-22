@@ -32,7 +32,6 @@ public class Config {
     }
 
     public static class SonicAttackConfig {
-        public boolean only_hit_player;
         public int max_cooldown;
         public float max_range;
         public float damage;
@@ -49,7 +48,6 @@ public class Config {
     }
 
     public static class BloodBeamConfig {
-        public boolean only_hit_player;
         public int max_cooldown;
         public float max_range;
         public float damage;

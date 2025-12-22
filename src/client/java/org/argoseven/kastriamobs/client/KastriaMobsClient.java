@@ -21,7 +21,7 @@ public class KastriaMobsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         EntityRendererRegistry.register(RegistryModdedEntity.PLAGUEBRUTE, PlagueRender::new);
-        EntityRendererRegistry.register(RegistryModdedEntity.RED_BLOOD_DMAGE, RedBloodMageRender::new);
+        EntityRendererRegistry.register(RegistryModdedEntity.RED_BLOOD_MAGE, RedBloodMageRender::new);
         EntityRendererRegistry.register(RegistryModdedEntity.BARD, BardRender::new);
         EntityRendererRegistry.register(RegistryModdedEntity.BASTION, BastionRender::new);
         EntityRendererRegistry.register(RegistryModdedEntity.BLINDWRATH, BlindwrathRender::new);

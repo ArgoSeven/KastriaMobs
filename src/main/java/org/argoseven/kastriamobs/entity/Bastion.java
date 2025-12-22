@@ -70,18 +70,12 @@ public class Bastion extends HostileEntity implements IAnimatable  {
 
     // Sound events using your available sounds
     @Override
-    protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_WARDEN_SNIFF;
-    }
-
+    protected SoundEvent getAmbientSound() {return SoundEvents.ENTITY_DROWNED_STEP;}
     @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_ZOMBIE_HURT;
-    }
-
+    protected SoundEvent getHurtSound(DamageSource source) {return SoundEvents.ENTITY_ELDER_GUARDIAN_HURT;}
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_WARDEN_ANGRY;
+        return SoundEvents.ENTITY_IRON_GOLEM_DEATH;
     }
 
     @Override
@@ -89,11 +83,12 @@ public class Bastion extends HostileEntity implements IAnimatable  {
         this.playSound(SoundEvents.ENTITY_WARDEN_STEP, 0.15F, 1.0F);
     }
 
-
     @Override
     public void playAmbientSound() {
-        this.playSound(SoundEvents.ENTITY_WARDEN_SNIFF, 0.15F, 1.0F);
+        this.playSound(getAmbientSound(), 0.15F, 0.69F);
     }
+
+
 
     @Override
     public boolean canHaveStatusEffect(StatusEffectInstance effect) {

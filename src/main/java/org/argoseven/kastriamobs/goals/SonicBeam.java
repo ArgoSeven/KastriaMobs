@@ -51,7 +51,7 @@ public class SonicBeam extends Goal {
     @Override
     public boolean canStart() {
         LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.canSee(target) && (caster.squaredDistanceTo(target) < maxRange + 1);
+        return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.canSee(target) && (caster.squaredDistanceTo(target) < KastriaMobs.getSquared(maxRange) + 1);
     }
 
     @Override
@@ -87,13 +87,11 @@ public class SonicBeam extends Goal {
         caster.swingHand(Hand.MAIN_HAND);
         caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
 
-        // Spawn particles along beam path
         for (int i = 1; i <= maxRange; i++) {
             Vec3d particlePos = startPos.add(direction.multiply(i));
             if (!caster.world.isClient) {serverWorld.spawnParticles(ParticleTypes.SONIC_BOOM, particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);}
         }
 
-        //Box searchBox = new Box(eyePos, endPos).expand(1);
         Box searchBox = caster.getBoundingBox().stretch(lookVec.multiply(maxRange));
 
         //wKastriaMobs.debugvisualizeBox(serverWorld, searchBox);
@@ -101,7 +99,7 @@ public class SonicBeam extends Goal {
         List<LivingEntity> hits = serverWorld.getEntitiesByClass(
                 LivingEntity.class,
                 searchBox,
-                e -> e != caster && isEntityInTheCone(eyePos, lookVec, e)
+                e -> e != caster && !e.isTeammate(caster) && isEntityInTheCone(eyePos, lookVec, e)
         );
 
 
