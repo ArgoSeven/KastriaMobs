@@ -68,27 +68,37 @@ public class Bastion extends HostileEntity implements IAnimatable  {
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, Config.data.bastion.generic_knockback_resistance);
     }
 
-    // Sound events using your available sounds
-    @Override
-    protected SoundEvent getAmbientSound() {return SoundEvents.ENTITY_DROWNED_STEP;}
-    @Override
-    protected SoundEvent getHurtSound(DamageSource source) {return SoundEvents.ENTITY_ELDER_GUARDIAN_HURT;}
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_IRON_GOLEM_DEATH;
+        return null;
     }
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.ENTITY_WARDEN_STEP, 0.15F, 1.0F);
+        this.playSound(SoundEvents.ENTITY_COW_STEP, 0.15F, 0.69F);
     }
 
     @Override
     public void playAmbientSound() {
-        this.playSound(getAmbientSound(), 0.15F, 0.69F);
+        this.playSound(SoundEvents.ENTITY_DROWNED_AMBIENT, 0.15F, 0.69F);
+    }
+
+    @Override
+    protected void playHurtSound(DamageSource source) {
+        this.playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_HURT, 1.0F, 1.049F);
+
+    }
+
+    public void playCustomDeathSound(){
+        this.playSound(SoundEvents.ENTITY_IRON_GOLEM_DEATH, 1.0F, 0.62F);
     }
 
 
+    @Override
+    public void onDeath(DamageSource damageSource) {
+        super.onDeath(damageSource);
+        playCustomDeathSound();
+    }
 
     @Override
     public boolean canHaveStatusEffect(StatusEffectInstance effect) {

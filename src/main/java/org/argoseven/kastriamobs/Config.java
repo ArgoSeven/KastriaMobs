@@ -13,13 +13,15 @@ import static org.argoseven.kastriamobs.KastriaMobs.configPath;
 public class Config {
     public static Config data;
     public Double version;
-    public Bastion bastion;
-    public Blindwrath blindwrath;
-    public Hollowseer hollowseer;
-    public Plaguebrute plaguebrute;
-    public Reaver reaver;
-    public RedBloodMage red_blood_mage;
-    public Stalker stalker;
+    public BastionConfig bastion;
+    public BlindwrathConfig blindwrath;
+    public HollowseerConfig hollowseer;
+    public PlaguebruteConfig plaguebrute;
+    public ReaverConfig reaver;
+    public RedBloodMageConfig red_blood_mage;
+    public StalkerConfig stalker;
+    public BardConfig bard;
+
 
     public static class EntityStatsConfig {
         public double generic_max_health;
@@ -60,32 +62,43 @@ public class Config {
         public float max_range_of_attack;
     }
 
-    public static class Bastion extends EntityStatsConfig {
+    public static class BastionConfig extends EntityStatsConfig {
     }
 
-    public static class Stalker extends EntityStatsConfig {
+    public static class StalkerConfig extends EntityStatsConfig {
     }
 
-    public static class Blindwrath extends EntityStatsConfig {
+    public static class BlindwrathConfig extends EntityStatsConfig {
         public SonicAttackConfig sonicbeam;
     }
 
-    public static class Plaguebrute extends EntityStatsConfig {
+    public static class PlaguebruteConfig extends EntityStatsConfig {
         public SonicAttackConfig sonicboom;
     }
 
-    public static class Hollowseer extends EntityStatsConfig {
+    public static class HollowseerConfig extends EntityStatsConfig {
         public FangAttackConfig evoker_fang_beam;
         public CursedBulletConfig cursed_bullet;
     }
 
-    public static class Reaver extends EntityStatsConfig {
+    public static class ReaverConfig extends EntityStatsConfig {
         public FangAttackConfig evoker_fang_circle;
     }
 
-    public static class RedBloodMage extends EntityStatsConfig {
+    public static class RedBloodMageConfig extends EntityStatsConfig {
         public BloodBeamConfig blood_beam;
     }
+
+    public static class BardConfig extends EntityStatsConfig {
+        public FangAttackConfig evoker_fang_beam;
+        public FangAttackConfig evoker_fang_circle;
+        public CursedBulletConfig cursed_bullet;
+        public BloodBeamConfig blood_beam;
+        public SonicAttackConfig sonicboom;
+        public SonicAttackConfig sonicbeam;
+
+    }
+
 
     public static Path checkConfig(Path path) {
         if (!Files.exists(path)) {

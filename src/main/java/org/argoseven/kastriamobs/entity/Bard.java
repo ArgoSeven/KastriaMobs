@@ -2,6 +2,7 @@ package org.argoseven.kastriamobs.entity;
 
 import net.minecraft.block.AbstractSkullBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -19,6 +20,7 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -27,8 +29,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
-import org.argoseven.kastriamobs.goals.BloodBeam;
-import org.argoseven.kastriamobs.goals.SummonCursedBullet;
+import org.argoseven.kastriamobs.KastriaMobs;
+import org.argoseven.kastriamobs.ModParticles;
+import org.argoseven.kastriamobs.goals.*;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -60,11 +63,10 @@ public class Bard extends HostileEntity implements IAnimatable, RangedAttackMob 
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(1,  new MeleeAttackGoal(this, 1, true));
-        this.goalSelector.add(2,  new BloodBeam( this, 20, 10, 1,1));
+        //this.goalSelector.add(1,  new MeleeAttackGoal(this, 1, true));
+        this.goalSelector.add(2,  new SonicBeam( this ,Config.data.bard.sonicbeam));
         this.goalSelector.add(3, new WanderAroundGoal(this, 0.6));
         this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 3.0F, 1.0F));
-        this.goalSelector.add(2,  new SummonCursedBullet(this, 40, 10 ,20));
         this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.add(2, new RevengeGoal(this));
     }
@@ -79,6 +81,16 @@ public class Bard extends HostileEntity implements IAnimatable, RangedAttackMob 
                 .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, Config.data.blindwrath.generic_armor_toughness)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, Config.data.blindwrath.generic_knockback_resistance);
     }
+
+
+    @Override
+    public void tickMovement() {
+        if (this.world.isClient && this.getTarget() != null ) {
+            this.world.addParticle(ModParticles.NOTES_PARTICLE, this.getParticleX(0.5), this.getRandomBodyY(), this.getParticleZ(0.5), 0.0, 0.0, 0.0);
+        }
+        super.tickMovement();
+    }
+
 
     @Override
     public boolean damage(DamageSource source, float amount) {
@@ -112,13 +124,25 @@ public class Bard extends HostileEntity implements IAnimatable, RangedAttackMob 
         this.playSound(SoundEvents.BLOCK_DEEPSLATE_STEP, 0.15F, 1.0F);
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-        if (this.getTarget()!=null && this.getTarget() instanceof  PlayerEntity player){
-            player.sendMessage(Text.of(String.valueOf(Config.data.blindwrath.generic_movement_speed)),true);
-        }
-    }
+
+    //@Override
+    //public void tick() {
+    //    super.tick();
+    //    if (this.getTarget()!=null && this.getTarget() instanceof  PlayerEntity player){
+    //        double l = KastriaMobs.getSquared(Config.data.bard.sonicbeam.max_range);
+    //        //player.sendMessage(Text.of(String.format("Distance from target: %b", this.squaredDistanceTo(player) < l) ),true);
+    //        player.sendMessage(Text.of(String.format("Distance from target: %b", this.getNavigation().isFollowingPath() )),true);
+    //        if(this.squaredDistanceTo(player) > l){
+    //            if(this.getNavigation().isIdle()){
+    //                this.getNavigation().startMovingTo(this.getTarget(), 1);
+    //            }
+    //        }else{
+    //            this.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, this.getTarget().getEyePos());
+    //            this.getNavigation().stop();
+    //            this.getMoveControl().strafeTo( this.squaredDistanceTo(player) < (KastriaMobs.getSquared(l) * 2f)  ? -2f : 2f,  0);
+    //        }
+    //    }
+    //}
 
     @Override
     public void playAmbientSound() {

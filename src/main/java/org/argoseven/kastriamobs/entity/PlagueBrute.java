@@ -50,7 +50,7 @@ public class PlagueBrute extends HostileEntity implements IAnimatable  {
     @Override
     protected void initGoals() {
         // Priority 1: Melee Attack
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.1D, false));
+        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.add(2, new WanderAroundGoal(this, (double)1.0F));
         this.goalSelector.add(3, new SonicBoom(this, Config.data.plaguebrute.sonicboom));
 
@@ -78,7 +78,7 @@ public class PlagueBrute extends HostileEntity implements IAnimatable  {
     // Sound events using your available sounds
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_WARDEN_SNIFF;
+        return SoundEvents.ENTITY_POLAR_BEAR_AMBIENT;
     }
 
     @Override

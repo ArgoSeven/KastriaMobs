@@ -5,8 +5,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
@@ -51,22 +49,17 @@ public class SonicBeam extends Goal {
     @Override
     public boolean canStart() {
         LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.canSee(target) && (caster.squaredDistanceTo(target) < KastriaMobs.getSquared(maxRange) + 1);
-    }
-
-    @Override
-    public boolean shouldContinue() {
-        LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target);
+        return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.canSee(target)&& (caster.squaredDistanceTo(target) < KastriaMobs.getSquared(maxRange) + 1) ;
     }
 
     @Override
     public void start() {
-        cooldown = 0;
+        cooldown = maxCooldown;
     }
 
     @Override
     public void tick() {
+        KastriaMobs.moveAndRetreat(caster, caster.getTarget(), maxRange);
         if (--cooldown <= 0) {
             fireSonicBoom();
             cooldown = maxCooldown;
@@ -94,8 +87,6 @@ public class SonicBeam extends Goal {
 
         Box searchBox = caster.getBoundingBox().stretch(lookVec.multiply(maxRange));
 
-        //wKastriaMobs.debugvisualizeBox(serverWorld, searchBox);
-
         List<LivingEntity> hits = serverWorld.getEntitiesByClass(
                 LivingEntity.class,
                 searchBox,
@@ -105,7 +96,6 @@ public class SonicBeam extends Goal {
 
         caster.playSound(SoundEvents.ENTITY_WARDEN_SONIC_BOOM, 3.0F, 1.0F);
         for (LivingEntity hit : hits) {
-            hit.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 20, 1, false, false));
             hit.damage(DamageSource.sonicBoom(caster), damage);
             double knockResistance = target.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
             double verticalKnock = (double)vertialKnocConstant * ((double)1.0F - knockResistance);
@@ -126,6 +116,8 @@ public class SonicBeam extends Goal {
         // 0.70 ~45° 0.50 60°
         return dot * dot > lenSq * (0.60 * 0.60);
     }
+
+
 
     private boolean isEntityInTheBeam(Vec3d eyePos, Vec3d lookVec, LivingEntity target) {
         Box entityBox = target.getBoundingBox().expand(0.5); // expand for leniency

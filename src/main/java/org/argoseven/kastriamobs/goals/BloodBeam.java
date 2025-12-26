@@ -53,19 +53,21 @@ public class BloodBeam extends Goal {
         return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.canSee(target) && (caster.squaredDistanceTo(target) < maxRange + 1);
     }
 
+    /*
     @Override
     public boolean shouldContinue() {
         LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target);
-    }
+        return target != null && target.isAlive() && this.caster.canTarget(target) && (caster.squaredDistanceTo(target) < maxRange + 1);
+    }*/
 
     @Override
     public void start() {
-        cooldown = 0;
+        cooldown = maxCooldown;
     }
 
     @Override
     public void tick() {
+        KastriaMobs.moveAndRetreat(caster, caster.getTarget(), maxRange);
         if (--cooldown <= 0) {
             fireBloodBeam();
             cooldown = maxCooldown;
@@ -74,8 +76,8 @@ public class BloodBeam extends Goal {
 
     protected void fireBloodBeam() {
         LivingEntity target = caster.getTarget();
-        float distanceFromTarget = caster.distanceTo(target);
-        if (target == null || distanceFromTarget > maxRange + 1) return;
+        if (target == null) return;
+
 
         ServerWorld serverWorld = (ServerWorld) caster.world;
         Vec3d startPos = caster.getPos().add(0.0, 1.6, 0.0);
@@ -107,9 +109,7 @@ public class BloodBeam extends Goal {
 
         caster.playSound(SoundEvents.ENTITY_WARDEN_SONIC_BOOM, 3.0F, 1.0F);
         for (LivingEntity hit : hits) {
-            hit.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 20, 1, false, false));
             hit.damage(DamageSource.sonicBoom(caster), damage);
-
             // Calculate the attraction vector
             Vec3d attraction = startPos.subtract(hit.getEyePos()).normalize();
             hit.addVelocity(attraction.getX() * attractionStrength, attraction.getY() * attractionStrength, attraction.getZ() * attractionStrength);

@@ -42,6 +42,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation 'software.bernie.geckolib:geckolib-fabric-1.19:3.1.40'
     implementation 'com.moandjiezana.toml:toml4j:0.7.2'
+    include 'com.moandjiezana.toml:toml4j:0.7.2'
 
 }
 

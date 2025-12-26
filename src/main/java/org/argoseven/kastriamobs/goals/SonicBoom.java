@@ -1,5 +1,6 @@
 package org.argoseven.kastriamobs.goals;
 
+import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -10,6 +11,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.argoseven.kastriamobs.Config;
@@ -50,18 +52,19 @@ public class SonicBoom extends Goal {
     @Override
     public boolean canStart() {
         LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.canSee(target) && (caster.distanceTo(target) < KastriaMobs.getSquared(maxRange) + 1);
+        return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.canSee(target) && (caster.squaredDistanceTo(target) < KastriaMobs.getSquared(maxRange) + 1);
     }
 
+    /*
     @Override
     public boolean shouldContinue() {
         LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target);
-    }
+        return target != null && target.isAlive() && this.caster.canTarget(target) && (caster.squaredDistanceTo(target) < KastriaMobs.getSquared(maxRange) + 1);
+    }*/
 
     @Override
     public void start() {
-        cooldown = 0;
+        cooldown = maxCooldown;
     }
 
     @Override
@@ -82,13 +85,14 @@ public class SonicBoom extends Goal {
 
         Box searchBox = new Box(startPos.x - maxRange, startPos.y - 1, startPos.z - maxRange, startPos.x + maxRange, startPos.y + 1, startPos.z + maxRange);
 
-        KastriaMobs.debugvisualizeBox(serverWorld , searchBox);
-
         List<LivingEntity> hits = serverWorld.getEntitiesByClass(
                 LivingEntity.class,
                 searchBox,
                 e -> e.getClass() !=caster.getClass() && !e.isTeammate(caster)
         );
+
+        caster.swingHand(Hand.MAIN_HAND);
+        caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
 
         if (!caster.world.isClient) {
             serverWorld.spawnParticles(ParticleTypes.SONIC_BOOM,caster.getX(), caster.getY() + 1.5, caster.getZ(), 1, (double)0.0F, (double)0.0F, (double)0.0F, (double)0.0F);
@@ -97,7 +101,6 @@ public class SonicBoom extends Goal {
         caster.playSound(SoundEvents.ENTITY_WARDEN_SONIC_BOOM, 1.0F, 1.0F);
         for (LivingEntity hit : hits) {
             Vec3d direction = hit.getEyePos().subtract(startPos).normalize();
-            hit.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 20, 1, false, false));
             hit.damage(DamageSource.sonicBoom(caster), damage);
             double knockResistance = target.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
             double verticalKnock = (double)vertialKnocConstant * ((double)1.0F - knockResistance);

@@ -1,11 +1,12 @@
 package org.argoseven.kastriamobs;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.command.argument.EntityAnchorArgumentType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.resource.ResourceManager;
@@ -13,10 +14,8 @@ import net.minecraft.resource.ResourceType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
-import org.argoseven.kastriamobs.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.nio.file.Path;
 
 
@@ -39,16 +38,33 @@ public class KastriaMobs implements ModInitializer {
 
             @Override
             public void reload(ResourceManager manager) {
-                LOGGER.info("FRATM");
+                LOGGER.info("Reloading Kastria Config...");
                 Config.init();
                 RegistryModdedEntity.register();
             }
         });
     }
 
+
     public static double getSquared(double range){
         return range * range;
     }
+
+
+
+    public static void moveAndRetreat(MobEntity caster, LivingEntity target, double maxRange){
+        double squaredDistance = KastriaMobs.getSquared(maxRange);
+        float flank = caster.getRandom().nextFloat() < 0.3 ? -0.5F : 0.5F;
+
+        if(caster.squaredDistanceTo(target) > squaredDistance && caster.getNavigation().isIdle()){
+            caster.getNavigation().startMovingTo(target, 0.5);
+        }else{
+            caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
+            caster.getNavigation().stop();
+            caster.getMoveControl().strafeTo( -0.5f, flank);
+        }
+    }
+
 
     public static void debugvisualizeBox(ServerWorld world, Box box) {
         DefaultParticleType particleType = ParticleTypes.END_ROD;

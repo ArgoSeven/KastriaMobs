@@ -1,16 +1,20 @@
 package org.argoseven.kastriamobs.goals;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.EvokerFangsEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.KastriaMobs;
+
+import java.util.EnumSet;
 
 public abstract class AbstractEvokeFangs extends Goal {
     protected final MobEntity caster;
@@ -22,6 +26,7 @@ public abstract class AbstractEvokeFangs extends Goal {
         this.caster = caster;
         this.activationRange  = activationRange;
         this.maxCooldown = maxCooldown;
+        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
     @Override
@@ -30,11 +35,12 @@ public abstract class AbstractEvokeFangs extends Goal {
         return target != null && target.isAlive() && this.caster.canTarget(target) && caster.squaredDistanceTo(target) < KastriaMobs.getSquared(activationRange) + 1;
     }
 
+    /*
     @Override
     public boolean shouldContinue() {
         LivingEntity target = this.caster.getTarget();
         return target != null && target.isAlive() && this.caster.canTarget(target);
-    }
+    }*/
 
     @Override
     public void start() {
@@ -53,6 +59,9 @@ public abstract class AbstractEvokeFangs extends Goal {
         LivingEntity target = caster.getTarget();
         if (target == null) return;
 
+
+        caster.swingHand(Hand.MAIN_HAND);
+        caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
         double minY = Math.min(target.getY(), caster.getY());
         double maxY = Math.max(target.getY(), caster.getY()) + 1.0F;
         float angle = (float) MathHelper.atan2(target.getZ() - caster.getZ(),

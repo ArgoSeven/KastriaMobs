@@ -50,7 +50,7 @@ public class Hollowseer extends HostileEntity implements IAnimatable  {
     @Override
     protected void initGoals() {
         // Priority 1: Melee Attack
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.1D, false));
+        //this.goalSelector.add(1, new MeleeAttackGoal(this, 1.1D, false));
         this.goalSelector.add(2, new WanderAroundGoal(this, (double)1.0F));
         this.goalSelector.add(3, new SummonCursedBullet(this, Config.data.hollowseer.cursed_bullet));
         this.goalSelector.add(4, new EvokeLineFangs(this, Config.data.hollowseer.evoker_fang_beam));
@@ -76,30 +76,34 @@ public class Hollowseer extends HostileEntity implements IAnimatable  {
     }
 
 
-    // Sound events using your available sounds
-    @Override
-    protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_WARDEN_SNIFF;
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_ZOMBIE_HURT;
-    }
-
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_WARDEN_ANGRY;
+        return null;
     }
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.ENTITY_WARDEN_STEP, 0.15F, 1.0F);
+        this.playSound(SoundEvents.ENTITY_SILVERFISH_STEP, 0.15F, 0.84F);
     }
 
     @Override
     public void playAmbientSound() {
-        this.playSound(SoundEvents.ENTITY_WARDEN_SNIFF, 0.15F, 1.0F);
+        this.playSound(SoundEvents.ENTITY_DROWNED_AMBIENT, 0.15F, 0.69F);
+    }
+
+    @Override
+    protected void playHurtSound(DamageSource source) {
+        this.playSound(SoundEvents.ENTITY_ALLAY_HURT, 1.0F, 1.69F);
+    }
+
+    public void playCustomDeathSound(){
+        this.playSound(SoundEvents.ENTITY_STRAY_DEATH, 1.0F, 1.0F);
+    }
+
+    @Override
+    public void onDeath(DamageSource damageSource) {
+        super.onDeath(damageSource);
+        playCustomDeathSound();
     }
 
     @Override
