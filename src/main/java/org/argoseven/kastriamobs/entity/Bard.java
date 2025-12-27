@@ -65,7 +65,7 @@ public class Bard extends HostileEntity implements IAnimatable, RangedAttackMob 
     protected void initGoals() {
         //this.goalSelector.add(1,  new MeleeAttackGoal(this, 1, true));
         this.goalSelector.add(2,  new SonicBeam( this ,Config.data.bard.sonicbeam));
-        this.goalSelector.add(3, new WanderAroundGoal(this, 0.6));
+        this.goalSelector.add(3, new WanderAroundGoal(this, 1));
         this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.add(2, new RevengeGoal(this));
@@ -85,7 +85,7 @@ public class Bard extends HostileEntity implements IAnimatable, RangedAttackMob 
 
     @Override
     public void tickMovement() {
-        if (this.world.isClient && this.getTarget() != null ) {
+        if (this.world.isClient && this.handSwinging) {
             this.world.addParticle(ModParticles.NOTES_PARTICLE, this.getParticleX(0.5), this.getRandomBodyY(), this.getParticleZ(0.5), 0.0, 0.0, 0.0);
         }
         super.tickMovement();
@@ -158,6 +158,7 @@ public class Bard extends HostileEntity implements IAnimatable, RangedAttackMob 
     private <E extends IAnimatable> PlayState movementPredicate(AnimationEvent<E> event) {
         if ((event.isMoving())) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "walk", ILoopType.EDefaultLoopTypes.LOOP));
+            //event.getController().setAnimationSpeed();
         } else if (this.isDead()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix +"idle", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         } else if (this.isAttacking() && event.isMoving()) {

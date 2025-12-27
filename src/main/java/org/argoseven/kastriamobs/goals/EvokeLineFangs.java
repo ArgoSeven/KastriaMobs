@@ -15,11 +15,13 @@ public class EvokeLineFangs extends AbstractEvokeFangs {
     public EvokeLineFangs(MobEntity caster, int activationRange, int maxCooldown, int numberOfFangs) {
         super(caster, activationRange, maxCooldown);
         this.numberOfFangs = numberOfFangs;
+        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
     public EvokeLineFangs(MobEntity caster, Config.FangAttackConfig fangAttackConfig) {
         super(caster, fangAttackConfig.range_of_activation, fangAttackConfig.max_cooldown);
         numberOfFangs = fangAttackConfig.number_of_fangs;
+        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
     @Override

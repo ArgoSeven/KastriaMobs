@@ -26,7 +26,6 @@ public abstract class AbstractEvokeFangs extends Goal {
         this.caster = caster;
         this.activationRange  = activationRange;
         this.maxCooldown = maxCooldown;
-        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
     @Override

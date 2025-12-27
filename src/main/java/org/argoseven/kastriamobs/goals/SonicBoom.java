@@ -37,6 +37,7 @@ public class SonicBoom extends Goal {
         this.damage = damage;
         this.vertialKnocConstant = verticalKnocConstant;
         this.horiziontalKnocConstant = horizontalKnocConstant;
+
     }
 
 

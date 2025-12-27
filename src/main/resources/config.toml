@@ -1,43 +1,42 @@
 version = 0.1
 
 [bastion]
-generic_max_health = 10.0
-generic_movement_speed = 0.25
-generic_attack_damage = 5.0
+generic_max_health = 50.0
+generic_movement_speed = 0.30
+generic_attack_damage = 12.0
 generic_follow_range = 30.0
-generic_armor = 20.0
+generic_armor = 14.0
 generic_armor_toughness = 0.7
 generic_knockback_resistance = 0.1
 
 [blindwrath]
-generic_max_health = 10.0
-generic_movement_speed = 0.25
-generic_attack_damage = 5.0
+generic_max_health = 40.0
+generic_movement_speed = 0.32
+generic_attack_damage = 8.0
 generic_follow_range = 30.0
-generic_armor = 20.0
+generic_armor = 12.0
 generic_armor_toughness = 0.7
 generic_knockback_resistance = 0.1
 
 [blindwrath.sonicbeam]
-max_cooldown = 60
+max_cooldown = 20
 max_range = 7
 damage = 10.0
 vertical_knock_constant = 0.5
 horizontal_knock_constant = 2.5
 
 [hollowseer]
-generic_max_health = 10.0
-generic_movement_speed = 0.25
-generic_attack_damage = 5.0
+generic_max_health = 40.0
+generic_movement_speed = 0.32
+generic_attack_damage = 8.0
 generic_follow_range = 30.0
-generic_armor = 20.0
+generic_armor = 10.0
 generic_armor_toughness = 0.7
 generic_knockback_resistance = 0.1
 
 [hollowseer.evoker_fang_beam]
-number_of_fangs = 5
-number_of_circles = 3
-max_cooldown = 60
+number_of_fangs = 10
+max_cooldown = 30
 range_of_activation = 7
 
 [hollowseer.cursed_bullet]
@@ -46,11 +45,11 @@ range_of_activation = 7
 max_range_of_attack = 20
 
 [plaguebrute]
-generic_max_health = 10.0
-generic_movement_speed = 0.25
-generic_attack_damage = 5.0
+generic_max_health = 50.0
+generic_movement_speed = 0.30
+generic_attack_damage = 8.0
 generic_follow_range = 30.0
-generic_armor = 20.0
+generic_armor = 12.0
 generic_armor_toughness = 0.7
 generic_knockback_resistance = 0.1
 
@@ -62,11 +61,11 @@ vertical_knock_constant = 0.5
 horizontal_knock_constant = 2.5
 
 [reaver]
-generic_max_health = 10.0
-generic_movement_speed = 0.25
-generic_attack_damage = 5.0
+generic_max_health = 40.0
+generic_movement_speed = 0.32
+generic_attack_damage = 12.0
 generic_follow_range = 30.0
-generic_armor = 20.0
+generic_armor = 12.0
 generic_armor_toughness = 0.7
 generic_knockback_resistance = 0.1
 
@@ -79,10 +78,10 @@ range_of_activation = 7
 
 [red_blood_mage]
 generic_max_health = 10.0
-generic_movement_speed = 0.25
-generic_attack_damage = 5.0
+generic_movement_speed = 0.30
+generic_attack_damage = 4.0
 generic_follow_range = 30.0
-generic_armor = 20.0
+generic_armor = 10.0
 generic_armor_toughness = 0.7
 generic_knockback_resistance = 0.1
 
@@ -94,22 +93,22 @@ attraction_strength= 1.5
 
 
 [stalker]
-generic_max_health = 10.0
-generic_movement_speed = 0.25
-generic_attack_damage = 5.0
+generic_max_health = 50.0
+generic_movement_speed = 0.35
+generic_attack_damage = 8.0
 generic_follow_range = 30.0
-generic_armor = 20.0
+generic_armor = 14.0
 generic_armor_toughness = 0.7
 generic_knockback_resistance = 0.1
 
 
 
 [bard]
-generic_max_health = 10.0
-generic_movement_speed = 0.25
-generic_attack_damage = 5.0
+generic_max_health = 20.0
+generic_movement_speed = 0.33
+generic_attack_damage = 8.0
 generic_follow_range = 30.0
-generic_armor = 20.0
+generic_armor = 12.0
 generic_armor_toughness = 0.7
 generic_knockback_resistance = 0.1
 
@@ -120,16 +119,16 @@ range_of_activation = 7
 max_range_of_attack = 20
 
 [bard.sonicbeam]
-max_cooldown = 60
+max_cooldown = 20
 max_range = 7
-damage = 10.0
+damage = 6.0
 vertical_knock_constant = 0.5
 horizontal_knock_constant = 2.5
 
 [bard.sonicboom]
 max_cooldown = 60
 max_range = 7
-damage = 10.0
+damage = 6.0
 vertical_knock_constant = 0.5
 horizontal_knock_constant = 2.5
 
@@ -141,9 +140,8 @@ max_cooldown = 60
 range_of_activation = 7
 
 [bard.evoker_fang_beam]
-number_of_fangs = 5
-number_of_circles = 3
-max_cooldown = 60
+number_of_fangs = 10
+max_cooldown = 30
 range_of_activation = 7
 
 [bard.blood_beam]

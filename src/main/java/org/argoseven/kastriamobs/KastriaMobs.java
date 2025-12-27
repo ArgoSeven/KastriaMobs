@@ -56,12 +56,12 @@ public class KastriaMobs implements ModInitializer {
         double squaredDistance = KastriaMobs.getSquared(maxRange);
         float flank = caster.getRandom().nextFloat() < 0.3 ? -0.5F : 0.5F;
 
-        if(caster.squaredDistanceTo(target) > squaredDistance && caster.getNavigation().isIdle()){
-            caster.getNavigation().startMovingTo(target, 0.5);
+        if(caster.squaredDistanceTo(target) >= squaredDistance && caster.getNavigation().isIdle()){
+            caster.getNavigation().startMovingTo(target, 1);
         }else{
             caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
             caster.getNavigation().stop();
-            caster.getMoveControl().strafeTo( -0.5f, flank);
+            caster.getMoveControl().strafeTo( -1.0f, 0);
         }
     }
 

@@ -15,6 +15,7 @@ import net.minecraft.util.math.Vec3d;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
 
+import java.util.EnumSet;
 import java.util.List;
 
 public class SonicBeam extends Goal {
@@ -34,6 +35,7 @@ public class SonicBeam extends Goal {
         this.damage = damage;
         this.vertialKnocConstant = verticalKnocConstant;
         this.horiziontalKnocConstant = horizontalKnocConstant;
+        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
 
@@ -44,6 +46,7 @@ public class SonicBeam extends Goal {
         this.damage = beamConfig.damage;
         this.vertialKnocConstant = beamConfig.vertical_knock_constant;
         this.horiziontalKnocConstant = beamConfig.horizontal_knock_constant;
+        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
     @Override

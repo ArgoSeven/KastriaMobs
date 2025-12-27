@@ -49,17 +49,17 @@ public class Blindwrath extends HostileEntity implements IAnimatable  {
     @Override
     protected void initGoals() {
         // Priority 1: Melee Attack
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.1D, false));
-        this.goalSelector.add(2, new SonicBeam(this, Config.data.blindwrath.sonicbeam));
-        this.goalSelector.add(3, new WanderAroundGoal(this, (double)1.0F));
+        //this.goalSelector.add(1, new MeleeAttackGoal(this, 1.1D, false));
+        this.goalSelector.add(1, new SonicBeam(this, Config.data.blindwrath.sonicbeam));
+        this.goalSelector.add(2, new WanderAroundGoal(this, (double)1.0F));
 
         // Priority 2-6: Target goals
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.add(1, new RevengeGoal(this));
 
         // Priority 7-8: Movement goals
-        this.goalSelector.add(4, new SwimGoal(this));
-        this.goalSelector.add(5, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.add(3, new SwimGoal(this));
+        this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
     }
 
     public static DefaultAttributeContainer.Builder setAttribute() {

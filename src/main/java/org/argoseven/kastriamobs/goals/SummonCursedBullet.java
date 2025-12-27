@@ -29,7 +29,7 @@ public class SummonCursedBullet extends Goal {
         this.maxCooldown = maxCooldown;
         this.activationRange = activationRange;
         this.maxRangeAttack = maxRangeAttack;
-        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
+        this.setControls(EnumSet.of(Goal.Control.LOOK, Control.TARGET));
     }
 
     public SummonCursedBullet(MobEntity caster, Config.CursedBulletConfig cursedBulletConfig) {
@@ -37,8 +37,7 @@ public class SummonCursedBullet extends Goal {
         this.maxCooldown = cursedBulletConfig.max_cooldown;
         this.activationRange = cursedBulletConfig.range_of_activation;
         this.maxRangeAttack = cursedBulletConfig.max_range_of_attack;
-        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
-
+        this.setControls(EnumSet.of(Goal.Control.LOOK, Control.TARGET));
     }
 
 
@@ -80,7 +79,7 @@ public class SummonCursedBullet extends Goal {
                 if (d < KastriaMobs.getSquared(maxRangeAttack)) {
                     if (this.cooldown <= 0) {
                         this.cooldown = maxCooldown + caster.getRandom().nextInt() * maxCooldown / 2;
-                        caster.world.spawnEntity(new CursedBullet(caster.world, caster, target, caster.getMovementDirection().getAxis(), new StatusEffectInstance(StatusEffects.DARKNESS, 60)));
+                        caster.world.spawnEntity(new CursedBullet(caster.world, caster, target, caster.getMovementDirection().getAxis(), new StatusEffectInstance(StatusEffects.BLINDNESS, 60)));
                         caster.playSound(SoundEvents.ENTITY_SHULKER_SHOOT, 2.0F, (caster.getRandom().nextFloat() - caster.getRandom().nextFloat()) * 0.2F + 1.0F);
                     }
                 } else {

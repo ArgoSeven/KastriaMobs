@@ -19,6 +19,7 @@ import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
 import org.argoseven.kastriamobs.ModParticles;
 
+import java.util.EnumSet;
 import java.util.List;
 
 public class BloodBeam extends Goal {
@@ -36,6 +37,7 @@ public class BloodBeam extends Goal {
         this.maxRange = maxRange;
         this.damage = damage;
         this.attractionStrength = attractionStrength;
+        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
 
@@ -45,6 +47,7 @@ public class BloodBeam extends Goal {
         this.maxRange = beamConfig.max_range;
         this.damage = beamConfig.damage;
         this.attractionStrength = beamConfig.attraction_strength;
+        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
     @Override
