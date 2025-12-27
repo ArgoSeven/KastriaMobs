@@ -77,28 +77,33 @@ public class PlagueBrute extends HostileEntity implements IAnimatable  {
 
     // Sound events using your available sounds
     @Override
-    protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_POLAR_BEAR_AMBIENT;
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_ZOMBIE_HURT;
-    }
-
-    @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_WARDEN_ANGRY;
+        return null;
     }
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.ENTITY_WARDEN_STEP, 0.15F, 1.0F);
+        this.playSound(SoundEvents.ENTITY_WARDEN_STEP, 0.15F, 0.90F);
     }
 
     @Override
     public void playAmbientSound() {
-        this.playSound(SoundEvents.ENTITY_WARDEN_SNIFF, 0.15F, 1.0F);
+        this.playSound(SoundEvents.ENTITY_POLAR_BEAR_AMBIENT, 0.15F, 0.79F);
+    }
+
+    @Override
+    protected void playHurtSound(DamageSource source) {
+        this.playSound(SoundEvents.ENTITY_POLAR_BEAR_HURT, 1.0F, 0.85F);
+    }
+
+    public void playCustomDeathSound(){
+        this.playSound(SoundEvents.ENTITY_WARDEN_DEATH, 1.0F, 0.89F);
+    }
+
+    @Override
+    public void onDeath(DamageSource damageSource) {
+        super.onDeath(damageSource);
+        playCustomDeathSound();
     }
 
     @Override
