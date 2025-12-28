@@ -13,12 +13,14 @@ import net.minecraft.item.ShieldItem;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 import org.argoseven.kastriamobs.entity.Bard;
+import org.argoseven.kastriamobs.entity.Tobias;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
+import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.ExtendedGeoEntityRenderer;
 
 
-public class BardRender extends ExtendedGeoEntityRenderer<Bard> {
+public class TobiasRender extends ExtendedGeoEntityRenderer<Tobias> {
     protected ItemStack mainHandItem;
     protected ItemStack offHandItem;
     protected ItemStack helmetItem;
@@ -28,17 +30,17 @@ public class BardRender extends ExtendedGeoEntityRenderer<Bard> {
     static private final String rightArm = "right_arm";
     static private final String leftArm = "left_arm";
 
-    public BardRender(EntityRendererFactory.Context renderManager) {
-        super(renderManager, new BardModel());
+    public TobiasRender(EntityRendererFactory.Context renderManager) {
+        super(renderManager, new TobiasModel());
         this.shadowRadius = 0.5F;
     }
 
-    public RenderLayer getRenderType(Bard animatable, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, VertexConsumer buffer, int packedLight, Identifier texture) {
+    public RenderLayer getRenderType(Tobias animatable, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, VertexConsumer buffer, int packedLight, Identifier texture) {
         return RenderLayer.getEntityTranslucent(this.getTextureLocation(animatable));
     }
 
     @Override
-    public void renderEarly(Bard animatable, MatrixStack poseStack, float partialTick, VertexConsumerProvider bufferSource, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
+    public void renderEarly(Tobias animatable, MatrixStack poseStack, float partialTick, VertexConsumerProvider bufferSource, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
         super.renderEarly(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
         this.mainHandItem = animatable.getEquippedStack(EquipmentSlot.MAINHAND);
         this.offHandItem = animatable.getEquippedStack(EquipmentSlot.OFFHAND);
@@ -54,16 +56,16 @@ public class BardRender extends ExtendedGeoEntityRenderer<Bard> {
     }
 
     @Override
-    protected Identifier getTextureForBone(String s, Bard bard) {
+    protected Identifier getTextureForBone(String s, Tobias tobias) {
         return null;
     }
 
     @Override
-    protected ItemStack getHeldItemForBone(String s, Bard bard) {
+    protected ItemStack getHeldItemForBone(String s, Tobias tobias) {
         ItemStack var10000;
         switch (s) {
-            case leftArm -> var10000 = bard.isLeftHanded() ? this.mainHandItem : this.offHandItem;
-            case rightArm -> var10000 = bard.isLeftHanded() ? this.offHandItem : this.mainHandItem;
+            case leftArm -> var10000 = tobias.isLeftHanded() ? this.mainHandItem : this.offHandItem;
+            case rightArm -> var10000 = tobias.isLeftHanded() ? this.offHandItem : this.mainHandItem;
             default -> var10000 = null;
         }
 
@@ -86,12 +88,12 @@ public class BardRender extends ExtendedGeoEntityRenderer<Bard> {
     }
 
     @Override
-    protected BlockState getHeldBlockForBone(String s, Bard bard) {
+    protected BlockState getHeldBlockForBone(String s, Tobias tobias) {
         return null;
     }
 
     @Override
-    protected void preRenderItem(MatrixStack matrixStack, ItemStack itemStack, String s, Bard bard, IBone iBone) {
+    protected void preRenderItem(MatrixStack matrixStack, ItemStack itemStack, String s, Tobias tobias, IBone iBone) {
         matrixStack.translate((double)0.0F, (double) -0.6F, (double)0.0F);
         if (itemStack == this.mainHandItem) {
             matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90.0F));
@@ -107,17 +109,17 @@ public class BardRender extends ExtendedGeoEntityRenderer<Bard> {
     }
 
     @Override
-    protected void preRenderBlock(MatrixStack matrixStack, BlockState blockState, String s, Bard bard) {
+    protected void preRenderBlock(MatrixStack matrixStack, BlockState blockState, String s, Tobias tobias) {
 
     }
 
     @Override
-    protected void postRenderItem(MatrixStack matrixStack, ItemStack itemStack, String s, Bard bard, IBone iBone) {
+    protected void postRenderItem(MatrixStack matrixStack, ItemStack itemStack, String s, Tobias tobias, IBone iBone) {
 
     }
 
     @Override
-    protected void postRenderBlock(MatrixStack matrixStack, BlockState blockState, String s, Bard bard) {
+    protected void postRenderBlock(MatrixStack matrixStack, BlockState blockState, String s, Tobias tobias) {
 
     }
 }

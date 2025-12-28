@@ -4,7 +4,20 @@
   "entity.kastriamobs.blindwrath": "Blindwrath",
   "entity.kastriamobs.hollowseer": "Hollowseer",
   "entity.kastriamobs.plaguebrute": "Plaguebrute",
-  "entity.kastriamobs.raver": "Raver",
+  "entity.kastriamobs.reaver": "Reaver",
   "entity.kastriamobs.red_blood_mage": "Red Blood Mage",
-  "entity.kastriamobs.stalker": "Stalker"
+  "entity.kastriamobs.stalker": "Stalker",
+
+
+
+
+  "item.kastriamobs.bard_spawn_egg": "Bard Spawn Egg",
+  "item.kastriamobs.tobias_spawn_egg": "Tobias Spawn Egg",
+  "item.kastriamobs.bastion_spawn_egg": "Bastion Spawn Egg",
+  "item.kastriamobs.blindwrath_spawn_egg": "Blindwrath Spawn Egg",
+  "item.kastriamobs.hollowseer_spawn_egg": "Hollowseer Spawn Egg",
+  "item.kastriamobs.plaguebrute_spawn_egg": "Plaguebrute Spawn Egg",
+  "item.kastriamobs.reaver_spawn_egg": "Reaver Spawn Egg",
+  "item.kastriamobs.red_blood_mage_spawn_egg": "Red Blood Mage Spawn Egg",
+  "item.kastriamobs.stalker_spawn_egg": "Stalker Spawn Egg"
 }

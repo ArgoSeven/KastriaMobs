@@ -27,8 +27,10 @@ public class KastriaMobs implements ModInitializer {
     public void onInitialize() {
         configPath = FabricLoader.getInstance().getConfigDir().resolve("kastriamobs.toml");
         Config.init();
-        RegistryModdedEntity.register();
+        RegistryKastriaEntity.registerEntityAttributes();
         KastriaParticles.registerParticles();
+        RegistryKastriaItems.registerItem();
+
 
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
@@ -40,7 +42,7 @@ public class KastriaMobs implements ModInitializer {
             public void reload(ResourceManager manager) {
                 LOGGER.info("Reloading Kastria Config...");
                 Config.init();
-                RegistryModdedEntity.register();
+                RegistryKastriaEntity.registerEntityAttributes();
             }
         });
     }
@@ -61,7 +63,7 @@ public class KastriaMobs implements ModInitializer {
         }else{
             caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
             caster.getNavigation().stop();
-            caster.getMoveControl().strafeTo( -1.0f, 0);
+            caster.getMoveControl().strafeTo( -1.0f, flank);
         }
     }
 

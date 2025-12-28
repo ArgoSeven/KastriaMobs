@@ -4,7 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import org.argoseven.kastriamobs.KastriaParticles;
-import org.argoseven.kastriamobs.RegistryModdedEntity;
+import org.argoseven.kastriamobs.RegistryKastriaEntity;
 import org.argoseven.kastriamobs.client.entity.*;
 import org.argoseven.kastriamobs.client.entity.BastionRender;
 import org.argoseven.kastriamobs.client.entity.BlindwrathRender;
@@ -21,14 +21,16 @@ public class KastriaMobsClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(RegistryModdedEntity.PLAGUEBRUTE, PlagueRender::new);
-        EntityRendererRegistry.register(RegistryModdedEntity.RED_BLOOD_MAGE, RedBloodMageRender::new);
-        EntityRendererRegistry.register(RegistryModdedEntity.BARD, BardRender::new);
-        EntityRendererRegistry.register(RegistryModdedEntity.BASTION, BastionRender::new);
-        EntityRendererRegistry.register(RegistryModdedEntity.BLINDWRATH, BlindwrathRender::new);
-        EntityRendererRegistry.register(RegistryModdedEntity.HOLLOWSEER, HollowseerRender::new);
-        EntityRendererRegistry.register(RegistryModdedEntity.REAVER, ReaverRender::new);
-        EntityRendererRegistry.register(RegistryModdedEntity.STALKER, StalkerRender::new);
+        EntityRendererRegistry.register(RegistryKastriaEntity.PLAGUEBRUTE, PlagueRender::new);
+        EntityRendererRegistry.register(RegistryKastriaEntity.RED_BLOOD_MAGE, RedBloodMageRender::new);
+        EntityRendererRegistry.register(RegistryKastriaEntity.BARD, BardRender::new);
+        EntityRendererRegistry.register(RegistryKastriaEntity.BARD, BardRender::new);
+        EntityRendererRegistry.register(RegistryKastriaEntity.TOBIAS, TobiasRender::new);
+        EntityRendererRegistry.register(RegistryKastriaEntity.BASTION, BastionRender::new);
+        EntityRendererRegistry.register(RegistryKastriaEntity.BLINDWRATH, BlindwrathRender::new);
+        EntityRendererRegistry.register(RegistryKastriaEntity.HOLLOWSEER, HollowseerRender::new);
+        EntityRendererRegistry.register(RegistryKastriaEntity.REAVER, ReaverRender::new);
+        EntityRendererRegistry.register(RegistryKastriaEntity.STALKER, StalkerRender::new);
 
         ParticleFactoryRegistry.getInstance().register(KastriaParticles.BLOOD_BEAM_PARTICLE, BloodBeamParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(KastriaParticles.NOTES_PARTICLE, Notes.Factory::new);
