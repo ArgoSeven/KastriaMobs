@@ -2,7 +2,6 @@ package org.argoseven.kastriamobs.entity;
 
 import net.minecraft.block.AbstractSkullBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -20,7 +19,6 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -29,8 +27,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
-import org.argoseven.kastriamobs.KastriaMobs;
-import org.argoseven.kastriamobs.ModParticles;
+import org.argoseven.kastriamobs.KastriaParticles;
 import org.argoseven.kastriamobs.goals.*;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -86,7 +83,7 @@ public class Bard extends HostileEntity implements IAnimatable, RangedAttackMob 
     @Override
     public void tickMovement() {
         if (this.world.isClient && this.handSwinging) {
-            this.world.addParticle(ModParticles.NOTES_PARTICLE, this.getParticleX(0.5), this.getRandomBodyY(), this.getParticleZ(0.5), 0.0, 0.0, 0.0);
+            this.world.addParticle(KastriaParticles.NOTES_PARTICLE, this.getParticleX(0.5), this.getRandomBodyY(), this.getParticleZ(0.5), 0.0, 0.0, 0.0);
         }
         super.tickMovement();
     }

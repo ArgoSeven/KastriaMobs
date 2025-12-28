@@ -1,6 +1,7 @@
 package org.argoseven.kastriamobs;
 
 import com.moandjiezana.toml.Toml;
+import net.minecraft.util.Identifier;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,6 +61,9 @@ public class Config {
         public int max_cooldown;
         public float range_of_activation;
         public float max_range_of_attack;
+        public String status_effect;
+        public int effect_duration;
+        public int effect_amplifier;
     }
 
     public static class BastionConfig extends EntityStatsConfig {

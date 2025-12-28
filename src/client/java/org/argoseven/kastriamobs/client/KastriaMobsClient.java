@@ -3,7 +3,7 @@ package org.argoseven.kastriamobs.client;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import org.argoseven.kastriamobs.ModParticles;
+import org.argoseven.kastriamobs.KastriaParticles;
 import org.argoseven.kastriamobs.RegistryModdedEntity;
 import org.argoseven.kastriamobs.client.entity.*;
 import org.argoseven.kastriamobs.client.entity.BastionRender;
@@ -12,6 +12,7 @@ import org.argoseven.kastriamobs.client.entity.HollowseerRender;
 import org.argoseven.kastriamobs.client.entity.ReaverRender;
 import org.argoseven.kastriamobs.client.entity.StalkerRender;
 import org.argoseven.kastriamobs.client.particles.BloodBeamParticle;
+import org.argoseven.kastriamobs.client.particles.MagicCircle;
 import org.argoseven.kastriamobs.client.particles.Notes;
 
 import java.util.Random;
@@ -29,8 +30,9 @@ public class KastriaMobsClient implements ClientModInitializer {
         EntityRendererRegistry.register(RegistryModdedEntity.REAVER, ReaverRender::new);
         EntityRendererRegistry.register(RegistryModdedEntity.STALKER, StalkerRender::new);
 
-        ParticleFactoryRegistry.getInstance().register(ModParticles.BLOOD_BEAM_PARTICLE, BloodBeamParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(ModParticles.NOTES_PARTICLE, Notes.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(KastriaParticles.BLOOD_BEAM_PARTICLE, BloodBeamParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(KastriaParticles.NOTES_PARTICLE, Notes.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(KastriaParticles.MAGIC_CIRCLE, MagicCircle.Factory::new);
     }
 
 

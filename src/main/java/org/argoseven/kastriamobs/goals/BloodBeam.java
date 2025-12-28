@@ -5,8 +5,6 @@ import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -17,7 +15,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
-import org.argoseven.kastriamobs.ModParticles;
+import org.argoseven.kastriamobs.KastriaParticles;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -95,7 +93,7 @@ public class BloodBeam extends Goal {
         for (double i = 1; i <= maxRange; i+= 0.5) {
             Vec3d particlePos = startPos.add(direction.multiply(i));
             if (!caster.world.isClient) {
-                serverWorld.spawnParticles(ModParticles.BLOOD_BEAM_PARTICLE, particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);
+                serverWorld.spawnParticles(KastriaParticles.BLOOD_BEAM_PARTICLE, particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);
                 serverWorld.spawnParticles(bloodEffect, particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);
             }
         }

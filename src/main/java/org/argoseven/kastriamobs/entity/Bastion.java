@@ -75,7 +75,7 @@ public class Bastion extends HostileEntity implements IAnimatable  {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.ENTITY_COW_STEP, 0.15F, 0.69F);
+        this.playSound(SoundEvents.ENTITY_IRON_GOLEM_STEP, 0.15F, 0.80F);
     }
 
     @Override
@@ -105,23 +105,26 @@ public class Bastion extends HostileEntity implements IAnimatable  {
         return true;
     }
 
-    // Animation methods
     private <E extends IAnimatable> PlayState movementPredicate(AnimationEvent<E> event) {
-
+        AnimationController<?> controller = event.getController();
+        controller.setAnimationSpeed(1.0F);
         if (this.isDead()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix +"death", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
-            return  PlayState.CONTINUE;
-        }
-
-        if ((event.isMoving())) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "walk", ILoopType.EDefaultLoopTypes.LOOP));
-        }else if (this.isAttacking() && event.isMoving()) {
+            controller.setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "death", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
             return PlayState.CONTINUE;
-        } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "idle", ILoopType.EDefaultLoopTypes.LOOP));
         }
+        if (this.swinging || this.handSwinging) {
+            return PlayState.STOP;
+        }
+        if (event.isMoving()) {
+            double speed = this.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+            controller.setAnimationSpeed(1.0F + (float) speed * 0.5F);
+            controller.setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "walk", ILoopType.EDefaultLoopTypes.LOOP));
+            return PlayState.CONTINUE;
+        }
+        controller.setAnimation(new AnimationBuilder().addAnimation(animation_prefix + "idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
+
 
     private <E extends IAnimatable> PlayState attackingPredicate(AnimationEvent<E> event) {
         if(!this.isDead()) {

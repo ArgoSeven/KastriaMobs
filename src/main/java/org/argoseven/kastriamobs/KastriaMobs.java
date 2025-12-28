@@ -28,7 +28,7 @@ public class KastriaMobs implements ModInitializer {
         configPath = FabricLoader.getInstance().getConfigDir().resolve("kastriamobs.toml");
         Config.init();
         RegistryModdedEntity.register();
-        ModParticles.registerParticles();
+        KastriaParticles.registerParticles();
 
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
