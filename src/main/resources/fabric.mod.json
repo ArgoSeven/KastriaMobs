@@ -4,8 +4,25 @@
   "version": "${version}",
   "name": "KastriaMobs",
   "description": "",
-  "authors": [],
-  "contact": {},
+  "authors": [
+    {
+      "name": "ArgoSeven",
+      "contact": {
+        "github": "https://github.com/ArgoSeven",
+        "curse": "https://www.curseforge.com/members/argoseven/projects"
+      }
+    }
+  ],
+  "contributors": [
+    {
+      "name": "FapTobi_",
+      "curse": "https://www.curseforge.com/members/faptobi_/projects"
+    }
+  ],
+  "contact": {
+    "sources": "https://github.com/ArgoSeven/KastriaMobs",
+    "issues": "https://github.com/ArgoSeven/KastriaMobs/issues/new"
+  },
   "license": "MIT",
   "icon": "assets/kastriamobs/icon.png",
   "environment": "*",
