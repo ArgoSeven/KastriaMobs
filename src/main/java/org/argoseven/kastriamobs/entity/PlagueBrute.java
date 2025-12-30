@@ -14,17 +14,22 @@ import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.goals.SonicBoom;
 
-public class PlagueBrute extends AbstractKastriaEntity {
+public class PlagueBrute extends AbstractKastriaEntity implements ConfigProvider.SonicBoomProvider {
 
     public PlagueBrute(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Override
+    public Config.SonicAttackConfig getSonicBoomConfig() {
+        return Config.data.plaguebrute.sonicboom;
+    }
+
+    @Override
     protected void initGoals() {
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.add(2, new WanderAroundGoal(this, 1.0));
-        this.goalSelector.add(3, new SonicBoom(this, Config.data.plaguebrute.sonicboom));
+        this.goalSelector.add(3, new SonicBoom(this));
         this.goalSelector.add(4, new SwimGoal(this));
         this.goalSelector.add(5, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         

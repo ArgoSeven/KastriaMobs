@@ -15,15 +15,20 @@ import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.goals.SonicBeam;
 
-public class Bard extends AbstractKastriaEntity {
+public class Bard extends AbstractKastriaEntity implements ConfigProvider.SonicBeamProvider {
 
     public Bard(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Override
+    public Config.SonicAttackConfig getSonicBeamConfig() {
+        return Config.data.bard.sonicbeam;
+    }
+
+    @Override
     protected void initGoals() {
-        this.goalSelector.add(2, new SonicBeam(this, Config.data.bard.sonicbeam));
+        this.goalSelector.add(2, new SonicBeam(this));
         this.goalSelector.add(3, new WanderAroundGoal(this, 1));
         this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         

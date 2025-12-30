@@ -14,17 +14,22 @@ import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.goals.BloodBeam;
 import net.minecraft.entity.damage.DamageSource;
 
-public class RedBloodMage extends AbstractKastriaEntity {
+public class RedBloodMage extends AbstractKastriaEntity implements ConfigProvider.BloodBeamProvider {
 
     public RedBloodMage(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Override
+    public Config.BloodBeamConfig getBloodBeamConfig() {
+        return Config.data.red_blood_mage.blood_beam;
+    }
+
+    @Override
     protected void initGoals() {
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.3, true));
         this.goalSelector.add(2, new WanderAroundGoal(this, 1.0));
-        this.goalSelector.add(3, new BloodBeam(this, Config.data.red_blood_mage.blood_beam));
+        this.goalSelector.add(3, new BloodBeam(this));
         this.goalSelector.add(4, new SwimGoal(this));
         this.goalSelector.add(5, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         

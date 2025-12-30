@@ -14,15 +14,20 @@ import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.goals.SonicBeam;
 
-public class Blindwrath extends AbstractKastriaEntity {
+public class Blindwrath extends AbstractKastriaEntity implements ConfigProvider.SonicBeamProvider {
 
     public Blindwrath(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Override
+    public Config.SonicAttackConfig getSonicBeamConfig() {
+        return Config.data.blindwrath.sonicbeam;
+    }
+
+    @Override
     protected void initGoals() {
-        this.goalSelector.add(1, new SonicBeam(this, Config.data.blindwrath.sonicbeam));
+        this.goalSelector.add(1, new SonicBeam(this));
         this.goalSelector.add(2, new WanderAroundGoal(this, 1.0));
         this.goalSelector.add(3, new SwimGoal(this));
         this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));

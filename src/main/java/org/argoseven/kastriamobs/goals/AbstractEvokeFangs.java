@@ -11,6 +11,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
+import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
 
 public abstract class AbstractEvokeFangs extends Goal {
@@ -20,10 +21,10 @@ public abstract class AbstractEvokeFangs extends Goal {
     protected final int maxCooldown;
     protected final float activationRange;
 
-    protected AbstractEvokeFangs(MobEntity caster, float activationRange, int maxCooldown) {
+    protected AbstractEvokeFangs(MobEntity caster, Config.FangAttackConfig config) {
         this.caster = caster;
-        this.activationRange = activationRange;
-        this.maxCooldown = maxCooldown;
+        this.activationRange = config.range_of_activation;
+        this.maxCooldown = config.max_cooldown;
     }
 
     @Override

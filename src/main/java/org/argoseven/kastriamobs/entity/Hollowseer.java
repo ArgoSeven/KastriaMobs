@@ -15,17 +15,28 @@ import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.goals.EvokeLineFangs;
 import org.argoseven.kastriamobs.goals.SummonCursedBullet;
 
-public class Hollowseer extends AbstractKastriaEntity {
+public class Hollowseer extends AbstractKastriaEntity 
+        implements ConfigProvider.LineFangsProvider, ConfigProvider.CursedBulletProvider {
 
     public Hollowseer(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Override
+    public Config.FangAttackConfig getLineFangsConfig() {
+        return Config.data.hollowseer.evoker_fang_beam;
+    }
+
+    @Override
+    public Config.CursedBulletConfig getCursedBulletConfig() {
+        return Config.data.hollowseer.cursed_bullet;
+    }
+
+    @Override
     protected void initGoals() {
         this.goalSelector.add(1, new WanderAroundGoal(this, 1.0));
-        this.goalSelector.add(2, new SummonCursedBullet(this, Config.data.hollowseer.cursed_bullet));
-        this.goalSelector.add(3, new EvokeLineFangs(this, Config.data.hollowseer.evoker_fang_beam));
+        this.goalSelector.add(2, new SummonCursedBullet(this));
+        this.goalSelector.add(3, new EvokeLineFangs(this));
         this.goalSelector.add(4, new SwimGoal(this));
         this.goalSelector.add(5, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         

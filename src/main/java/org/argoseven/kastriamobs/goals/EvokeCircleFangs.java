@@ -4,6 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.math.MathHelper;
 import org.argoseven.kastriamobs.Config;
+import org.argoseven.kastriamobs.entity.ConfigProvider;
 
 public class EvokeCircleFangs extends AbstractEvokeFangs {
     
@@ -14,16 +15,16 @@ public class EvokeCircleFangs extends AbstractEvokeFangs {
     private final int numberOfCircles;
     private final float radiusStep;
 
-    public EvokeCircleFangs(MobEntity caster, int activationRange, int maxCooldown, 
-                           int numberOfFangs, int numberOfCircles, float radiusStep) {
-        super(caster, activationRange, maxCooldown);
-        this.numberOfFangs = numberOfFangs;
-        this.numberOfCircles = numberOfCircles;
-        this.radiusStep = radiusStep;
+    public <T extends MobEntity & ConfigProvider.CircleFangsProvider> EvokeCircleFangs(T caster) {
+        super(caster, caster.getCircleFangsConfig());
+        Config.FangAttackConfig config = caster.getCircleFangsConfig();
+        this.numberOfFangs = config.number_of_fangs;
+        this.numberOfCircles = config.number_of_circles;
+        this.radiusStep = config.radius_step;
     }
 
-    public EvokeCircleFangs(MobEntity caster, Config.FangAttackConfig config) {
-        super(caster, config.range_of_activation, config.max_cooldown);
+    protected EvokeCircleFangs(MobEntity caster, Config.FangAttackConfig config) {
+        super(caster, config);
         this.numberOfFangs = config.number_of_fangs;
         this.numberOfCircles = config.number_of_circles;
         this.radiusStep = config.radius_step;

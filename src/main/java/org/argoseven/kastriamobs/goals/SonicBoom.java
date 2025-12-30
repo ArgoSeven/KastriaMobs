@@ -7,7 +7,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import org.argoseven.kastriamobs.Config;
+import org.argoseven.kastriamobs.entity.ConfigProvider;
 
 import java.util.List;
 
@@ -16,13 +16,8 @@ public class SonicBoom extends AbstractSonicAttack {
     private static final double BOOM_START_HEIGHT = 1.5;
     private static final double BOOM_VERTICAL_RANGE = 1.0;
 
-    public SonicBoom(MobEntity caster, int maxCooldown, float maxRange, float damage, 
-                     float verticalKnockback, float horizontalKnockback) {
-        super(caster, maxCooldown, maxRange, damage, verticalKnockback, horizontalKnockback);
-    }
-
-    public SonicBoom(MobEntity caster, Config.SonicAttackConfig config) {
-        super(caster, config);
+    public <T extends MobEntity & ConfigProvider.SonicBoomProvider> SonicBoom(T caster) {
+        super(caster, caster.getSonicBoomConfig());
     }
 
     @Override

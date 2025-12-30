@@ -16,6 +16,7 @@ import net.minecraft.util.math.Vec3d;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
 import org.argoseven.kastriamobs.KastriaParticles;
+import org.argoseven.kastriamobs.entity.ConfigProvider;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -36,17 +37,14 @@ public class BloodBeam extends Goal {
     private final float damage;
     private final float attractionStrength;
 
-    public BloodBeam(MobEntity caster, int maxCooldown, float maxRange, float damage, float attractionStrength) {
+    public <T extends MobEntity & ConfigProvider.BloodBeamProvider> BloodBeam(T caster) {
+        Config.BloodBeamConfig config = caster.getBloodBeamConfig();
         this.caster = caster;
-        this.maxCooldown = maxCooldown;
-        this.maxRange = maxRange;
-        this.damage = damage;
-        this.attractionStrength = attractionStrength;
+        this.maxCooldown = config.max_cooldown;
+        this.maxRange = config.max_range;
+        this.damage = config.damage;
+        this.attractionStrength = config.attraction_strength;
         this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
-    }
-
-    public BloodBeam(MobEntity caster, Config.BloodBeamConfig config) {
-        this(caster, config.max_cooldown, config.max_range, config.damage, config.attraction_strength);
     }
 
     @Override

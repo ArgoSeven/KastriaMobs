@@ -6,6 +6,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.math.MathHelper;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
+import org.argoseven.kastriamobs.entity.ConfigProvider;
 
 import java.util.EnumSet;
 
@@ -15,14 +16,14 @@ public class EvokeLineFangs extends AbstractEvokeFangs {
     
     private final int numberOfFangs;
 
-    public EvokeLineFangs(MobEntity caster, int activationRange, int maxCooldown, int numberOfFangs) {
-        super(caster, activationRange, maxCooldown);
-        this.numberOfFangs = numberOfFangs;
+    public <T extends MobEntity & ConfigProvider.LineFangsProvider> EvokeLineFangs(T caster) {
+        super(caster, caster.getLineFangsConfig());
+        this.numberOfFangs = caster.getLineFangsConfig().number_of_fangs;
         this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
-    public EvokeLineFangs(MobEntity caster, Config.FangAttackConfig config) {
-        super(caster, config.range_of_activation, config.max_cooldown);
+    protected EvokeLineFangs(MobEntity caster, Config.FangAttackConfig config) {
+        super(caster, config);
         this.numberOfFangs = config.number_of_fangs;
         this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }

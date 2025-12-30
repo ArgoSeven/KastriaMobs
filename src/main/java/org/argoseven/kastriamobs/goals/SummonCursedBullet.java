@@ -13,6 +13,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Difficulty;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
+import org.argoseven.kastriamobs.entity.ConfigProvider;
 import org.argoseven.kastriamobs.entity.CursedBullet;
 
 import java.util.EnumSet;
@@ -31,19 +32,21 @@ public class SummonCursedBullet extends Goal {
     private final int duration;
     private final int amplifier;
 
-    public SummonCursedBullet(MobEntity caster, int maxCooldown, int activationRange, int maxRangeAttack, 
-                              Identifier statusEffect, int duration, int amplifier) {
+    public <T extends MobEntity & ConfigProvider.CursedBulletProvider> SummonCursedBullet(T caster) {
+        Config.CursedBulletConfig config = caster.getCursedBulletConfig();
         this.caster = caster;
-        this.maxCooldown = maxCooldown;
-        this.activationRange = activationRange;
-        this.maxRangeAttack = maxRangeAttack;
-        this.statusEffect = resolveStatusEffect(statusEffect);
-        this.duration = duration;
-        this.amplifier = amplifier;
+        this.maxCooldown = config.max_cooldown;
+        this.activationRange = config.range_of_activation;
+        this.maxRangeAttack = config.max_range_of_attack;
+        this.statusEffect = resolveStatusEffect(
+                config.status_effect != null ? new Identifier(config.status_effect) : null
+        );
+        this.duration = config.effect_duration;
+        this.amplifier = config.effect_amplifier;
         this.setControls(EnumSet.of(Goal.Control.LOOK, Control.TARGET));
     }
 
-    public SummonCursedBullet(MobEntity caster, Config.CursedBulletConfig config) {
+    protected SummonCursedBullet(MobEntity caster, Config.CursedBulletConfig config) {
         this.caster = caster;
         this.maxCooldown = config.max_cooldown;
         this.activationRange = config.range_of_activation;

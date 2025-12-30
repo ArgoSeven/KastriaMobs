@@ -14,17 +14,22 @@ import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.goals.EvokeCircleFangs;
 
-public class Reaver extends AbstractKastriaEntity {
+public class Reaver extends AbstractKastriaEntity implements ConfigProvider.CircleFangsProvider {
 
     public Reaver(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Override
+    public Config.FangAttackConfig getCircleFangsConfig() {
+        return Config.data.reaver.evoker_fang_circle;
+    }
+
+    @Override
     protected void initGoals() {
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.1D, false));
         this.goalSelector.add(2, new WanderAroundGoal(this, 1.0));
-        this.goalSelector.add(3, new EvokeCircleFangs(this, Config.data.reaver.evoker_fang_circle));
+        this.goalSelector.add(3, new EvokeCircleFangs(this));
         this.goalSelector.add(4, new SwimGoal(this));
         this.goalSelector.add(5, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         

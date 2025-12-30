@@ -31,20 +31,14 @@ public abstract class AbstractSonicAttack extends Goal {
     protected final float verticalKnockback;
     protected final float horizontalKnockback;
 
-    protected AbstractSonicAttack(MobEntity caster, int maxCooldown, float maxRange, float damage, 
-                                   float verticalKnockback, float horizontalKnockback) {
-        this.caster = caster;
-        this.maxCooldown = maxCooldown;
-        this.maxRange = maxRange;
-        this.damage = damage;
-        this.verticalKnockback = verticalKnockback;
-        this.horizontalKnockback = horizontalKnockback;
-        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
-    }
-
     protected AbstractSonicAttack(MobEntity caster, Config.SonicAttackConfig config) {
-        this(caster, config.max_cooldown, config.max_range, config.damage, 
-             config.vertical_knock_constant, config.horizontal_knock_constant);
+        this.caster = caster;
+        this.maxCooldown = config.max_cooldown;
+        this.maxRange = config.max_range;
+        this.damage = config.damage;
+        this.verticalKnockback = config.vertical_knock_constant;
+        this.horizontalKnockback = config.horizontal_knock_constant;
+        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
     @Override
