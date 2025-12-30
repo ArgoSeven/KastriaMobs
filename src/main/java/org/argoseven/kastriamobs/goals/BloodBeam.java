@@ -89,6 +89,14 @@ public class BloodBeam extends Goal {
         prepareCasterForAttack(target);
         spawnBeamParticles(serverWorld, startPos, direction);
         
+        Box searchBox = caster.getBoundingBox().stretch(lookVec.multiply(maxRange));
+        
+        if (DebugShapePackets.isDebugEnabled()) {
+            Vec3d beamEnd = startPos.add(direction.multiply(maxRange));
+            DebugShapePackets.sendDebugBeam(serverWorld, startPos, beamEnd, 1.0f, 0.0f, 0.0f, 1.0f, 20);
+            DebugShapePackets.sendDebugBox(serverWorld, searchBox, 0.0f, 1.0f, 0.0f, 0.5f, 20);
+        }
+        
         List<LivingEntity> hits = findEntitiesInBeam(serverWorld, lookVec, eyePos);
         applyDamageAndAttraction(hits, startPos);
     }

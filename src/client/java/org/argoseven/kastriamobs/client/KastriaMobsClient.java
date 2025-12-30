@@ -1,15 +1,21 @@
 package org.argoseven.kastriamobs.client;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import org.argoseven.kastriamobs.KastriaParticles;
 import org.argoseven.kastriamobs.RegistryKastriaEntity;
+import org.argoseven.kastriamobs.client.debug.DebugShapeRenderer;
 import org.argoseven.kastriamobs.client.entity.*;
 import org.argoseven.kastriamobs.client.particles.BloodBeamParticle;
 import org.argoseven.kastriamobs.client.particles.MagicCircle;
 import org.argoseven.kastriamobs.client.particles.Notes;
 import org.argoseven.kastriamobs.entity.*;
+import org.argoseven.kastriamobs.network.DebugShapePackets;
 
 import java.util.Random;
 
@@ -21,6 +27,8 @@ public class KastriaMobsClient implements ClientModInitializer {
     public void onInitializeClient() {
         registerEntityRenderers();
         registerParticles();
+        registerTickHandler();
+        registerDebugPacketReceivers();
     }
 
     private void registerEntityRenderers() {
@@ -64,5 +72,49 @@ public class KastriaMobsClient implements ClientModInitializer {
         int green = RANDOM.nextInt(256);
         int blue = RANDOM.nextInt(256);
         return new int[]{red, green, blue};
+    }
+
+    private void registerTickHandler() {
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            DebugShapeRenderer.tick();
+        });
+    }
+
+    private void registerDebugPacketReceivers() {
+        ClientPlayNetworking.registerGlobalReceiver(DebugShapePackets.DEBUG_BOX_PACKET, (client, handler, buf, responseSender) -> {
+            double minX = buf.readDouble();
+            double minY = buf.readDouble();
+            double minZ = buf.readDouble();
+            double maxX = buf.readDouble();
+            double maxY = buf.readDouble();
+            double maxZ = buf.readDouble();
+            float red = buf.readFloat();
+            float green = buf.readFloat();
+            float blue = buf.readFloat();
+            float alpha = buf.readFloat();
+            long lifetimeTicks = buf.readLong();
+            
+            client.execute(() -> {
+                DebugShapeRenderer.addBox(new Box(minX, minY, minZ, maxX, maxY, maxZ), red, green, blue, alpha, lifetimeTicks);
+            });
+        });
+        
+        ClientPlayNetworking.registerGlobalReceiver(DebugShapePackets.DEBUG_BEAM_PACKET, (client, handler, buf, responseSender) -> {
+            double startX = buf.readDouble();
+            double startY = buf.readDouble();
+            double startZ = buf.readDouble();
+            double endX = buf.readDouble();
+            double endY = buf.readDouble();
+            double endZ = buf.readDouble();
+            float red = buf.readFloat();
+            float green = buf.readFloat();
+            float blue = buf.readFloat();
+            float alpha = buf.readFloat();
+            long lifetimeTicks = buf.readLong();
+            
+            client.execute(() -> {
+                DebugShapeRenderer.addBeam(new Vec3d(startX, startY, startZ), new Vec3d(endX, endY, endZ), red, green, blue, alpha, lifetimeTicks);
+            });
+        });
     }
 }

@@ -1,5 +1,8 @@
 version = 0.1
 
+[debug]
+enabled = false
+
 [bastion]
 generic_max_health = 50.0
 generic_movement_speed = 0.30

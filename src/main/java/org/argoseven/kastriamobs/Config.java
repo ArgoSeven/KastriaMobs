@@ -16,6 +16,7 @@ public class Config {
     
     public static Config data;
     public Double version;
+    public DebugConfig debug;
     public BastionConfig bastion;
     public BlindwrathConfig blindwrath;
     public HollowseerConfig hollowseer;
@@ -24,6 +25,10 @@ public class Config {
     public RedBloodMageConfig red_blood_mage;
     public StalkerConfig stalker;
     public BardConfig bard;
+
+    public static class DebugConfig {
+        public boolean enabled = false;
+    }
 
     public static class EntityStatsConfig {
         public double generic_max_health;
