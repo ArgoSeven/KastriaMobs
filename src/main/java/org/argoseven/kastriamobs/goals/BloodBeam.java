@@ -17,6 +17,7 @@ import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
 import org.argoseven.kastriamobs.KastriaParticles;
 import org.argoseven.kastriamobs.entity.ConfigProvider;
+import org.argoseven.kastriamobs.network.DebugShapePackets;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -148,5 +149,15 @@ public class BloodBeam extends Goal {
         }
         
         return dot * dot > lengthSquared * (CONE_ANGLE_FACTOR * CONE_ANGLE_FACTOR);
+    }
+
+    private boolean isEntityInBeam(Vec3d eyePos, Vec3d lookVec, LivingEntity target, boolean debugVisualize) {
+        Box entityBox = target.getBoundingBox().expand(0.5); // expand for leniency
+        
+        if (debugVisualize && caster.world instanceof ServerWorld serverWorld) {
+            DebugShapePackets.sendDebugBox(serverWorld, entityBox, 1.0f, 0.5f, 0.0f, 1.0f, 20);
+        }
+        
+        return entityBox.raycast(eyePos, eyePos.add(lookVec.multiply(maxRange))).isPresent();
     }
 }
