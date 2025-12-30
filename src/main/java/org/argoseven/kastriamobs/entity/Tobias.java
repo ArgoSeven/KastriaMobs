@@ -18,12 +18,14 @@ import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
+import org.argoseven.kastriamobs.KastriaParticles;
 
 public class Tobias extends AbstractKastriaEntity implements RangedAttackMob {
     
@@ -125,7 +127,7 @@ public class Tobias extends AbstractKastriaEntity implements RangedAttackMob {
                 && this.random.nextFloat() < WEAKNESS_CHANCE) {
             return Potions.WEAKNESS;
         }
-        
+        if (this.world instanceof ServerWorld serverWorld) { serverWorld.spawnParticles( KastriaParticles.MAGIC_CIRCLE, this.getX(), this.getY() + 0.1, this.getZ(), 1, 0.0, 0.0, 0.0, 0 ); }
         return Potions.HARMING;
     }
 }

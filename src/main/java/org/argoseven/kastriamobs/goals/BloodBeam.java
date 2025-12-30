@@ -54,9 +54,10 @@ public class BloodBeam extends Goal {
         if (target == null || !target.isAlive()) {
             return false;
         }
-        return this.caster.canTarget(target) 
+        
+        return this.caster.canTarget(target)
                 && this.caster.canSee(target) 
-                && caster.squaredDistanceTo(target) < maxRange + 1;
+                && caster.squaredDistanceTo(target) < maxRange * maxRange;
     }
 
     @Override

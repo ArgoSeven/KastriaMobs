@@ -7,10 +7,13 @@ import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
+import org.argoseven.kastriamobs.client.KastriaColorHelper;
 
 public class MagicCircle extends AbstractMagicCircle{
     protected MagicCircle(ClientWorld clientWorld, double d, double e, double f, double g, SpriteProvider spriteProvider) {
         super(clientWorld, d, e, f, g, spriteProvider);
+        float[] color = KastriaColorHelper.fromHex("#492f61").toFloatColor();
+        this.setColor(color[0], color[1], color[2]);
         this.scale  = 2F;
     }
 
