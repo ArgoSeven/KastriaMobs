@@ -12,42 +12,44 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
-import org.argoseven.kastriamobs.entity.Bard;
 import org.argoseven.kastriamobs.entity.Tobias;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.ExtendedGeoEntityRenderer;
 
-
 public class TobiasRender extends ExtendedGeoEntityRenderer<Tobias> {
-    protected ItemStack mainHandItem;
-    protected ItemStack offHandItem;
-    protected ItemStack helmetItem;
-    protected ItemStack chestplateItem;
-    protected ItemStack leggingsItem;
-    protected ItemStack bootsItem;
-    static private final String rightArm = "right_arm";
-    static private final String leftArm = "left_arm";
+    
+    private static final String RIGHT_ARM_BONE = "right_arm";
+    private static final String LEFT_ARM_BONE = "left_arm";
+    private static final float DEFAULT_SHADOW_RADIUS = 0.5F;
+    private static final float ITEM_Y_OFFSET = -0.6F;
+    private static final float SHIELD_Y_OFFSET = 0.125F;
+    private static final float SHIELD_Z_OFFSET = -0.25F;
+    
+    private ItemStack mainHandItem;
+    private ItemStack offHandItem;
 
     public TobiasRender(EntityRendererFactory.Context renderManager) {
-        super(renderManager, new TobiasModel());
-        this.shadowRadius = 0.5F;
+        super(renderManager, new KastriaEntityModel<>("tobias", "bard"));
+        this.shadowRadius = DEFAULT_SHADOW_RADIUS;
     }
 
-    public RenderLayer getRenderType(Tobias animatable, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, VertexConsumer buffer, int packedLight, Identifier texture) {
+    @Override
+    public RenderLayer getRenderType(Tobias animatable, float partialTick, MatrixStack poseStack, 
+                                      VertexConsumerProvider bufferSource, VertexConsumer buffer, 
+                                      int packedLight, Identifier texture) {
         return RenderLayer.getEntityTranslucent(this.getTextureLocation(animatable));
     }
 
     @Override
-    public void renderEarly(Tobias animatable, MatrixStack poseStack, float partialTick, VertexConsumerProvider bufferSource, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
-        super.renderEarly(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
+    public void renderEarly(Tobias animatable, MatrixStack poseStack, float partialTick, 
+                           VertexConsumerProvider bufferSource, VertexConsumer buffer, 
+                           int packedLight, int packedOverlay, 
+                           float red, float green, float blue, float partialTicks) {
+        super.renderEarly(animatable, poseStack, partialTick, bufferSource, buffer, 
+                packedLight, packedOverlay, red, green, blue, partialTicks);
         this.mainHandItem = animatable.getEquippedStack(EquipmentSlot.MAINHAND);
         this.offHandItem = animatable.getEquippedStack(EquipmentSlot.OFFHAND);
-        this.helmetItem = animatable.getEquippedStack(EquipmentSlot.HEAD);
-        this.chestplateItem = animatable.getEquippedStack(EquipmentSlot.CHEST);
-        this.leggingsItem = animatable.getEquippedStack(EquipmentSlot.LEGS);
-        this.bootsItem = animatable.getEquippedStack(EquipmentSlot.FEET);
     }
 
     @Override
@@ -56,70 +58,60 @@ public class TobiasRender extends ExtendedGeoEntityRenderer<Tobias> {
     }
 
     @Override
-    protected Identifier getTextureForBone(String s, Tobias tobias) {
+    protected Identifier getTextureForBone(String boneName, Tobias entity) {
         return null;
     }
 
     @Override
-    protected ItemStack getHeldItemForBone(String s, Tobias tobias) {
-        ItemStack var10000;
-        switch (s) {
-            case leftArm -> var10000 = tobias.isLeftHanded() ? this.mainHandItem : this.offHandItem;
-            case rightArm -> var10000 = tobias.isLeftHanded() ? this.offHandItem : this.mainHandItem;
-            default -> var10000 = null;
-        }
-
-        return var10000;
+    protected ItemStack getHeldItemForBone(String boneName, Tobias entity) {
+        return switch (boneName) {
+            case LEFT_ARM_BONE -> entity.isLeftHanded() ? this.mainHandItem : this.offHandItem;
+            case RIGHT_ARM_BONE -> entity.isLeftHanded() ? this.offHandItem : this.mainHandItem;
+            default -> null;
+        };
     }
 
     @Override
-    protected ModelTransformation.Mode getCameraTransformForItemAtBone(ItemStack itemStack, String s) {
-        ModelTransformation.Mode var10000;
-        switch (s) {
-            case leftArm:
-            case rightArm:
-                var10000 = ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND;
-                break;
-            default:
-                var10000 = ModelTransformation.Mode.NONE;
-        }
-
-        return var10000;
+    protected ModelTransformation.Mode getCameraTransformForItemAtBone(ItemStack itemStack, String boneName) {
+        return switch (boneName) {
+            case LEFT_ARM_BONE, RIGHT_ARM_BONE -> ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND;
+            default -> ModelTransformation.Mode.NONE;
+        };
     }
 
     @Override
-    protected BlockState getHeldBlockForBone(String s, Tobias tobias) {
+    protected BlockState getHeldBlockForBone(String boneName, Tobias entity) {
         return null;
     }
 
     @Override
-    protected void preRenderItem(MatrixStack matrixStack, ItemStack itemStack, String s, Tobias tobias, IBone iBone) {
-        matrixStack.translate((double)0.0F, (double) -0.6F, (double)0.0F);
-        if (itemStack == this.mainHandItem) {
+    protected void preRenderItem(MatrixStack matrixStack, ItemStack itemStack, String boneName, 
+                                 Tobias entity, IBone bone) {
+        matrixStack.translate(0.0, ITEM_Y_OFFSET, 0.0);
+        
+        if (itemStack == this.mainHandItem || itemStack == this.offHandItem) {
             matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90.0F));
+            
             if (itemStack.getItem() instanceof ShieldItem) {
-                matrixStack.translate((double)0.0F, (double)0.125F, (double)-0.25F);
-            }
-        } else if (itemStack == this.offHandItem) {
-            matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90.0F));
-            if (itemStack.getItem() instanceof ShieldItem) {
-                matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
+                if (itemStack == this.mainHandItem) {
+                    matrixStack.translate(0.0, SHIELD_Y_OFFSET, SHIELD_Z_OFFSET);
+                } else {
+                    matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
+                }
             }
         }
     }
 
     @Override
-    protected void preRenderBlock(MatrixStack matrixStack, BlockState blockState, String s, Tobias tobias) {
-
+    protected void preRenderBlock(MatrixStack matrixStack, BlockState blockState, String boneName, Tobias entity) {
     }
 
     @Override
-    protected void postRenderItem(MatrixStack matrixStack, ItemStack itemStack, String s, Tobias tobias, IBone iBone) {
-
+    protected void postRenderItem(MatrixStack matrixStack, ItemStack itemStack, String boneName, 
+                                  Tobias entity, IBone bone) {
     }
 
     @Override
-    protected void postRenderBlock(MatrixStack matrixStack, BlockState blockState, String s, Tobias tobias) {
-
+    protected void postRenderBlock(MatrixStack matrixStack, BlockState blockState, String boneName, Tobias entity) {
     }
 }

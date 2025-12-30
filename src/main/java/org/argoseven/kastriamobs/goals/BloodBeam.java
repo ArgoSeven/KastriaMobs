@@ -21,13 +21,20 @@ import java.util.EnumSet;
 import java.util.List;
 
 public class BloodBeam extends Goal {
+    
+    private static final double BEAM_START_HEIGHT = 1.6;
+    private static final double PARTICLE_STEP = 0.5;
+    private static final double CONE_ANGLE_FACTOR = 0.60;
+    private static final double DOT_PRODUCT_THRESHOLD = 1.0E-4;
+    private static final float SOUND_VOLUME = 3.0F;
+    private static final float SOUND_PITCH = 1.0F;
+    
     private final MobEntity caster;
     private int cooldown = 0;
     private final int maxCooldown;
     private final float maxRange;
     private final float damage;
     private final float attractionStrength;
-
 
     public BloodBeam(MobEntity caster, int maxCooldown, float maxRange, float damage, float attractionStrength) {
         this.caster = caster;
@@ -38,28 +45,20 @@ public class BloodBeam extends Goal {
         this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
-
-    public BloodBeam(MobEntity caster, Config.BloodBeamConfig beamConfig){
-        this.caster = caster;
-        this.maxCooldown = beamConfig.max_cooldown;
-        this.maxRange = beamConfig.max_range;
-        this.damage = beamConfig.damage;
-        this.attractionStrength = beamConfig.attraction_strength;
-        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
+    public BloodBeam(MobEntity caster, Config.BloodBeamConfig config) {
+        this(caster, config.max_cooldown, config.max_range, config.damage, config.attraction_strength);
     }
 
     @Override
     public boolean canStart() {
         LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target) && this.caster.canSee(target) && (caster.squaredDistanceTo(target) < maxRange + 1);
+        if (target == null || !target.isAlive()) {
+            return false;
+        }
+        return this.caster.canTarget(target) 
+                && this.caster.canSee(target) 
+                && caster.squaredDistanceTo(target) < maxRange + 1;
     }
-
-    /*
-    @Override
-    public boolean shouldContinue() {
-        LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target) && (caster.squaredDistanceTo(target) < maxRange + 1);
-    }*/
 
     @Override
     public void start() {
@@ -69,71 +68,87 @@ public class BloodBeam extends Goal {
     @Override
     public void tick() {
         KastriaMobs.moveAndRetreat(caster, caster.getTarget(), maxRange);
+        
         if (--cooldown <= 0) {
             fireBloodBeam();
             cooldown = maxCooldown;
         }
     }
 
-    protected void fireBloodBeam() {
+    private void fireBloodBeam() {
         LivingEntity target = caster.getTarget();
-        if (target == null) return;
-
+        if (target == null) {
+            return;
+        }
 
         ServerWorld serverWorld = (ServerWorld) caster.world;
-        Vec3d startPos = caster.getPos().add(0.0, 1.6, 0.0);
+        Vec3d startPos = caster.getPos().add(0.0, BEAM_START_HEIGHT, 0.0);
         Vec3d direction = target.getEyePos().subtract(startPos).normalize();
         Vec3d lookVec = caster.getRotationVec(1.0F);
         Vec3d eyePos = caster.getCameraPosVec(1.0F);
 
+        prepareCasterForAttack(target);
+        spawnBeamParticles(serverWorld, startPos, direction);
+        
+        List<LivingEntity> hits = findEntitiesInBeam(serverWorld, lookVec, eyePos);
+        applyDamageAndAttraction(hits, startPos);
+    }
+
+    private void prepareCasterForAttack(LivingEntity target) {
         caster.swingHand(Hand.MAIN_HAND);
         caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
+    }
 
-        BlockStateParticleEffect bloodEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.getDefaultState());
-        for (double i = 1; i <= maxRange; i+= 0.5) {
+    private void spawnBeamParticles(ServerWorld world, Vec3d startPos, Vec3d direction) {
+        BlockStateParticleEffect bloodEffect = new BlockStateParticleEffect(
+                ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.getDefaultState());
+        
+        for (double i = 1; i <= maxRange; i += PARTICLE_STEP) {
             Vec3d particlePos = startPos.add(direction.multiply(i));
-            if (!caster.world.isClient) {
-                serverWorld.spawnParticles(KastriaParticles.BLOOD_BEAM_PARTICLE, particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);
-                serverWorld.spawnParticles(bloodEffect, particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);
-            }
+            world.spawnParticles(KastriaParticles.BLOOD_BEAM_PARTICLE, 
+                    particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);
+            world.spawnParticles(bloodEffect, 
+                    particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);
         }
+    }
 
+    private List<LivingEntity> findEntitiesInBeam(ServerWorld world, Vec3d lookVec, Vec3d eyePos) {
         Box searchBox = caster.getBoundingBox().stretch(lookVec.multiply(maxRange));
-
-
-        List<LivingEntity> hits = serverWorld.getEntitiesByClass(
+        
+        return world.getEntitiesByClass(
                 LivingEntity.class,
                 searchBox,
-                e -> e != caster && !e.isTeammate(caster) && isEntityInTheCone(eyePos, lookVec, e)
+                entity -> entity != caster 
+                        && !entity.isTeammate(caster) 
+                        && isEntityInCone(eyePos, lookVec, entity)
         );
+    }
 
-
-        caster.playSound(SoundEvents.ENTITY_WARDEN_SONIC_BOOM, 3.0F, 1.0F);
+    private void applyDamageAndAttraction(List<LivingEntity> hits, Vec3d startPos) {
+        caster.playSound(SoundEvents.ENTITY_WARDEN_SONIC_BOOM, SOUND_VOLUME, SOUND_PITCH);
+        
         for (LivingEntity hit : hits) {
             hit.damage(DamageSource.sonicBoom(caster), damage);
-            // Calculate the attraction vector
+            
             Vec3d attraction = startPos.subtract(hit.getEyePos()).normalize();
-            hit.addVelocity(attraction.getX() * attractionStrength, attraction.getY() * attractionStrength, attraction.getZ() * attractionStrength);
+            hit.addVelocity(
+                    attraction.getX() * attractionStrength,
+                    attraction.getY() * attractionStrength,
+                    attraction.getZ() * attractionStrength
+            );
             hit.velocityModified = true;
         }
-
     }
 
-
-    private boolean isEntityInTheCone(Vec3d eyePos, Vec3d lookVec, LivingEntity target) {
+    private boolean isEntityInCone(Vec3d eyePos, Vec3d lookVec, LivingEntity target) {
         Vec3d toEntity = target.getPos().subtract(eyePos);
         double dot = lookVec.dotProduct(toEntity);
-        double lenSq = toEntity.lengthSquared();
-        if (dot < 1.0E-4) return false;
-        // 0.70 ~45° 0.50 60°
-        return dot * dot > lenSq * (0.60 * 0.60);
+        double lengthSquared = toEntity.lengthSquared();
+        
+        if (dot < DOT_PRODUCT_THRESHOLD) {
+            return false;
+        }
+        
+        return dot * dot > lengthSquared * (CONE_ANGLE_FACTOR * CONE_ANGLE_FACTOR);
     }
-
-    private boolean isEntityInTheBeam(Vec3d eyePos, Vec3d lookVec, LivingEntity target) {
-        Box entityBox = target.getBoundingBox().expand(0.5); // expand for leniency
-        KastriaMobs.debugvisualizeBox((ServerWorld) target.world, entityBox);
-        return entityBox.raycast(eyePos, eyePos.add(lookVec.multiply(maxRange))).isPresent();
-    }
-
 }
-

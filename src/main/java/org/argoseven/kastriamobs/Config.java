@@ -1,7 +1,6 @@
 package org.argoseven.kastriamobs;
 
 import com.moandjiezana.toml.Toml;
-import net.minecraft.util.Identifier;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +11,9 @@ import java.nio.file.Path;
 import static org.argoseven.kastriamobs.KastriaMobs.configPath;
 
 public class Config {
+    
+    private static final String CONFIG_RESOURCE_PATH = "config.toml";
+    
     public static Config data;
     public Double version;
     public BastionConfig bastion;
@@ -22,7 +24,6 @@ public class Config {
     public RedBloodMageConfig red_blood_mage;
     public StalkerConfig stalker;
     public BardConfig bard;
-
 
     public static class EntityStatsConfig {
         public double generic_max_health;
@@ -100,29 +101,30 @@ public class Config {
         public BloodBeamConfig blood_beam;
         public SonicAttackConfig sonicboom;
         public SonicAttackConfig sonicbeam;
-
     }
 
+    public static void init() {
+        Path path = ensureConfigExists(configPath);
+        data = new Toml().read(new File(path.toUri())).to(Config.class);
+    }
 
-    public static Path checkConfig(Path path) {
-        if (!Files.exists(path)) {
-            try (InputStream inputStream = KastriaMobs.class.getClassLoader().getResourceAsStream("config.toml")) {
-                if (inputStream == null) {
-                    KastriaMobs.LOGGER.error("File not found in resources: ");
-                }
-                assert inputStream != null;
-                Files.copy(inputStream, path);
-                KastriaMobs.LOGGER.info("File copied successfully");
-                return path;
-            } catch (IOException e) {
-                KastriaMobs.LOGGER.error("Error occurred: {}", e.getMessage());
-            }
+    private static Path ensureConfigExists(Path path) {
+        if (Files.exists(path)) {
+            KastriaMobs.LOGGER.info("Config loaded successfully");
+            return path;
         }
-        KastriaMobs.LOGGER.info("Config loaded successfully");
-        return path;
-    }
 
-    public static void init(){
-        data = new Toml().read(new File(checkConfig(configPath).toUri())).to(Config.class);
+        try (InputStream inputStream = KastriaMobs.class.getClassLoader().getResourceAsStream(CONFIG_RESOURCE_PATH)) {
+            if (inputStream == null) {
+                KastriaMobs.LOGGER.error("Default config not found in resources: {}", CONFIG_RESOURCE_PATH);
+                return path;
+            }
+            Files.copy(inputStream, path);
+            KastriaMobs.LOGGER.info("Default config copied to: {}", path);
+        } catch (IOException e) {
+            KastriaMobs.LOGGER.error("Failed to copy default config", e);
+        }
+
+        return path;
     }
 }

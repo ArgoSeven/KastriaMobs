@@ -10,7 +10,10 @@ import org.argoseven.kastriamobs.KastriaMobs;
 import java.util.EnumSet;
 
 public class EvokeLineFangs extends AbstractEvokeFangs {
-    private int numberOfFangs = 8;
+    
+    private static final double FANG_SPACING = 1.25;
+    
+    private final int numberOfFangs;
 
     public EvokeLineFangs(MobEntity caster, int activationRange, int maxCooldown, int numberOfFangs) {
         super(caster, activationRange, maxCooldown);
@@ -18,26 +21,30 @@ public class EvokeLineFangs extends AbstractEvokeFangs {
         this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
-    public EvokeLineFangs(MobEntity caster, Config.FangAttackConfig fangAttackConfig) {
-        super(caster, fangAttackConfig.range_of_activation, fangAttackConfig.max_cooldown);
-        numberOfFangs = fangAttackConfig.number_of_fangs;
+    public EvokeLineFangs(MobEntity caster, Config.FangAttackConfig config) {
+        super(caster, config.range_of_activation, config.max_cooldown);
+        this.numberOfFangs = config.number_of_fangs;
         this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
     @Override
     public void tick() {
         super.tick();
-        KastriaMobs.moveAndRetreat(caster, caster.getTarget(), activationRange);
+        LivingEntity target = caster.getTarget();
+        if (target != null) {
+            KastriaMobs.moveAndRetreat(caster, target, activationRange);
+        }
     }
 
     @Override
     protected void spawnPattern(LivingEntity target, double minY, double maxY, float angle) {
         for (int i = 0; i < numberOfFangs; ++i) {
-            double h = 1.25D * (i + 1);
-            conjureFangs(caster.getX() + MathHelper.cos(angle) * h,
-                    caster.getZ() + MathHelper.sin(angle) * h,
-                    minY, maxY, angle, i);
+            double distance = FANG_SPACING * (i + 1);
+            conjureFangs(
+                    caster.getX() + MathHelper.cos(angle) * distance,
+                    caster.getZ() + MathHelper.sin(angle) * distance,
+                    minY, maxY, angle, i
+            );
         }
     }
 }
-

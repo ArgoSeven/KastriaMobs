@@ -1,6 +1,5 @@
 package org.argoseven.kastriamobs.goals;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -14,32 +13,28 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.KastriaMobs;
 
-import java.util.EnumSet;
-
 public abstract class AbstractEvokeFangs extends Goal {
+    
     protected final MobEntity caster;
     protected int cooldown = 0;
-    protected int maxCooldown;
-    protected float activationRange;
+    protected final int maxCooldown;
+    protected final float activationRange;
 
-    public AbstractEvokeFangs(MobEntity caster, float activationRange, int maxCooldown) {
+    protected AbstractEvokeFangs(MobEntity caster, float activationRange, int maxCooldown) {
         this.caster = caster;
-        this.activationRange  = activationRange;
+        this.activationRange = activationRange;
         this.maxCooldown = maxCooldown;
     }
 
     @Override
     public boolean canStart() {
         LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target) && caster.squaredDistanceTo(target) < KastriaMobs.getSquared(activationRange) + 1;
+        if (target == null || !target.isAlive()) {
+            return false;
+        }
+        return this.caster.canTarget(target) 
+                && caster.squaredDistanceTo(target) < KastriaMobs.getSquared(activationRange) + 1;
     }
-
-    /*
-    @Override
-    public boolean shouldContinue() {
-        LivingEntity target = this.caster.getTarget();
-        return target != null && target.isAlive() && this.caster.canTarget(target);
-    }*/
 
     @Override
     public void start() {
@@ -56,18 +51,22 @@ public abstract class AbstractEvokeFangs extends Goal {
 
     protected void castSpell() {
         LivingEntity target = caster.getTarget();
-        if (target == null) return;
-
+        if (target == null) {
+            return;
+        }
 
         caster.swingHand(Hand.MAIN_HAND);
         caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
+        
         double minY = Math.min(target.getY(), caster.getY());
         double maxY = Math.max(target.getY(), caster.getY()) + 1.0F;
-        float angle = (float) MathHelper.atan2(target.getZ() - caster.getZ(),
-                target.getX() - caster.getX());
+        float angle = (float) MathHelper.atan2(
+                target.getZ() - caster.getZ(),
+                target.getX() - caster.getX()
+        );
 
         if (caster.squaredDistanceTo(target) < KastriaMobs.getSquared(activationRange)) {
-           spawnPattern(target, minY, maxY, angle);
+            spawnPattern(target, minY, maxY, angle);
         }
     }
 
@@ -80,13 +79,10 @@ public abstract class AbstractEvokeFangs extends Goal {
 
         while (pos.getY() >= MathHelper.floor(maxY) - 1) {
             BlockPos below = pos.down();
-            BlockState belowState = world.getBlockState(below);
-
-            if (belowState.isSideSolidFullSquare(world, below, Direction.UP)) {
-                BlockState currentState = world.getBlockState(pos);
-
+            
+            if (world.getBlockState(below).isSideSolidFullSquare(world, below, Direction.UP)) {
                 if (!world.isAir(pos)) {
-                    VoxelShape shape = currentState.getCollisionShape(world, pos);
+                    VoxelShape shape = world.getBlockState(pos).getCollisionShape(world, pos);
                     if (!shape.isEmpty()) {
                         offsetY = shape.getMax(Direction.Axis.Y);
                     }
@@ -100,4 +96,3 @@ public abstract class AbstractEvokeFangs extends Goal {
         }
     }
 }
-
