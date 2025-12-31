@@ -5,11 +5,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
+import org.argoseven.kastriamobs.client.KastriaColorHelper;
 import org.argoseven.kastriamobs.client.KastriaMobsClient;
 import org.jetbrains.annotations.Nullable;
 
 public class Notes extends AnimatedParticle {
-    int[] color = KastriaMobsClient.randomColor();
+    int[] color = KastriaColorHelper.randomColor().toIntArray();
     protected Notes(ClientWorld clientWorld, double d, double e, double f,double velocityX, double velocityY, double velocityZ, SpriteProvider spriteProvider) {
         super(clientWorld, d, e, f, spriteProvider, 0.0125F);
         this.velocityMultiplier = 0.96F;

@@ -67,13 +67,6 @@ public class KastriaMobsClient implements ClientModInitializer {
                 KastriaParticles.MAGIC_CIRCLE, MagicCircle.Factory::new);
     }
 
-    public static int[] randomColor() {
-        int red = RANDOM.nextInt(256);
-        int green = RANDOM.nextInt(256);
-        int blue = RANDOM.nextInt(256);
-        return new int[]{red, green, blue};
-    }
-
     private void registerTickHandler() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             DebugShapeRenderer.tick();
