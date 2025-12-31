@@ -8,6 +8,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.argoseven.kastriamobs.entity.ConfigProvider;
+import org.argoseven.kastriamobs.network.DebugShapePackets;
 
 import java.util.List;
 
@@ -53,6 +54,10 @@ public class SonicBoom extends AbstractSonicAttack {
                 startPos.x - maxRange, startPos.y - BOOM_VERTICAL_RANGE, startPos.z - maxRange,
                 startPos.x + maxRange, startPos.y + BOOM_VERTICAL_RANGE, startPos.z + maxRange
         );
+
+        if (DebugShapePackets.isDebugEnabled()) {
+            DebugShapePackets.sendDebugBox(world, searchBox, 0.0f, 1.0f, 0.0f, 0.5f, 20);
+        }
 
         return world.getEntitiesByClass(
                 LivingEntity.class,

@@ -7,6 +7,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.argoseven.kastriamobs.entity.ConfigProvider;
+import org.argoseven.kastriamobs.network.DebugShapePackets;
 
 import java.util.List;
 
@@ -31,6 +32,12 @@ public class SonicBeam extends AbstractSonicAttack {
         Vec3d lookVec = caster.getRotationVec(1.0F);
         Vec3d eyePos = caster.getCameraPosVec(1.0F);
 
+
+        if (DebugShapePackets.isDebugEnabled()) {
+            Vec3d beamEnd = startPos.add(direction.multiply(maxRange));
+            DebugShapePackets.sendDebugBeam(serverWorld, startPos, beamEnd, 1.0f, 0.0f, 0.0f, 1.0f, 20);
+        }
+
         prepareCasterForAttack(target);
         spawnBeamParticles(serverWorld, startPos, direction);
         
@@ -48,7 +55,8 @@ public class SonicBeam extends AbstractSonicAttack {
 
     private List<LivingEntity> findEntitiesInBeam(ServerWorld world, Vec3d lookVec, Vec3d eyePos) {
         Box searchBox = caster.getBoundingBox().stretch(lookVec.multiply(maxRange));
-        
+
+
         return world.getEntitiesByClass(
                 LivingEntity.class,
                 searchBox,
