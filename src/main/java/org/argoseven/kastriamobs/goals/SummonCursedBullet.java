@@ -35,7 +35,7 @@ public class SummonCursedBullet extends Goal {
         Config.CursedBulletConfig config = caster.getCursedBulletConfig();
         this.caster = caster;
         this.maxCooldown = config.max_cooldown;
-        this.activationRange = config.attack_range_after;
+        this.activationRange = config.min_shooting_distance;
         this.statusEffect = resolveStatusEffect(
                 config.status_effect != null ? new Identifier(config.status_effect) : null
         );
@@ -47,7 +47,7 @@ public class SummonCursedBullet extends Goal {
     protected SummonCursedBullet(MobEntity caster, Config.CursedBulletConfig config) {
         this.caster = caster;
         this.maxCooldown = config.max_cooldown;
-        this.activationRange = config.attack_range_after;
+        this.activationRange = config.min_shooting_distance;
         this.statusEffect = resolveStatusEffect(
                 config.status_effect != null ? new Identifier(config.status_effect) : null
         );

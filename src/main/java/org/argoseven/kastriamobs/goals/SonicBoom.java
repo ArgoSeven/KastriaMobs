@@ -24,7 +24,6 @@ public class SonicBoom extends AbstractSonicAttack {
 
     @Override
     protected void handleMovement(LivingEntity target) {
-        KastriaMobs.moveAndRetreat(caster,target, attackRange, true);
     }
 
     @Override

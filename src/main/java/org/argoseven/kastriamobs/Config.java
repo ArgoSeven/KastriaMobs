@@ -31,27 +31,27 @@ public class Config {
     }
 
     public static class EntityStatsConfig {
-        public double generic_max_health;
-        public double generic_movement_speed;
-        public double generic_attack_damage;
-        public double generic_follow_range;
-        public double generic_armor;
-        public double generic_armor_toughness;
-        public double generic_knockback_resistance;
+        public double max_health;
+        public double movement_speed;
+        public double attack_damage;
+        public double follow_range;
+        public double armor;
+        public double armor_toughness;
+        public double knockback_resistance;
     }
 
     public static class SonicAttackConfig {
         public int max_cooldown;
-        public float max_aggro_range;
-        public float max_range_of_attack;
+        public float aggro_range;
+        public float attack_range;
         public float damage;
         public float vertical_knock_constant;
         public float horizontal_knock_constant;
     }
 
     public static class FangAttackConfig {
-        public float max_aggro_range;
-        public float max_range_of_attack;
+        public float aggro_range;
+        public float attack_range;
         public int max_cooldown;
         public int number_of_fangs;
         public int number_of_circles;
@@ -60,16 +60,15 @@ public class Config {
 
     public static class BloodBeamConfig {
         public int max_cooldown;
-        public float max_aggro_range;
-        public float max_range_of_attack;
+        public float aggro_range;
+        public float attack_range;
         public float damage;
         public float attraction_strength;
     }
 
     public static class CursedBulletConfig {
         public int max_cooldown;
-        public float attack_range_after;
-        public float max_range_of_attack;
+        public float min_shooting_distance;
         public String status_effect;
         public int effect_duration;
         public int effect_amplifier;

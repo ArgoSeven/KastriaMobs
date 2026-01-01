@@ -25,11 +25,14 @@ public abstract class AbstractEvokeFangs extends Goal {
     protected final float activationRange;
     protected final float attackRange;
 
+
+    private int particleTimer = 0;
+    private final int particleInterval = 10;
     protected AbstractEvokeFangs(MobEntity caster, Config.FangAttackConfig config) {
         this.caster = caster;
-        this.activationRange = config.max_aggro_range;
+        this.activationRange = config.aggro_range;
         this.maxCooldown = config.max_cooldown;
-        this.attackRange = config.max_range_of_attack;
+        this.attackRange = config.attack_range;
     }
 
     @Override
@@ -52,6 +55,12 @@ public abstract class AbstractEvokeFangs extends Goal {
         if (--cooldown <= 0) {
             castSpell();
             cooldown = maxCooldown;
+        }
+
+        particleTimer++;
+        if(particleTimer >= particleInterval){
+            particleTimer = 0;
+            if (caster.world instanceof ServerWorld serverWorld) { serverWorld.spawnParticles(ParticleTypes.ENCHANTED_HIT, caster.getX(), caster.getRandomBodyY(), caster.getZ(), 5, 0.3, 0.5, 0.3, 0.1 ); }
         }
     }
 

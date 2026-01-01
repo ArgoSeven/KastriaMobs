@@ -8,11 +8,13 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
+import org.argoseven.kastriamobs.KastriaParticles;
 import org.argoseven.kastriamobs.goals.SonicBeam;
 
 public class Bard extends AbstractKastriaEntity implements ConfigProvider.SonicBeamProvider {
@@ -43,6 +45,10 @@ public class Bard extends AbstractKastriaEntity implements ConfigProvider.SonicB
     @Override
     public boolean damage(DamageSource source, float amount) {
         if (source.getSource() instanceof PersistentProjectileEntity) {
+            if (this.world instanceof ServerWorld serverWorld) {
+                serverWorld.spawnParticles( KastriaParticles.NOTES_PARTICLE, this.getX(), this.getRandomBodyY(), this.getZ(), 10, 0.1, 0.3, 0.1, 0.03 );
+                this.playSound(SoundEvents.BLOCK_NOTE_BLOCK_BANJO, 1,1);
+            }
             return false;
         }
         if (source == DamageSource.FALL) {
@@ -75,5 +81,10 @@ public class Bard extends AbstractKastriaEntity implements ConfigProvider.SonicB
     @Override
     public void playAmbientSound() {
         this.playSound(SoundEvents.ENTITY_PLAYER_BREATH, 0.15F, 1.0F);
+    }
+
+    @Override
+    protected void updatePostDeath() {
+        this.remove(RemovalReason.KILLED);
     }
 }

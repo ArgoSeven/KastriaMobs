@@ -37,13 +37,13 @@ public abstract class AbstractKastriaEntity extends HostileEntity implements IAn
 
     public static DefaultAttributeContainer.Builder createAttributes(Config.EntityStatsConfig config) {
         return HostileEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, config.generic_max_health)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, config.generic_movement_speed)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, config.generic_attack_damage)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, config.generic_follow_range)
-                .add(EntityAttributes.GENERIC_ARMOR, config.generic_armor)
-                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, config.generic_armor_toughness)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, config.generic_knockback_resistance);
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, config.max_health)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, config.movement_speed)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, config.attack_damage)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, config.follow_range)
+                .add(EntityAttributes.GENERIC_ARMOR, config.armor)
+                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, config.armor_toughness)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE,config.knockback_resistance);
     }
 
     protected <E extends IAnimatable> PlayState handleMovementAnimation(AnimationEvent<E> event) {

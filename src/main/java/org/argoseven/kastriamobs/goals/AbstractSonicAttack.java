@@ -6,8 +6,6 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.particle.ShriekParticleEffect;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
@@ -16,7 +14,6 @@ import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
 import org.argoseven.kastriamobs.KastriaParticles;
 
-import java.util.EnumSet;
 import java.util.List;
 
 public abstract class AbstractSonicAttack extends Goal {
@@ -35,18 +32,17 @@ public abstract class AbstractSonicAttack extends Goal {
     protected final float verticalKnockback;
     protected final float horizontalKnockback;
 
-    protected int particleTimer = 0;
-    protected final int particleInterval = 10;
+    private int particleTimer = 0;
+    private final int particleInterval = 10;
 
     protected AbstractSonicAttack(MobEntity caster, Config.SonicAttackConfig config) {
         this.caster = caster;
         this.maxCooldown = config.max_cooldown;
-        this.attackRange = config.max_range_of_attack;
-        this.activationRange = config.max_aggro_range;
+        this.attackRange = config.attack_range;
+        this.activationRange = config.aggro_range;
         this.damage = config.damage;
         this.verticalKnockback = config.vertical_knock_constant;
         this.horizontalKnockback = config.horizontal_knock_constant;
-        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
     @Override
@@ -57,8 +53,7 @@ public abstract class AbstractSonicAttack extends Goal {
         }
         return this.caster.canTarget(target) 
                 && this.caster.canSee(target) 
-                && caster.squaredDistanceTo(target) < KastriaMobs.getSquared(activationRange) + 1
-                && caster.squaredDistanceTo(target) > KastriaMobs.getSquared(2);
+                && caster.squaredDistanceTo(target) < KastriaMobs.getSquared(activationRange) + 1;
     }
 
     @Override
@@ -80,7 +75,7 @@ public abstract class AbstractSonicAttack extends Goal {
         particleTimer++;
         if(particleTimer >= particleInterval){
             particleTimer = 0;
-            if (caster.world instanceof ServerWorld serverWorld) { serverWorld.spawnParticles(new ShriekParticleEffect(1), caster.getX(), caster.getY(), caster.getZ(), 10, 0.1, 0.3, 0.1, 0.1 ); }
+            if (caster.world instanceof ServerWorld serverWorld) { serverWorld.spawnParticles(KastriaParticles.SONIC_CHARGE, caster.getX(), caster.getRandomBodyY(), caster.getZ(), 1, 0.1, 0.3, 0.1, 0.1 ); }
         }
 
     }

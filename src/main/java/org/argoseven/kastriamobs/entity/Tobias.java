@@ -21,6 +21,7 @@ import net.minecraft.potion.Potions;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -97,7 +98,7 @@ public class Tobias extends AbstractKastriaEntity implements RangedAttackMob {
         double horizontalDistance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
         
         Potion potion = selectPotionForTarget(target, horizontalDistance);
-        
+        this.swingHand(Hand.MAIN_HAND);
         PotionEntity potionEntity = new PotionEntity(this.world, this);
         potionEntity.setItem(PotionUtil.setPotion(new ItemStack(Items.SPLASH_POTION), potion));
         potionEntity.setPitch(potionEntity.getPitch() + 20.0f);
@@ -129,5 +130,9 @@ public class Tobias extends AbstractKastriaEntity implements RangedAttackMob {
         }
         if (this.world instanceof ServerWorld serverWorld) { serverWorld.spawnParticles( KastriaParticles.MAGIC_CIRCLE, this.getX(), this.getY() + 0.1, this.getZ(), 1, 0.0, 0.0, 0.0, 0 ); }
         return Potions.HARMING;
+    }
+    @Override
+    protected void updatePostDeath() {
+        this.remove(RemovalReason.KILLED);
     }
 }

@@ -2,17 +2,21 @@ package org.argoseven.kastriamobs.goals;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
+import net.minecraft.command.argument.ParticleEffectArgumentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.DustColorTransitionParticleEffect;
+import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
 import org.argoseven.kastriamobs.KastriaParticles;
@@ -35,17 +39,22 @@ public class BloodBeam extends Goal {
     private int cooldown = 0;
     private final int maxCooldown;
     private final float attackRange;
+    private final float activationRange;
     private final float damage;
     private final float attractionStrength;
+
+
+    private int particleTimer = 0;
+    private final int particleInterval = 10;
 
     public <T extends MobEntity & ConfigProvider.BloodBeamProvider> BloodBeam(T caster) {
         Config.BloodBeamConfig config = caster.getBloodBeamConfig();
         this.caster = caster;
         this.maxCooldown = config.max_cooldown;
-        this.attackRange = config.max_range_of_attack;
+        this.attackRange = config.attack_range;
+        this.activationRange = config.aggro_range;
         this.damage = config.damage;
         this.attractionStrength = config.attraction_strength;
-        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
     @Override
@@ -57,7 +66,7 @@ public class BloodBeam extends Goal {
         
         return this.caster.canTarget(target)
                 && this.caster.canSee(target) 
-                && caster.squaredDistanceTo(target) < attackRange * attackRange;
+                && caster.squaredDistanceTo(target) < KastriaMobs.getSquared(activationRange);
     }
 
     @Override
@@ -68,16 +77,21 @@ public class BloodBeam extends Goal {
     @Override
     public void tick() {
         KastriaMobs.moveAndRetreat(caster, caster.getTarget(), attackRange);
-        
         if (--cooldown <= 0) {
             fireBloodBeam();
             cooldown = maxCooldown;
+        }
+
+        particleTimer++;
+        if(particleTimer >= particleInterval){
+            particleTimer = 0;
+            if (caster.world instanceof ServerWorld serverWorld) { serverWorld.spawnParticles(new DustParticleEffect(new Vec3f( 0.2901960784F, 0.0117647059F, 0.0117647059F ), 1), caster.getX(), caster.getRandomBodyY(), caster.getZ(), 10, 0.2, 0.5, 0.2, 0.1 ); }
         }
     }
 
     private void fireBloodBeam() {
         LivingEntity target = caster.getTarget();
-        if (target == null) {
+        if (target == null || caster.squaredDistanceTo(target) > KastriaMobs.getSquared(attackRange)) {
             return;
         }
 
@@ -133,7 +147,7 @@ public class BloodBeam extends Goal {
     }
 
     private void applyDamageAndAttraction(List<LivingEntity> hits, Vec3d startPos) {
-        caster.playSound(SoundEvents.ENTITY_WARDEN_SONIC_BOOM, SOUND_VOLUME, SOUND_PITCH);
+        caster.playSound(SoundEvents.BLOCK_SCULK_SHRIEKER_STEP, SOUND_VOLUME, SOUND_PITCH);
         
         for (LivingEntity hit : hits) {
             hit.damage(DamageSource.sonicBoom(caster), damage);

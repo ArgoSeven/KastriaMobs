@@ -27,10 +27,10 @@ public class RedBloodMage extends AbstractKastriaEntity implements ConfigProvide
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(1, new WanderAroundGoal(this, 1.0));
-        this.goalSelector.add(2, new BloodBeam(this));
-        this.goalSelector.add(3, new SwimGoal(this));
-        this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.add(2, new WanderAroundGoal(this, 1.0));
+        this.goalSelector.add(3, new BloodBeam(this));
+        this.goalSelector.add(4, new SwimGoal(this));
+        this.goalSelector.add(5, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         
         this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.add(2, new RevengeGoal(this));

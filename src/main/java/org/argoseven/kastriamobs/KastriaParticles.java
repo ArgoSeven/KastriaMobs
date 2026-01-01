@@ -9,6 +9,7 @@ public class KastriaParticles {
     public static final DefaultParticleType NOTES_PARTICLE = registerParticle("notes", FabricParticleTypes.simple());
     public static final DefaultParticleType BLOOD_BEAM_PARTICLE = registerParticle("blood_beam", FabricParticleTypes.simple());
     public static final DefaultParticleType MAGIC_CIRCLE = registerParticle("magic_circle", FabricParticleTypes.simple());
+    public static final DefaultParticleType SONIC_CHARGE = registerParticle("sonic_charge", FabricParticleTypes.simple());
 
 
     private static DefaultParticleType registerParticle(String name, DefaultParticleType particleType) {
