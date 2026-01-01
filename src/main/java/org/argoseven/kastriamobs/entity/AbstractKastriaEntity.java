@@ -61,8 +61,8 @@ public abstract class AbstractKastriaEntity extends HostileEntity implements IAn
         }
         
         if (event.isMoving()) {
-            double speed = this.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-            controller.setAnimationSpeed(BASE_ANIMATION_SPEED + (float) speed * ANIMATION_SPEED_MULTIPLIER);
+            double mob_speed = this.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+            controller.setAnimationSpeed(BASE_ANIMATION_SPEED + (float) mob_speed * ANIMATION_SPEED_MULTIPLIER);
             controller.setAnimation(new AnimationBuilder()
                     .addAnimation("walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;

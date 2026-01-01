@@ -51,6 +51,7 @@ public class Bard extends AbstractKastriaEntity implements ConfigProvider.SonicB
         return super.damage(source, amount);
     }
 
+
     @Override
     protected SoundEvent getAmbientSound() {
         return SoundEvents.ENTITY_PLAYER_BREATH;

@@ -34,7 +34,7 @@ public class BloodBeam extends Goal {
     private final MobEntity caster;
     private int cooldown = 0;
     private final int maxCooldown;
-    private final float maxRange;
+    private final float attackRange;
     private final float damage;
     private final float attractionStrength;
 
@@ -42,7 +42,7 @@ public class BloodBeam extends Goal {
         Config.BloodBeamConfig config = caster.getBloodBeamConfig();
         this.caster = caster;
         this.maxCooldown = config.max_cooldown;
-        this.maxRange = config.max_range;
+        this.attackRange = config.max_range_of_attack;
         this.damage = config.damage;
         this.attractionStrength = config.attraction_strength;
         this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
@@ -57,7 +57,7 @@ public class BloodBeam extends Goal {
         
         return this.caster.canTarget(target)
                 && this.caster.canSee(target) 
-                && caster.squaredDistanceTo(target) < maxRange * maxRange;
+                && caster.squaredDistanceTo(target) < attackRange * attackRange;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class BloodBeam extends Goal {
 
     @Override
     public void tick() {
-        KastriaMobs.moveAndRetreat(caster, caster.getTarget(), maxRange);
+        KastriaMobs.moveAndRetreat(caster, caster.getTarget(), attackRange);
         
         if (--cooldown <= 0) {
             fireBloodBeam();
@@ -90,10 +90,10 @@ public class BloodBeam extends Goal {
         prepareCasterForAttack(target);
         spawnBeamParticles(serverWorld, startPos, direction);
         
-        Box searchBox = caster.getBoundingBox().stretch(lookVec.multiply(maxRange));
+        Box searchBox = caster.getBoundingBox().stretch(lookVec.multiply(attackRange));
         
         if (DebugShapePackets.isDebugEnabled()) {
-            Vec3d beamEnd = startPos.add(direction.multiply(maxRange));
+            Vec3d beamEnd = startPos.add(direction.multiply(attackRange));
             DebugShapePackets.sendDebugBeam(serverWorld, startPos, beamEnd, 1.0f, 0.0f, 0.0f, 1.0f, 20);
             DebugShapePackets.sendDebugBox(serverWorld, searchBox, 0.0f, 1.0f, 0.0f, 0.5f, 20);
         }
@@ -111,7 +111,7 @@ public class BloodBeam extends Goal {
         BlockStateParticleEffect bloodEffect = new BlockStateParticleEffect(
                 ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.getDefaultState());
         
-        for (double i = 1; i <= maxRange; i += PARTICLE_STEP) {
+        for (double i = 1; i <= attackRange; i += PARTICLE_STEP) {
             Vec3d particlePos = startPos.add(direction.multiply(i));
             world.spawnParticles(KastriaParticles.BLOOD_BEAM_PARTICLE, 
                     particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);
@@ -121,7 +121,7 @@ public class BloodBeam extends Goal {
     }
 
     private List<LivingEntity> findEntitiesInBeam(ServerWorld world, Vec3d lookVec, Vec3d eyePos) {
-        Box searchBox = caster.getBoundingBox().stretch(lookVec.multiply(maxRange));
+        Box searchBox = caster.getBoundingBox().stretch(lookVec.multiply(attackRange));
         
         return world.getEntitiesByClass(
                 LivingEntity.class,
@@ -167,6 +167,6 @@ public class BloodBeam extends Goal {
             DebugShapePackets.sendDebugBox(serverWorld, entityBox, 1.0f, 0.5f, 0.0f, 1.0f, 20);
         }
         
-        return entityBox.raycast(eyePos, eyePos.add(lookVec.multiply(maxRange))).isPresent();
+        return entityBox.raycast(eyePos, eyePos.add(lookVec.multiply(attackRange))).isPresent();
     }
 }

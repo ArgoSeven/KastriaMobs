@@ -27,9 +27,9 @@ public class PlagueBrute extends AbstractKastriaEntity implements ConfigProvider
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.add(2, new WanderAroundGoal(this, 1.0));
-        this.goalSelector.add(3, new SonicBoom(this));
+        this.goalSelector.add(1, new SonicBoom(this));
+        this.goalSelector.add(2, new MeleeAttackGoal(this, 1.0D, false));
+        this.goalSelector.add(3, new WanderAroundGoal(this, 1.0));
         this.goalSelector.add(4, new SwimGoal(this));
         this.goalSelector.add(5, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         

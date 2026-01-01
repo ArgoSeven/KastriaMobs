@@ -27,7 +27,6 @@ public class SummonCursedBullet extends Goal {
     private int cooldown;
     private final int maxCooldown;
     private final float activationRange;
-    private final float maxRangeAttack;
     private final StatusEffect statusEffect;
     private final int duration;
     private final int amplifier;
@@ -36,8 +35,7 @@ public class SummonCursedBullet extends Goal {
         Config.CursedBulletConfig config = caster.getCursedBulletConfig();
         this.caster = caster;
         this.maxCooldown = config.max_cooldown;
-        this.activationRange = config.range_of_activation;
-        this.maxRangeAttack = config.max_range_of_attack;
+        this.activationRange = config.attack_range_after;
         this.statusEffect = resolveStatusEffect(
                 config.status_effect != null ? new Identifier(config.status_effect) : null
         );
@@ -49,8 +47,7 @@ public class SummonCursedBullet extends Goal {
     protected SummonCursedBullet(MobEntity caster, Config.CursedBulletConfig config) {
         this.caster = caster;
         this.maxCooldown = config.max_cooldown;
-        this.activationRange = config.range_of_activation;
-        this.maxRangeAttack = config.max_range_of_attack;
+        this.activationRange = config.attack_range_after;
         this.statusEffect = resolveStatusEffect(
                 config.status_effect != null ? new Identifier(config.status_effect) : null
         );
@@ -100,17 +97,10 @@ public class SummonCursedBullet extends Goal {
             return;
         }
         
-        double distanceSquared = caster.squaredDistanceTo(target);
-        if (distanceSquared >= KastriaMobs.getSquared(maxRangeAttack)) {
-            caster.setTarget(null);
-            return;
-        }
-        
         caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
         caster.swingHand(Hand.MAIN_HAND);
-        
-        int randomizedCooldown = maxCooldown + caster.getRandom().nextInt(maxCooldown / COOLDOWN_RANDOMIZATION_DIVISOR);
-        this.cooldown = randomizedCooldown;
+
+        this.cooldown = maxCooldown + caster.getRandom().nextInt(maxCooldown / COOLDOWN_RANDOMIZATION_DIVISOR);
         
         CursedBullet bullet = new CursedBullet(
                 caster.world, caster, target, 

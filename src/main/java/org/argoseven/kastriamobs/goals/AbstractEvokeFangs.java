@@ -5,6 +5,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.EvokerFangsEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -13,6 +15,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
+import org.argoseven.kastriamobs.KastriaParticles;
 
 public abstract class AbstractEvokeFangs extends Goal {
     
@@ -20,11 +23,13 @@ public abstract class AbstractEvokeFangs extends Goal {
     protected int cooldown = 0;
     protected final int maxCooldown;
     protected final float activationRange;
+    protected final float attackRange;
 
     protected AbstractEvokeFangs(MobEntity caster, Config.FangAttackConfig config) {
         this.caster = caster;
-        this.activationRange = config.range_of_activation;
+        this.activationRange = config.max_aggro_range;
         this.maxCooldown = config.max_cooldown;
+        this.attackRange = config.max_range_of_attack;
     }
 
     @Override
@@ -39,7 +44,7 @@ public abstract class AbstractEvokeFangs extends Goal {
 
     @Override
     public void start() {
-        cooldown = 0;
+        cooldown = maxCooldown;
     }
 
     @Override
@@ -52,7 +57,7 @@ public abstract class AbstractEvokeFangs extends Goal {
 
     protected void castSpell() {
         LivingEntity target = caster.getTarget();
-        if (target == null) {
+        if (target == null ||  caster.squaredDistanceTo(target) > KastriaMobs.getSquared(attackRange)) {
             return;
         }
 

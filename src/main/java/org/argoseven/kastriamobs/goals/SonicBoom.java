@@ -7,6 +7,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import org.argoseven.kastriamobs.KastriaMobs;
 import org.argoseven.kastriamobs.entity.ConfigProvider;
 import org.argoseven.kastriamobs.network.DebugShapePackets;
 
@@ -23,13 +24,13 @@ public class SonicBoom extends AbstractSonicAttack {
 
     @Override
     protected void handleMovement(LivingEntity target) {
-        // SonicBoom doesn't use movement/retreat behavior
+        KastriaMobs.moveAndRetreat(caster,target, attackRange, true);
     }
 
     @Override
     protected void executeAttack() {
         LivingEntity target = caster.getTarget();
-        if (target == null || caster.distanceTo(target) > maxRange + 1) {
+        if (target == null || caster.squaredDistanceTo(target) > KastriaMobs.getSquared(attackRange)) {
             return;
         }
 
@@ -51,8 +52,8 @@ public class SonicBoom extends AbstractSonicAttack {
 
     private List<LivingEntity> findEntitiesInRadius(ServerWorld world, Vec3d startPos) {
         Box searchBox = new Box(
-                startPos.x - maxRange, startPos.y - BOOM_VERTICAL_RANGE, startPos.z - maxRange,
-                startPos.x + maxRange, startPos.y + BOOM_VERTICAL_RANGE, startPos.z + maxRange
+                startPos.x - attackRange, startPos.y - BOOM_VERTICAL_RANGE, startPos.z - attackRange,
+                startPos.x + attackRange, startPos.y + BOOM_VERTICAL_RANGE, startPos.z + attackRange
         );
 
         if (DebugShapePackets.isDebugEnabled()) {

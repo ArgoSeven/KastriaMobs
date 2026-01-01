@@ -42,14 +42,16 @@ public class Config {
 
     public static class SonicAttackConfig {
         public int max_cooldown;
-        public float max_range;
+        public float max_aggro_range;
+        public float max_range_of_attack;
         public float damage;
         public float vertical_knock_constant;
         public float horizontal_knock_constant;
     }
 
     public static class FangAttackConfig {
-        public float range_of_activation;
+        public float max_aggro_range;
+        public float max_range_of_attack;
         public int max_cooldown;
         public int number_of_fangs;
         public int number_of_circles;
@@ -58,14 +60,15 @@ public class Config {
 
     public static class BloodBeamConfig {
         public int max_cooldown;
-        public float max_range;
+        public float max_aggro_range;
+        public float max_range_of_attack;
         public float damage;
         public float attraction_strength;
     }
 
     public static class CursedBulletConfig {
         public int max_cooldown;
-        public float range_of_activation;
+        public float attack_range_after;
         public float max_range_of_attack;
         public String status_effect;
         public int effect_duration;

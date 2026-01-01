@@ -54,7 +54,7 @@ public class KastriaMobs implements ModInitializer {
         return range * range;
     }
 
-    public static void moveAndRetreat(MobEntity caster, LivingEntity target, double maxRange) {
+    public static void moveAndRetreat(MobEntity caster, LivingEntity target, double maxRange, boolean moveOnlyForward) {
         if (target == null) {
             return;
         }
@@ -62,12 +62,28 @@ public class KastriaMobs implements ModInitializer {
         double squaredDistance = getSquared(maxRange);
         float strafeDirection = caster.getRandom().nextFloat() < 0.3 ? -0.5F : 0.5F;
 
-        if (caster.squaredDistanceTo(target) >= squaredDistance && caster.getNavigation().isIdle()) {
+        if (caster.squaredDistanceTo(target) >= squaredDistance && caster.getNavigation().isIdle() && !caster.getMoveControl().isMoving()) {
             caster.getNavigation().startMovingTo(target, 1);
-        } else {
-            caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
+        } else if (!caster.getMoveControl().isMoving() && !moveOnlyForward){
             caster.getNavigation().stop();
-            caster.getMoveControl().strafeTo(-1.0f, strafeDirection);
+            caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
+            caster.getMoveControl().strafeTo(-1.0f, 0);
+        }
+    }
+    public static void moveAndRetreat(MobEntity caster, LivingEntity target, double maxRange) {
+        if (target == null) {
+            return;
+        }
+
+        double squaredDistance = getSquared(maxRange);
+        float strafeDirection = caster.getRandom().nextFloat() < 0.3 ? -0.5F : 0.5F;
+
+        if (caster.squaredDistanceTo(target) >= squaredDistance && caster.getNavigation().isIdle() && !caster.getMoveControl().isMoving()) {
+            caster.getNavigation().startMovingTo(target, 1);
+        } else if (!caster.getMoveControl().isMoving()){
+            caster.getNavigation().stop();
+            caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
+            caster.getMoveControl().strafeTo(-1.0f, 0);
         }
     }
 }

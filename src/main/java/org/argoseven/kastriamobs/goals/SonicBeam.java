@@ -6,6 +6,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import org.argoseven.kastriamobs.KastriaMobs;
 import org.argoseven.kastriamobs.entity.ConfigProvider;
 import org.argoseven.kastriamobs.network.DebugShapePackets;
 
@@ -22,7 +23,7 @@ public class SonicBeam extends AbstractSonicAttack {
     @Override
     protected void executeAttack() {
         LivingEntity target = caster.getTarget();
-        if (target == null || caster.distanceTo(target) > maxRange + 1) {
+        if (target == null || caster.squaredDistanceTo(target) > KastriaMobs.getSquared(attackRange)) {
             return;
         }
 
@@ -34,7 +35,7 @@ public class SonicBeam extends AbstractSonicAttack {
 
 
         if (DebugShapePackets.isDebugEnabled()) {
-            Vec3d beamEnd = startPos.add(direction.multiply(maxRange));
+            Vec3d beamEnd = startPos.add(direction.multiply(attackRange));
             DebugShapePackets.sendDebugBeam(serverWorld, startPos, beamEnd, 1.0f, 0.0f, 0.0f, 1.0f, 20);
         }
 
@@ -46,7 +47,7 @@ public class SonicBeam extends AbstractSonicAttack {
     }
 
     private void spawnBeamParticles(ServerWorld world, Vec3d startPos, Vec3d direction) {
-        for (int i = 1; i <= maxRange; i++) {
+        for (int i = 1; i <= attackRange; i++) {
             Vec3d particlePos = startPos.add(direction.multiply(i));
             world.spawnParticles(ParticleTypes.SONIC_BOOM, 
                     particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);
@@ -54,7 +55,7 @@ public class SonicBeam extends AbstractSonicAttack {
     }
 
     private List<LivingEntity> findEntitiesInBeam(ServerWorld world, Vec3d lookVec, Vec3d eyePos) {
-        Box searchBox = caster.getBoundingBox().stretch(lookVec.multiply(maxRange));
+        Box searchBox = caster.getBoundingBox().stretch(lookVec.multiply(attackRange));
 
 
         return world.getEntitiesByClass(
