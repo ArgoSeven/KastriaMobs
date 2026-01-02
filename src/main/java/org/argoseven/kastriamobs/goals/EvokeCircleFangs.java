@@ -4,6 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.math.MathHelper;
 import org.argoseven.kastriamobs.Config;
+import org.argoseven.kastriamobs.KastriaMobs;
 import org.argoseven.kastriamobs.entity.ConfigProvider;
 
 public class EvokeCircleFangs extends AbstractEvokeFangs {
@@ -28,6 +29,9 @@ public class EvokeCircleFangs extends AbstractEvokeFangs {
         this.numberOfFangs = config.number_of_fangs;
         this.numberOfCircles = config.number_of_circles;
         this.radiusStep = config.radius_step;
+    }
+
+    protected void handleMovement(LivingEntity target) {
     }
 
     @Override

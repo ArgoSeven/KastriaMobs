@@ -31,10 +31,6 @@ public class EvokeLineFangs extends AbstractEvokeFangs {
     @Override
     public void tick() {
         super.tick();
-        LivingEntity target = caster.getTarget();
-        if (target != null) {
-            KastriaMobs.moveAndRetreat(caster, target, activationRange);
-        }
     }
 
     @Override

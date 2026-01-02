@@ -1,5 +1,6 @@
 {
   "entity.kastriamobs.bard": "Bard",
+  "entity.kastriamobs.tobias": "Tobias",
   "entity.kastriamobs.bastion": "Bastion",
   "entity.kastriamobs.blindwrath": "Blindwrath",
   "entity.kastriamobs.hollowseer": "Hollowseer",
@@ -7,8 +8,6 @@
   "entity.kastriamobs.reaver": "Reaver",
   "entity.kastriamobs.red_blood_mage": "Red Blood Mage",
   "entity.kastriamobs.stalker": "Stalker",
-
-
 
 
   "item.kastriamobs.bard_spawn_egg": "Bard Spawn Egg",

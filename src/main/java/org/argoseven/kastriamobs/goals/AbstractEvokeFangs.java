@@ -15,7 +15,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaMobs;
-import org.argoseven.kastriamobs.KastriaParticles;
 
 public abstract class AbstractEvokeFangs extends Goal {
     
@@ -50,13 +49,17 @@ public abstract class AbstractEvokeFangs extends Goal {
         cooldown = maxCooldown;
     }
 
+    protected void handleMovement(LivingEntity target) {
+       KastriaMobs.moveAndRetreat(caster, target, attackRange);
+    }
+
     @Override
     public void tick() {
         if (--cooldown <= 0) {
             castSpell();
             cooldown = maxCooldown;
         }
-
+        handleMovement(caster);
         particleTimer++;
         if(particleTimer >= particleInterval){
             particleTimer = 0;
