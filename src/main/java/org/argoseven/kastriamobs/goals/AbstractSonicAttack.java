@@ -120,13 +120,15 @@ public abstract class AbstractSonicAttack extends Goal {
     }
 
 
+
+
     protected void dealDamageAndKnockback(List<LivingEntity> hits, Vec3d startPos) {
         caster.playSound(SoundEvents.ENTITY_WARDEN_SONIC_BOOM, SOUND_VOLUME, SOUND_PITCH);
         
         for (LivingEntity hit : hits) {
             hit.damage(DamageSource.sonicBoom(caster), damage);
-           // Vec3d direction = hit.getEyePos().subtract(startPos).normalize();
-            applyAttraction(hit, caster);
+            Vec3d direction = hit.getEyePos().subtract(startPos).normalize();
+            applyKnockback(hit, direction);
         }
     }
 
