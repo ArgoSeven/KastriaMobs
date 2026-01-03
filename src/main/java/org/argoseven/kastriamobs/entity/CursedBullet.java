@@ -51,6 +51,5 @@ public class CursedBullet extends ShulkerBulletEntity {
             }
 
         }
-        super.onEntityHit(entityHitResult);
     }
 }
