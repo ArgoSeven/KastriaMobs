@@ -1,6 +1,7 @@
 package org.argoseven.kastriamobs;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
@@ -10,6 +11,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
+import org.argoseven.kastriamobs.command.KastriaReload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +29,7 @@ public class KastriaMobs implements ModInitializer {
         Config.init();
         RegistryKastriaEntity.registerEntityAttributes();
         KastriaParticles.registerParticles();
+        CommandRegistrationCallback.EVENT.register(KastriaReload::register);
         RegistryKastriaItems.registerItem();
 
         registerConfigReloader();
