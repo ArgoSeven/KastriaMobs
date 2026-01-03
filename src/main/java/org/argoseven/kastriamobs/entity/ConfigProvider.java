@@ -31,4 +31,8 @@ public interface ConfigProvider {
     interface CursedBulletProvider {
         Config.CursedBulletConfig getCursedBulletConfig();
     }
+
+    interface MeleeEffectProvider {
+        Config.MeleeEffectConfig getMeleeEffect();
+    }
 }

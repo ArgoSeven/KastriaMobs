@@ -74,10 +74,18 @@ public class Config {
         public int effect_amplifier;
     }
 
+    public static class MeleeEffectConfig {
+        public String status_effect;
+        public int effect_duration;
+        public int effect_amplifier;
+    }
+
     public static class BastionConfig extends EntityStatsConfig {
+        public MeleeEffectConfig melee_effect;
     }
 
     public static class StalkerConfig extends EntityStatsConfig {
+        public MeleeEffectConfig melee_effect;
     }
 
     public static class BlindwrathConfig extends EntityStatsConfig {
@@ -86,6 +94,7 @@ public class Config {
 
     public static class PlaguebruteConfig extends EntityStatsConfig {
         public SonicAttackConfig sonicboom;
+        public MeleeEffectConfig melee_effect;
     }
 
     public static class HollowseerConfig extends EntityStatsConfig {
@@ -95,6 +104,7 @@ public class Config {
 
     public static class ReaverConfig extends EntityStatsConfig {
         public FangAttackConfig evoker_fang_circle;
+        public MeleeEffectConfig melee_effect;
     }
 
     public static class RedBloodMageConfig extends EntityStatsConfig {

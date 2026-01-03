@@ -21,10 +21,10 @@ armor_toughness = 0.7
 knockback_resistance = 0.1
 
 [blindwrath.sonicbeam]
-max_cooldown = 30
-aggro_range = 20
-attack_range = 10
-damage = 10.0
+max_cooldown = 20
+aggro_range = 24
+attack_range = 20
+damage = 4.0
 vertical_knock_constant = 0.5
 horizontal_knock_constant = 2.5
 
@@ -38,15 +38,14 @@ armor_toughness = 0.7
 knockback_resistance = 0.1
 
 [hollowseer.evoker_fang_beam]
-number_of_fangs = 20
+number_of_fangs = 17
 max_cooldown = 30
-aggro_range = 20
+aggro_range = 18
 attack_range = 15
 
 [hollowseer.cursed_bullet]
 max_cooldown = 60
-range_of_activation = 16
-min_shooting_distance = 40
+min_shooting_distance = 20
 status_effect = "minecraft:blindness"
 effect_duration = 40
 effect_amplifier = 1
@@ -61,12 +60,12 @@ armor_toughness = 0.7
 knockback_resistance = 0.1
 
 [plaguebrute.sonicboom]
-max_cooldown = 30
-aggro_range = 15
-attack_range = 10
+max_cooldown = 60
+aggro_range = 8
+attack_range = 4
 damage = 10.0
 vertical_knock_constant = 2
-horizontal_knock_constant = 1.5
+horizontal_knock_constant = 4.5
 
 [reaver]
 max_health = 40.0

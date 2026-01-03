@@ -1,18 +1,24 @@
 package org.argoseven.kastriamobs.entity;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
 
-public class Stalker extends AbstractKastriaEntity {
+public class Stalker extends AbstractKastriaEntity implements ConfigProvider.MeleeEffectProvider {
 
     public Stalker(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
@@ -49,8 +55,24 @@ public class Stalker extends AbstractKastriaEntity {
     }
 
     @Override
+    public boolean tryAttack(Entity target) {
+        boolean bl = super.tryAttack(target);
+        if (target instanceof LivingEntity && (getMeleeEffect() != null)) {
+            StatusEffect effectId = Registry.STATUS_EFFECT.get(new Identifier(getMeleeEffect().status_effect));
+            if (effectId == null) return bl;
+            ((LivingEntity)target).addStatusEffect(new StatusEffectInstance(effectId, getMeleeEffect().effect_duration, getMeleeEffect().effect_amplifier), this);
+        }
+        return  bl;
+    }
+
+    @Override
     public void onDeath(DamageSource damageSource) {
         super.onDeath(damageSource);
         this.playSound(SoundEvents.ENTITY_STRAY_DEATH, 1.0F, 0.90F);
+    }
+
+    @Override
+    public Config.MeleeEffectConfig getMeleeEffect() {
+        return Config.data.stalker.melee_effect;
     }
 }
