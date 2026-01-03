@@ -72,7 +72,7 @@ public class SonicBoom extends AbstractSonicAttack {
         for (LivingEntity hit : hits) {
             Vec3d direction = hit.getEyePos().subtract(startPos).normalize();
             hit.damage(net.minecraft.entity.damage.DamageSource.sonicBoom(caster), damage);
-            applyKnockback(hit, direction);
+            applyAttraction(hit, caster);
         }
     }
 }

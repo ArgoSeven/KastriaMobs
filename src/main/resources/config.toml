@@ -12,9 +12,9 @@ armor_toughness = 0.7
 knockback_resistance = 0.1
 
 [bastion.melee_effect]
-status_effect = "minecraft:blindness"
-effect_duration = 40
-effect_amplifier = 1
+status_effect = "minecraft:wither"
+effect_duration = 200
+effect_amplifier = 0
 
 [blindwrath]
 max_health = 40.0
@@ -29,9 +29,9 @@ knockback_resistance = 0.1
 max_cooldown = 20
 aggro_range = 24
 attack_range = 20
-damage = 4.0
-vertical_knock_constant = 0.5
-horizontal_knock_constant = 2.5
+damage = 5.0
+vertical_force_multiplier = 0.5
+horizontal_force_multiplier = 2.5
 
 [hollowseer]
 max_health = 40.0
@@ -69,13 +69,13 @@ max_cooldown = 60
 aggro_range = 8
 attack_range = 4
 damage = 10.0
-vertical_knock_constant = 2
-horizontal_knock_constant = 4.5
+vertical_force_multiplier = 2
+horizontal_force_multiplier = 2
 
 [plaguebrute.melee_effect]
-status_effect = "minecraft:glowing"
-effect_duration = 40
-effect_amplifier = 1
+status_effect = "minecraft:slowness"
+effect_duration = 200
+effect_amplifier = 0
 
 
 [reaver]
@@ -96,9 +96,9 @@ aggro_range = 10
 attack_range = 7
 
 [reaver.melee_effect]
-status_effect = "minecraft:blindness"
-effect_duration = 40
-effect_amplifier = 1
+status_effect = "minecraft:slowness"
+effect_duration = 200
+effect_amplifier = 0
 
 
 [red_blood_mage]
@@ -128,9 +128,9 @@ armor_toughness = 0.7
 knockback_resistance = 0.1
 
 [stalker.melee_effect]
-status_effect = "minecraft:blindness"
-effect_duration = 40
-effect_amplifier = 1
+status_effect = "minecraft:wither"
+effect_duration = 200
+effect_amplifier = 0
 
 
 # MEME
@@ -148,8 +148,8 @@ max_cooldown = 30
 aggro_range = 15
 attack_range = 10
 damage = 10.0
-vertical_knock_constant = 2
-horizontal_knock_constant = 1.5
+vertical_force_multiplier = 2
+horizontal_force_multiplier = 1.5
 
 [tobias]
 max_health = 20.0

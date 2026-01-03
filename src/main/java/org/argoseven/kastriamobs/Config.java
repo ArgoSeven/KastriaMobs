@@ -45,8 +45,8 @@ public class Config {
         public float aggro_range;
         public float attack_range;
         public float damage;
-        public float vertical_knock_constant;
-        public float horizontal_knock_constant;
+        public float vertical_force_multiplier;
+        public float horizontal_force_multiplier;
     }
 
     public static class FangAttackConfig {

@@ -29,8 +29,8 @@ public abstract class AbstractSonicAttack extends Goal {
     protected final float activationRange;
     protected final float attackRange;
     protected final float damage;
-    protected final float verticalKnockback;
-    protected final float horizontalKnockback;
+    protected final float verticalForceMultiplier;
+    protected final float horizontalForceHorizontal;
 
     private int particleTimer = 0;
     private final int particleInterval = 10;
@@ -41,8 +41,8 @@ public abstract class AbstractSonicAttack extends Goal {
         this.attackRange = config.attack_range;
         this.activationRange = config.aggro_range;
         this.damage = config.damage;
-        this.verticalKnockback = config.vertical_knock_constant;
-        this.horizontalKnockback = config.horizontal_knock_constant;
+        this.verticalForceMultiplier = config.vertical_force_multiplier;
+        this.horizontalForceHorizontal = config.horizontal_force_multiplier;
     }
 
     @Override
@@ -88,24 +88,45 @@ public abstract class AbstractSonicAttack extends Goal {
 
     protected void applyKnockback(LivingEntity hit, Vec3d direction) {
         double knockResistance = hit.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
-        double verticalKnock = verticalKnockback * (1.0 - knockResistance);
-        double horizontalKnock = horizontalKnockback * (1.0 - knockResistance);
-        
+        double verticalKnock = verticalForceMultiplier * (1.0 - knockResistance);
+        double horizontalKnock = horizontalForceHorizontal * (1.0 - knockResistance);
+
         hit.addVelocity(
-                direction.getX() * horizontalKnock, 
-                direction.getY() * verticalKnock, 
+                direction.getX() * horizontalKnock,
+                direction.getY() * verticalKnock,
                 direction.getZ() * horizontalKnock
         );
         hit.velocityModified = true;
     }
+
+    protected void applyAttraction(LivingEntity hit, LivingEntity caster) {
+        Vec3d hitPos = hit.getPos();
+        Vec3d casterPos = caster.getPos();
+        double distance = hitPos.distanceTo(casterPos);
+        double knockResistance = hit.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
+        double verticalAttraction = verticalForceMultiplier * (1.0 - knockResistance);
+        double horizontalAttraction = horizontalForceHorizontal * (1.0 - knockResistance);
+        
+        if (distance > 1.0) {
+            Vec3d direction = casterPos.subtract(hitPos).normalize();
+
+            hit.addVelocity(
+                    direction.getX() * horizontalAttraction,
+                    direction.getY() * verticalAttraction,
+                    direction.getZ() * horizontalAttraction
+            );
+            hit.velocityModified = true;
+        }
+    }
+
 
     protected void dealDamageAndKnockback(List<LivingEntity> hits, Vec3d startPos) {
         caster.playSound(SoundEvents.ENTITY_WARDEN_SONIC_BOOM, SOUND_VOLUME, SOUND_PITCH);
         
         for (LivingEntity hit : hits) {
             hit.damage(DamageSource.sonicBoom(caster), damage);
-            Vec3d direction = hit.getEyePos().subtract(startPos).normalize();
-            applyKnockback(hit, direction);
+           // Vec3d direction = hit.getEyePos().subtract(startPos).normalize();
+            applyAttraction(hit, caster);
         }
     }
 
