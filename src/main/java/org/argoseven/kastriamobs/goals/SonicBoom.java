@@ -62,7 +62,7 @@ public class SonicBoom extends AbstractSonicAttack {
         return world.getEntitiesByClass(
                 LivingEntity.class,
                 searchBox,
-                entity -> entity.getClass() != caster.getClass() && !entity.isTeammate(caster)
+                entity -> entity.getClass() != caster.getClass() && !entity.isTeammate(caster) && !entity.isSpectator()
         );
     }
 

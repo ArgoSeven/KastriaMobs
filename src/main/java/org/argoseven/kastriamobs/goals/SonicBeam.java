@@ -64,6 +64,7 @@ public class SonicBeam extends AbstractSonicAttack {
                 entity -> entity != caster 
                         && !entity.isTeammate(caster) 
                         && isEntityInCone(eyePos, lookVec, entity)
+                        && !entity.isSpectator()
         );
     }
 }

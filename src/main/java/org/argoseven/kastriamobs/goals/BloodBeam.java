@@ -143,6 +143,7 @@ public class BloodBeam extends Goal {
                 entity -> entity != caster 
                         && !entity.isTeammate(caster) 
                         && isEntityInCone(eyePos, lookVec, entity)
+                        && !entity.isSpectator()
         );
     }
 
