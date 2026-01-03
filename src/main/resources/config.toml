@@ -11,6 +11,11 @@ armor = 14.0
 armor_toughness = 0.7
 knockback_resistance = 0.1
 
+[bastion.melee_effect]
+status_effect = "minecraft:blindness"
+effect_duration = 40
+effect_amplifier = 1
+
 [blindwrath]
 max_health = 40.0
 movement_speed = 0.32
@@ -67,6 +72,12 @@ damage = 10.0
 vertical_knock_constant = 2
 horizontal_knock_constant = 4.5
 
+[plaguebrute.melee_effect]
+status_effect = "minecraft:glowing"
+effect_duration = 40
+effect_amplifier = 1
+
+
 [reaver]
 max_health = 40.0
 movement_speed = 0.32
@@ -83,6 +94,12 @@ radius_step = 1.0
 max_cooldown = 60
 aggro_range = 10
 attack_range = 7
+
+[reaver.melee_effect]
+status_effect = "minecraft:blindness"
+effect_duration = 40
+effect_amplifier = 1
+
 
 [red_blood_mage]
 max_health = 10.0
@@ -109,6 +126,11 @@ follow_range = 30.0
 armor = 14.0
 armor_toughness = 0.7
 knockback_resistance = 0.1
+
+[stalker.melee_effect]
+status_effect = "minecraft:blindness"
+effect_duration = 40
+effect_amplifier = 1
 
 
 # MEME
