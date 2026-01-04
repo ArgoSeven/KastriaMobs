@@ -1,6 +1,6 @@
 # KastriaMobs
 
-**KastriaMobs** is a Fabric mod that adds 10 unique hostile mobs to Minecraft, each with custom 3D models (powered by Geckolib), distinctive attacks, and configurable stats.
+**KastriaMobs** is a Fabric mod that adds 9 unique hostile mobs to Minecraft, each with custom 3D models (powered by Geckolib), distinctive attacks, and configurable stats.
 
 ## Mobs
 
