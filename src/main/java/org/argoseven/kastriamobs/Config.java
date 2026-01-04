@@ -128,6 +128,7 @@ public class Config {
         Toml internalConfigToml = readTomlFromResource(KastriaMobs.class.getClassLoader().getResourceAsStream(CONFIG_RESOURCE_PATH));
 
         if (externalConfigToml == null){
+            configEnsurer(configPath);
             externalConfigToml = internalConfigToml;
         }
 
@@ -142,7 +143,7 @@ public class Config {
             configEnsurer(configPath);
             externalConfigToml = internalConfigToml;
         }
-            data = externalConfigToml.to(Config.class);
+        data = externalConfigToml.to(Config.class);
     }
 
     private static void createModFolder(Path config) {
