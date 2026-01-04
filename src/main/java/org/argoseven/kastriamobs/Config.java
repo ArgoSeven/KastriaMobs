@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
+import static org.argoseven.kastriamobs.KastriaMobs.LOGGER;
 import static org.argoseven.kastriamobs.KastriaMobs.configPath;
 
 public class Config {
@@ -121,9 +123,65 @@ public class Config {
     }
 
     public static void init() {
-        Path path = ensureConfigExists(configPath);
-        data = new Toml().read(new File(path.toUri())).to(Config.class);
+        Toml externalConfigToml = readVersionFromFile(configPath);
+        Toml internalConfigToml = readTomlFromResource(KastriaMobs.class.getClassLoader().getResourceAsStream(CONFIG_RESOURCE_PATH));
+
+        if (externalConfigToml == null){
+            externalConfigToml = internalConfigToml;
+            configEnsurer(configPath);
+        }
+
+        LOGGER.info("Reading KastriaMobs config...");
+        double internalVersion = internalConfigToml.getDouble("version", -1D);
+        double externalVersion = externalConfigToml.getDouble("version", -1D);
+
+        if (internalVersion > externalVersion){
+            LOGGER.warn("Config version mismatch: external={} internal={} copying the default one", externalVersion, internalVersion);
+            Path oldPath = configPath.resolveSibling(configPath.getFileName().toString().replace(".toml", ".old"));
+            try { Files.move(configPath, oldPath, StandardCopyOption.REPLACE_EXISTING); } catch (IOException e) { LOGGER.error("Failed to rename config file", e); }
+            configEnsurer(configPath);
+        }
+        data = externalConfigToml.to(Config.class);
     }
+
+    private static Toml readVersionFromFile(Path path) {
+        if (!Files.exists(path)) return null;
+        return new Toml().read(path.toFile());
+    }
+
+    private static Toml readTomlFromResource(InputStream inputStream) {
+        if (inputStream == null) {
+            throw new IllegalStateException("Internal config resource missing try to download angain the mod!");
+        }
+
+        try (InputStream is = inputStream) {
+            return new Toml().read(is);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to read internal config resource", e);
+        }
+    }
+
+
+    private static Path configEnsurer(Path path) {
+        if (Files.exists(path)) {
+            KastriaMobs.LOGGER.info("Config loaded successfully");
+            return path;
+        }
+        try (InputStream is =  KastriaMobs.class.getClassLoader().getResourceAsStream(CONFIG_RESOURCE_PATH)) {
+            if (is == null) {
+                KastriaMobs.LOGGER.error("Default config not found in resources: {}", CONFIG_RESOURCE_PATH);
+                return path;
+            }
+            Files.copy(is, path);
+            KastriaMobs.LOGGER.info("Default config copied to: {}", path);
+        } catch (IOException e) {
+            KastriaMobs.LOGGER.error("Failed to copy default config", e);
+        }
+        return path;
+    }
+
+
+
 
     private static Path ensureConfigExists(Path path) {
         if (Files.exists(path)) {
