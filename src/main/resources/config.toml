@@ -51,7 +51,7 @@ attack_range = 15
 [hollowseer.cursed_bullet]
 max_cooldown = 60
 min_shooting_distance = 20
-status_effect = "mysticpotions:fatal_poison"
+status_effect = "minecraft:poison"
 effect_duration = 200
 effect_amplifier = 1
 
