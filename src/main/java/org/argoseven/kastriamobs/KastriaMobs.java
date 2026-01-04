@@ -25,7 +25,7 @@ public class KastriaMobs implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        configPath = FabricLoader.getInstance().getConfigDir().resolve("kastriamobs.toml");
+        configPath = FabricLoader.getInstance().getConfigDir().resolve("kastriamobs").resolve("kastriamobs.toml");
         Config.init();
         RegistryKastriaEntity.registerEntityAttributes();
         KastriaParticles.registerParticles();

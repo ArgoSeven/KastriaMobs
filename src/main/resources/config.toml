@@ -1,6 +1,6 @@
-version = 0.1
+version = 0.2
 [debug]
-enabled = true
+enabled = false
 
 [bastion]
 max_health = 50.0
@@ -26,7 +26,7 @@ armor_toughness = 0.7
 knockback_resistance = 0.1
 
 [blindwrath.sonicbeam]
-max_cooldown = 20
+max_cooldown = 25
 aggro_range = 24
 attack_range = 20
 damage = 5.0
@@ -51,8 +51,8 @@ attack_range = 15
 [hollowseer.cursed_bullet]
 max_cooldown = 60
 min_shooting_distance = 20
-status_effect = "minecraft:blindness"
-effect_duration = 40
+status_effect = "mysticpotions:fatal_poison"
+effect_duration = 200
 effect_amplifier = 1
 
 [plaguebrute]
@@ -65,11 +65,11 @@ armor_toughness = 0.7
 knockback_resistance = 0.1
 
 [plaguebrute.sonicboom]
-max_cooldown = 60
-aggro_range = 8
-attack_range = 4
-damage = 10.0
-vertical_force_multiplier = 2
+max_cooldown = 30
+aggro_range = 10
+attack_range = 5
+damage = 5.0
+vertical_force_multiplier = 1
 horizontal_force_multiplier = 2
 
 [plaguebrute.melee_effect]
@@ -96,7 +96,7 @@ aggro_range = 10
 attack_range = 7
 
 [reaver.melee_effect]
-status_effect = "minecraft:slowness"
+status_effect = "minecraft:blindness"
 effect_duration = 200
 effect_amplifier = 0
 
@@ -129,8 +129,8 @@ knockback_resistance = 0.1
 
 [stalker.melee_effect]
 status_effect = "minecraft:wither"
-effect_duration = 200
-effect_amplifier = 0
+effect_duration = 400
+effect_amplifier = 1
 
 
 # MEME
