@@ -82,40 +82,9 @@ public class Blindwrath extends AbstractKastriaEntity implements ConfigProvider.
 
         if (source.getAttacker() instanceof PlayerEntity target) {
             KastriaMobs.LOGGER.info("Alerting nearby mobs");
-            alertNearbyMobs(target);
+            alertNearbyMobs(target, Config.data.blindwrath.alert_range);
         }
 
         return true;
-    }
-
-    private void alertNearbyMobs(PlayerEntity target) {
-        if (target.getWorld().isClient) {
-            return;
-        }
-
-        List<HostileEntity> entities = getHostileMobsInRadius();
-
-        for (HostileEntity mob : entities) {
-            if (mob.getTarget() == null) {
-                mob.setAttacker(target);
-                mob.setTarget(target);
-                mob.getNavigation().startMovingTo(target, Config.data.blindwrath.movement_speed);
-            }
-        }
-    }
-
-    private List<HostileEntity> getHostileMobsInRadius() {
-        Vec3d pos = this.getPos();
-        double radius = Config.data.blindwrath.alert_range;
-
-        Box box = new Box(
-                pos.getX() - radius, pos.getY() - radius, pos.getZ() - radius,
-                pos.getX() + radius, pos.getY() + radius, pos.getZ() + radius
-        );
-
-        return world.getEntitiesByClass(
-                HostileEntity.class,
-                box, LivingEntity::isAlive
-        );
     }
 }

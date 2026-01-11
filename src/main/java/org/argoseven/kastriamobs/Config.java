@@ -40,6 +40,7 @@ public class Config {
         public double armor;
         public double armor_toughness;
         public double knockback_resistance;
+        public double alert_range;
     }
 
     public static class SonicAttackConfig {
@@ -91,7 +92,6 @@ public class Config {
     }
 
     public static class BlindwrathConfig extends EntityStatsConfig {
-        public double alert_range;
         public SonicAttackConfig sonicbeam;
     }
 

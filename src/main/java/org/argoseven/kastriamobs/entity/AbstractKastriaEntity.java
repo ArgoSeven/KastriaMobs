@@ -1,10 +1,14 @@
 package org.argoseven.kastriamobs.entity;
 
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
 import software.bernie.geckolib3.core.AnimationState;
@@ -17,6 +21,8 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
+
+import java.util.List;
 
 public abstract class AbstractKastriaEntity extends HostileEntity implements IAnimatable {
     
@@ -135,5 +141,39 @@ public abstract class AbstractKastriaEntity extends HostileEntity implements IAn
     
     protected void setLastSwingTime(long time) {
         this.lastSwingTime = time;
+    }
+
+
+    protected void alertNearbyMobs(PlayerEntity target, double radius) {
+        if (target.getWorld().isClient) {
+            return;
+        }
+        List<HostileEntity> entities = getHostileMobsInRadius(radius);
+        for (HostileEntity mob : entities) {
+                mob.setAttacker(target);
+                mob.setTarget(target);
+                mob.getNavigation().startMovingTo(target, this.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED));
+        }
+    }
+
+    private List<HostileEntity> getHostileMobsInRadius(double radius) {
+        Vec3d pos = this.getPos();
+        Box box = new Box(
+                pos.getX() - radius, pos.getY() - radius, pos.getZ() - radius,
+                pos.getX() + radius, pos.getY() + radius, pos.getZ() + radius
+        );
+
+        /*
+        return world.getEntitiesByClass(
+                HostileEntity.class,
+                box, LivingEntity::isAlive
+        );
+        */
+
+        return world.getEntitiesByClass(
+                HostileEntity.class,
+                box,
+                entity -> entity.isAlive() && (entity.getTarget() == null)
+        );
     }
 }

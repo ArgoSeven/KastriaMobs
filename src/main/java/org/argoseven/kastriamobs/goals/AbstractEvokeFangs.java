@@ -113,4 +113,7 @@ public abstract class AbstractEvokeFangs extends Goal {
             pos = below;
         }
     }
+
+
+
 }
