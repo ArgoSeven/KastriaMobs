@@ -4,6 +4,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
@@ -11,6 +13,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
+import org.argoseven.kastriamobs.network.DebugShapePackets;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -151,8 +154,11 @@ public abstract class AbstractKastriaEntity extends HostileEntity implements IAn
         List<HostileEntity> entities = getHostileMobsInRadius(radius);
         for (HostileEntity mob : entities) {
                 mob.setAttacker(target);
+                if (DebugShapePackets.isDebugEnabled()){
+                    mob.setStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 60,1), this);
+                }
                 mob.setTarget(target);
-                mob.getNavigation().startMovingTo(target, this.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED));
+                mob.getNavigation().startMovingTo(target, mob.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED));
         }
     }
 
