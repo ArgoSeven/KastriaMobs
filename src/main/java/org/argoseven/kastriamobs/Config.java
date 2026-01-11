@@ -91,6 +91,7 @@ public class Config {
     }
 
     public static class BlindwrathConfig extends EntityStatsConfig {
+        public double alert_range;
         public SonicAttackConfig sonicbeam;
     }
 

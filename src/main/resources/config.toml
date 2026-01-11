@@ -1,4 +1,5 @@
-version = 0.2
+version = 0.3
+
 [debug]
 enabled = false
 
@@ -24,6 +25,7 @@ follow_range = 30.0
 armor = 12.0
 armor_toughness = 0.7
 knockback_resistance = 0.1
+alert_range = 10
 
 [blindwrath.sonicbeam]
 max_cooldown = 25

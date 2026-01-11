@@ -2,6 +2,7 @@ package org.argoseven.kastriamobs.entity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.damage.DamageSource;
@@ -10,9 +11,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
+import org.argoseven.kastriamobs.KastriaMobs;
 import org.argoseven.kastriamobs.goals.SonicBeam;
+
+import java.util.List;
 
 public class Blindwrath extends AbstractKastriaEntity implements ConfigProvider.SonicBeamProvider {
 
@@ -64,5 +70,52 @@ public class Blindwrath extends AbstractKastriaEntity implements ConfigProvider.
     public void onDeath(DamageSource damageSource) {
         super.onDeath(damageSource);
         this.playSound(SoundEvents.ENTITY_DONKEY_DEATH, 1.0F, 0.50F);
+    }
+
+    @Override
+    public boolean damage(DamageSource source, float amount) {
+        boolean result = super.damage(source, amount);
+
+        if (this.getWorld().isClient || !result) {
+            return result;
+        }
+
+        if (source.getAttacker() instanceof PlayerEntity target) {
+            KastriaMobs.LOGGER.info("Alerting nearby mobs");
+            alertNearbyMobs(target);
+        }
+
+        return true;
+    }
+
+    private void alertNearbyMobs(PlayerEntity target) {
+        if (target.getWorld().isClient) {
+            return;
+        }
+
+        List<HostileEntity> entities = getHostileMobsInRadius();
+
+        for (HostileEntity mob : entities) {
+            if (mob.getTarget() == null) {
+                mob.setAttacker(target);
+                mob.setTarget(target);
+                mob.getNavigation().startMovingTo(target, Config.data.blindwrath.movement_speed);
+            }
+        }
+    }
+
+    private List<HostileEntity> getHostileMobsInRadius() {
+        Vec3d pos = this.getPos();
+        double radius = Config.data.blindwrath.alert_range;
+
+        Box box = new Box(
+                pos.getX() - radius, pos.getY() - radius, pos.getZ() - radius,
+                pos.getX() + radius, pos.getY() + radius, pos.getZ() + radius
+        );
+
+        return world.getEntitiesByClass(
+                HostileEntity.class,
+                box, LivingEntity::isAlive
+        );
     }
 }
