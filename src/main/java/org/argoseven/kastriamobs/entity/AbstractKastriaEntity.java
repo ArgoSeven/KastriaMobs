@@ -158,7 +158,7 @@ public abstract class AbstractKastriaEntity extends HostileEntity implements IAn
                     mob.setStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 60,1), this);
                 }
                 mob.setTarget(target);
-                mob.getNavigation().startMovingTo(target, mob.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED));
+                mob.getNavigation().startMovingTo(target, 1);
         }
     }
 
