@@ -5,6 +5,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.EntityDamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
@@ -126,7 +127,9 @@ public abstract class AbstractSonicAttack extends Goal {
         caster.playSound(SoundEvents.ENTITY_WARDEN_SONIC_BOOM, SOUND_VOLUME, SOUND_PITCH);
         
         for (LivingEntity hit : hits) {
-            hit.damage(DamageSource.sonicBoom(caster), damage);
+            EntityDamageSource customSonicDamage = new EntityDamageSource("sonic_boom", caster);
+
+            hit.damage(customSonicDamage, damage);
             Vec3d direction = hit.getEyePos().subtract(startPos).normalize();
             applyKnockback(hit, direction);
         }
