@@ -91,7 +91,7 @@ public <T extends MobEntity> AbyssalCountessCryGoal(T caster) {
 
         caster.swingHand(Hand.MAIN_HAND);
         if (caster instanceof  MutipleAttack){
-            ((MutipleAttack) caster).setAttack("cry");
+            ((MutipleAttack) caster).setAttackAnimation("cry");
         }
     }
 

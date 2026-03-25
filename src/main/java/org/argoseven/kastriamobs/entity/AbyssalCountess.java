@@ -17,12 +17,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaParticles;
 import org.argoseven.kastriamobs.goals.MutipleAttack;
@@ -43,7 +41,7 @@ public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAtt
 
     public AbyssalCountess(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
-        setAttack("melee");
+        setAttackAnimation("melee");
     }
 
     @Override
@@ -143,7 +141,9 @@ public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAtt
         if (this.swinging && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
             event.getController().markNeedsReload();
             event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation(getAttack(), ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+                    .addAnimation(getAttackAnimation(), ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+
+            setAttackAnimation("melee");
         }
 
         return PlayState.CONTINUE;
@@ -166,12 +166,12 @@ public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAtt
     }
 
     @Override
-    public void setAttack(String attack) {
+    public void setAttackAnimation(String attack) {
        dataTracker.set(CURRENT_STATE, attack);
     }
 
     @Override
-    public String getAttack() {
+    public String getAttackAnimation() {
         return dataTracker.get(CURRENT_STATE);
     }
 }
