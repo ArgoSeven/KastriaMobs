@@ -42,6 +42,7 @@ public class KastriaMobsClient implements ClientModInitializer {
         EntityRendererRegistry.register(RegistryKastriaEntity.STALKER, ctx -> new KastriaEntityRenderer<>(ctx, new KastriaEntityModel<Stalker>("stalker")));
         EntityRendererRegistry.register(RegistryKastriaEntity.BARD, BardRender::new);
         EntityRendererRegistry.register(RegistryKastriaEntity.TOBIAS, TobiasRender::new);
+        EntityRendererRegistry.register(RegistryKastriaEntity.ABYSSAL_COUNTESS, ctx -> new AbyssalCountessRender(ctx, new KastriaEntityModel<AbyssalCountess>("abyssal_countess")));
     }
 
     private void registerParticles() {
@@ -49,6 +50,7 @@ public class KastriaMobsClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(KastriaParticles.NOTES_PARTICLE, Notes.Factory::new);
         ParticleFactoryRegistry.getInstance().register(KastriaParticles.MAGIC_CIRCLE, MagicCircle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(KastriaParticles.SONIC_CHARGE, SonicCharge.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(KastriaParticles.BLOOD_ORB_PARTICLE, BloodBeamParticle.Factory::new);
     }
 
     private void registerTickHandler() {

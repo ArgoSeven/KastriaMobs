@@ -8,7 +8,7 @@
   "entity.kastriamobs.reaver": "Reaver",
   "entity.kastriamobs.red_blood_mage": "Red Blood Mage",
   "entity.kastriamobs.stalker": "Stalker",
-
+  "entity.kastriamobs.abyssal_countess" : "Abyssal Countess",
 
   "item.kastriamobs.bard_spawn_egg": "Bard Spawn Egg",
   "item.kastriamobs.tobias_spawn_egg": "Tobias Spawn Egg",
@@ -18,5 +18,6 @@
   "item.kastriamobs.plaguebrute_spawn_egg": "Plaguebrute Spawn Egg",
   "item.kastriamobs.reaver_spawn_egg": "Reaver Spawn Egg",
   "item.kastriamobs.red_blood_mage_spawn_egg": "Red Blood Mage Spawn Egg",
-  "item.kastriamobs.stalker_spawn_egg": "Stalker Spawn Egg"
+  "item.kastriamobs.stalker_spawn_egg": "Stalker Spawn Egg",
+  "item.kastriamobs.abyssal_countess_spawn_egg" : "Abyssal Countess Spawn Egg"
 }

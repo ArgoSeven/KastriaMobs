@@ -20,6 +20,7 @@ public class RegistryKastriaItems {
     public static final Item BASTION_SPAWN_EGG = registerSpawnEgg("bastion_spawn_egg", RegistryKastriaEntity.BASTION, 0x245269, 0x9B1D5A);
     public static final Item BARD_SPAWN_EGG = registerSpawnEgg("bard_spawn_egg", RegistryKastriaEntity.BARD, 0x940505, 0xDD9E07);
     public static final Item TOBIAS_SPAWN_EGG = registerSpawnEgg("tobias_spawn_egg", RegistryKastriaEntity.TOBIAS, 0xDEDEDE, 0x6F5B75);
+    public static final Item ABYSSAL_COUNTESS_SPAWN_EGG = registerSpawnEgg("abyssal_countess_spawn_egg", RegistryKastriaEntity.ABYSSAL_COUNTESS, 0xDEDEDE, 0x6F5B75);
 
 
     private static Item registerSpawnEgg(String name, net.minecraft.entity.EntityType<?> entityType, int primaryColor, int secondaryColor) {

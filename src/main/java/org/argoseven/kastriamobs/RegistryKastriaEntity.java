@@ -28,6 +28,9 @@ public class RegistryKastriaEntity {
     
     public static final EntityType<Stalker> STALKER = registerEntity(
             "stalker", Stalker::new, EntityDimensions.fixed(0.6f, 1.8f));
+
+    public static final EntityType<AbyssalCountess> ABYSSAL_COUNTESS = registerEntity(
+            "abyssal_countess", AbyssalCountess::new, EntityDimensions.fixed(1.2f, 3.0f));
     
     public static final EntityType<Bastion> BASTION = registerEntity(
             "bastion", Bastion::new, EntityDimensions.fixed(1.2f, 3.0f));
@@ -59,5 +62,6 @@ public class RegistryKastriaEntity {
         FabricDefaultAttributeRegistry.register(BASTION, Bastion.setAttribute());
         FabricDefaultAttributeRegistry.register(BARD, Bard.setAttribute());
         FabricDefaultAttributeRegistry.register(TOBIAS, Tobias.setAttribute());
+        FabricDefaultAttributeRegistry.register(ABYSSAL_COUNTESS, Tobias.setAttribute());
     }
 }

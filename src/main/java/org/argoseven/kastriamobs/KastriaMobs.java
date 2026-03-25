@@ -8,9 +8,12 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 import org.argoseven.kastriamobs.command.KastriaReload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +36,9 @@ public class KastriaMobs implements ModInitializer {
         RegistryKastriaItems.registerItem();
 
         registerConfigReloader();
+
+
+
     }
 
     private void registerConfigReloader() {
@@ -73,4 +79,34 @@ public class KastriaMobs implements ModInitializer {
             caster.getMoveControl().strafeTo(-1.0f, 0);
         }
     }
+
+    public static void spawnAncoredEyeParticle(LivingEntity entity, ParticleEffect particle, Double forwardOffset, Double horizontalOffset) {
+        float yaw = (float) Math.toRadians(entity.getYaw());
+        float pitch = (float) Math.toRadians(entity.getPitch());
+
+        Vec3d eyePos = entity.getEyePos();
+
+        // Forward direction
+        double xDir = -Math.sin(yaw) * Math.cos(pitch);
+        double yDir = -Math.sin(pitch);
+        double zDir =  Math.cos(yaw) * Math.cos(pitch);
+
+        // Right direction (yaw + 90°) — uses only yaw so it's horizontal
+        double rightX = -Math.sin(yaw + Math.PI / 2.0);
+        double rightZ =  Math.cos(yaw + Math.PI / 2.0);
+        double rightY = 0.0;
+
+       // double forwardDist = 0.5; // how far in front of eyes
+       // double sideOffset = 0.15; // positive = right eye, negative = left eye
+
+        Vec3d offsetPos = eyePos.add(xDir * forwardOffset, yDir * forwardOffset, zDir * forwardOffset)
+                .add(rightX * horizontalOffset, 0, rightZ * horizontalOffset);
+
+        if (entity.getWorld() instanceof ServerWorld serverWorld){
+            serverWorld.spawnParticles(particle,
+                    offsetPos.x, offsetPos.y, offsetPos.z, 1, 0.0, 0.0, 0.0, 0.0);
+        }
+    }
+
+
 }

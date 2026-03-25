@@ -29,15 +29,15 @@ import java.util.List;
 
 public abstract class AbstractKastriaEntity extends HostileEntity implements IAnimatable {
     
-    private static final long SWING_DURATION_TICKS = 15L;
+    protected static final long SWING_DURATION_TICKS = 15L;
     private static final int DEATH_REMOVAL_DELAY_TICKS = 30;
     private static final float BASE_ANIMATION_SPEED = 1.0F;
     private static final float ANIMATION_SPEED_MULTIPLIER = 0.5F;
     
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
-    private boolean swinging;
-    private long lastSwingTime;
-    private int deathTicks = 0;
+    protected boolean swinging;
+    protected long lastSwingTime;
+    protected int deathTicks = 0;
 
     protected AbstractKastriaEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
