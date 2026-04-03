@@ -4,9 +4,10 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
+import org.argoseven.kastriamobs.KastriaParticles;
+import org.argoseven.kastriamobs.entity.AbyssalCountess;
 
 public class AbyssalCountessMeleeGoal extends MeleeAttackGoal {
 
@@ -17,6 +18,7 @@ public class AbyssalCountessMeleeGoal extends MeleeAttackGoal {
         this.caster = caster;
     }
 
+
     @Override
     protected void attack(LivingEntity target, double squaredDistance) {
         double d = this.getSquaredMaxAttackDistance(target);
@@ -25,8 +27,13 @@ public class AbyssalCountessMeleeGoal extends MeleeAttackGoal {
             this.mob.swingHand(Hand.MAIN_HAND);
             ServerWorld serverWorld = (ServerWorld) caster.world;
 
-            serverWorld.spawnParticles(ParticleTypes.SWEEP_ATTACK,caster.getX(), caster.getY() + 1, caster.getZ(), 3, 0.0, 1, 0.0, 0.3);
+            serverWorld.spawnParticles(KastriaParticles.CLAW_SWEEP,caster.getX(), caster.getEyeY(), caster.getZ(), 0, 0, 0, 0.0, 0);
             this.mob.tryAttack(target);
+
+            if (caster instanceof  MutipleAttack){
+                ((MutipleAttack) caster).setAttackAnimation("melee");
+            }
+            caster.swingHand(Hand.MAIN_HAND);
         }
     }
 }

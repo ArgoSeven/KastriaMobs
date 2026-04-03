@@ -11,10 +11,7 @@ import org.argoseven.kastriamobs.KastriaParticles;
 import org.argoseven.kastriamobs.RegistryKastriaEntity;
 import org.argoseven.kastriamobs.client.debug.DebugShapeRenderer;
 import org.argoseven.kastriamobs.client.entity.*;
-import org.argoseven.kastriamobs.client.particles.BloodBeamParticle;
-import org.argoseven.kastriamobs.client.particles.MagicCircle;
-import org.argoseven.kastriamobs.client.particles.Notes;
-import org.argoseven.kastriamobs.client.particles.SonicCharge;
+import org.argoseven.kastriamobs.client.particles.*;
 import org.argoseven.kastriamobs.entity.*;
 import org.argoseven.kastriamobs.network.DebugShapePackets;
 
@@ -51,6 +48,7 @@ public class KastriaMobsClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(KastriaParticles.MAGIC_CIRCLE, MagicCircle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(KastriaParticles.SONIC_CHARGE, SonicCharge.Factory::new);
         ParticleFactoryRegistry.getInstance().register(KastriaParticles.BLOOD_ORB_PARTICLE, BloodBeamParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(KastriaParticles.CLAW_SWEEP, ClawSweep.Factory::new);
     }
 
     private void registerTickHandler() {

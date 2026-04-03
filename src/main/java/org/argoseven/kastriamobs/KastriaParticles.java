@@ -2,6 +2,7 @@ package org.argoseven.kastriamobs;
 
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.ParticleType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -11,6 +12,7 @@ public class KastriaParticles {
     public static final DefaultParticleType BLOOD_ORB_PARTICLE = registerParticle("blood_orb", FabricParticleTypes.simple());
     public static final DefaultParticleType MAGIC_CIRCLE = registerParticle("magic_circle", FabricParticleTypes.simple());
     public static final DefaultParticleType SONIC_CHARGE = registerParticle("sonic_charge", FabricParticleTypes.simple());
+    public static final DefaultParticleType CLAW_SWEEP = registerParticle("claw_sweep", FabricParticleTypes.simple());;
 
 
     private static DefaultParticleType registerParticle(String name, DefaultParticleType particleType) {
