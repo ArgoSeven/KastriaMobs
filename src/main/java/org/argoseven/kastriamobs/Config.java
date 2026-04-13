@@ -2,7 +2,6 @@ package org.argoseven.kastriamobs;
 
 import com.moandjiezana.toml.Toml;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -27,6 +26,7 @@ public class Config {
     public RedBloodMageConfig red_blood_mage;
     public StalkerConfig stalker;
     public BardConfig bard;
+    public AbyssalCountessConfig abyssal_countess;
 
     public static class DebugConfig {
         public boolean enabled = false;
@@ -83,6 +83,30 @@ public class Config {
         public int effect_amplifier;
     }
 
+
+    public static class AbyssalCountessExplosionGoalConfig {
+        public int max_cooldown;
+        public float max_range;
+        public int min_range;
+        public float attraction_strength;
+        public float damage;
+    }
+
+    public static class AbyssalCountessRayGoalConfig {
+        public int max_cooldown;
+        public float max_range;
+        public int min_range;
+        public float damage;
+    }
+
+    public static class AbyssalCountessCryGoalConfig {
+        public int max_cooldown;
+        public float max_range;
+        public int min_range;
+        public float damage;
+    }
+
+
     public static class BastionConfig extends EntityStatsConfig {
         public MeleeEffectConfig melee_effect;
     }
@@ -121,6 +145,14 @@ public class Config {
         public BloodBeamConfig blood_beam;
         public SonicAttackConfig sonicboom;
         public SonicAttackConfig sonicbeam;
+    }
+
+    public static class AbyssalCountessConfig extends EntityStatsConfig {
+
+        public AbyssalCountessExplosionGoalConfig abyssal_coutess_explosion;
+        //public AbyssalCountessMeleeGoalConfig abyssal_coutess_melee;
+        public AbyssalCountessCryGoalConfig abyssal_coutess_cry;
+        public AbyssalCountessRayGoalConfig abyssal_coutess_ray;
     }
 
     public static void init() {

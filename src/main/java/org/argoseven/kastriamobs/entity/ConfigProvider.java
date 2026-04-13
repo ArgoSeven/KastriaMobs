@@ -35,4 +35,17 @@ public interface ConfigProvider {
     interface MeleeEffectProvider {
         Config.MeleeEffectConfig getMeleeEffect();
     }
+
+    interface AbyssalConfigRayProvider {
+        Config.AbyssalCountessRayGoalConfig getAbyssalRayConfig();
+    }
+
+    interface AbyssalConfigExplosionProvider {
+        Config.AbyssalCountessExplosionGoalConfig  getAbyssalExplosionConfig();
+    }
+
+    interface AbyssalConfigCryProvider {
+        Config.AbyssalCountessCryGoalConfig getAbyssalCryConfig();
+    }
+
 }

@@ -8,7 +8,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.ProjectileDamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -25,10 +24,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.argoseven.kastriamobs.Config;
 import org.argoseven.kastriamobs.KastriaParticles;
-import org.argoseven.kastriamobs.goals.AbyssalCountessMeleeGoal;
-import org.argoseven.kastriamobs.goals.AbyssalCountessRayGoal;
-import org.argoseven.kastriamobs.goals.MutipleAttack;
-import org.argoseven.kastriamobs.goals.AbyssalCountessCryGoal;
+import org.argoseven.kastriamobs.goals.*;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -36,9 +32,10 @@ import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
+import java.util.HashSet;
 import java.util.Objects;
 
-public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAttack, ConfigProvider.MeleeEffectProvider {
+public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAttack, ConfigProvider.AbyssalConfigCryProvider, ConfigProvider.AbyssalConfigExplosionProvider, ConfigProvider.AbyssalConfigRayProvider {
     private final String[] STATE_AVEIABLE = {"melee", "explosion", "cry"};
     private int RAGE_COUNTER = 0;
     private Vec3d LAST_RAGE_POS = new Vec3d(0.0D, 0.0D, 0.0D);
@@ -46,7 +43,7 @@ public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAtt
     private static final TrackedData<String> CURRENT_STATE = DataTracker.registerData(AbyssalCountess.class, TrackedDataHandlerRegistry.STRING);
     private  String OLD_STATE = "melee";
 
-    private LivingEntity ranged_entity;
+    private HashSet<LivingEntity> ranged_entity = new HashSet<LivingEntity>();
 
 
     public AbyssalCountess(EntityType<? extends HostileEntity> entityType, World world) {
@@ -65,18 +62,27 @@ public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAtt
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
 
-        this.goalSelector.add(2, new AbyssalCountessMeleeGoal(this));
-        this.goalSelector.add(3, new AbyssalCountessCryGoal(this));
-        this.goalSelector.add(4, new AbyssalCountessRayGoal(this));
+        this.goalSelector.add(2, new AbyssalCountessExplosionGoal(this));
+        this.goalSelector.add(3, new AbyssalCountessMeleeGoal(this));
+        this.goalSelector.add(4, new AbyssalCountessCryGoal(this));
+        this.goalSelector.add(5, new AbyssalCountessRayGoal(this));
         //this.goalSelector.add(3, new WanderAroundGoal(this, 1.0));
 
         this.targetSelector.add(1, new RevengeGoal(this));
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
     }
 
     public static DefaultAttributeContainer.Builder setAttribute() {
-        return createAttributes(Config.data.stalker);
+        return createAttributes(Config.data.abyssal_countess);
     }
+
+    @Override
+    public Config.AbyssalCountessCryGoalConfig getAbyssalCryConfig() {return Config.data.abyssal_countess.abyssal_coutess_cry;}
+
+    @Override
+    public Config.AbyssalCountessExplosionGoalConfig getAbyssalExplosionConfig() {return Config.data.abyssal_countess.abyssal_coutess_explosion;}
+
+    @Override
+    public Config.AbyssalCountessRayGoalConfig getAbyssalRayConfig() {return Config.data.abyssal_countess.abyssal_coutess_ray;}
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
@@ -98,15 +104,15 @@ public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAtt
     @Override
     public boolean damage(DamageSource source, float amount) {
         if (source.getSource() instanceof AreaEffectCloudEntity) return  false;
+        Vec3d position = source.getPosition();
 
-        if (source instanceof ProjectileDamageSource && source.getAttacker() instanceof PlayerEntity player) {
-            setTurretTarget(player);
+        if (position != null && position.distanceTo(this.getPos()) > 3  && source.getAttacker() instanceof LivingEntity attacker) {
+            setTurretTarget(attacker);
         };
 
 
         if (RAGE_COUNTER >= 3 && source.getAttacker() instanceof  PlayerEntity player) {
             BlockPos attackPos = source.getAttacker().getBlockPos();
-
             player.sendMessage(Text.literal("Foolish mortal did you think my wings could be caged? Kneel and meet your doom").styled(style -> style.withColor(Formatting.DARK_RED) ));
             player.teleport(this.lastRenderX,  this.lastRenderY + 1, this.lastRenderZ);
 
@@ -116,18 +122,16 @@ public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAtt
             world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_GHAST_WARN, SoundCategory.MASTER, 1.0f, 1.0f);
             RAGE_COUNTER = 0;
             return false;
-
         }
 
-        if (source.getPosition() != null){
-            if (LAST_RAGE_POS.isInRange(source.getPosition(), 2)){
+        if (position != null){
+            if (LAST_RAGE_POS.isInRange(position, 2)){
                 RAGE_COUNTER = RAGE_COUNTER + 1;
             }else {
-                LAST_RAGE_POS = source.getPosition();
+                LAST_RAGE_POS = position;
                 RAGE_COUNTER = 0;
             }
         }
-
         return super.damage(source, amount);
     }
 
@@ -161,7 +165,7 @@ public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAtt
             event.getController().markNeedsReload();
 
             event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation(getAttackAnimation(), ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+                    .addAnimation(getAttackAnimation(),  ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         }
 
         return PlayState.CONTINUE;
@@ -178,10 +182,6 @@ public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAtt
         this.playSound(SoundEvents.ENTITY_STRAY_DEATH, 1.0F, 0.90F);
     }
 
-    @Override
-    public Config.MeleeEffectConfig getMeleeEffect() {
-        return Config.data.stalker.melee_effect;
-    }
 
     @Override
     public void setAttackAnimation(String attack) {
@@ -194,12 +194,12 @@ public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAtt
         return dataTracker.get(CURRENT_STATE);
     }
 
-    public LivingEntity getTurretTarget() {
+    public HashSet<LivingEntity> getTurretTarget() {
         return ranged_entity;
     }
 
     public void setTurretTarget(LivingEntity o) {
-        this.ranged_entity = o;
+        ranged_entity.add(o);
+        System.out.println(ranged_entity.size());
     }
-
 }

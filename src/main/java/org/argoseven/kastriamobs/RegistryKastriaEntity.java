@@ -62,6 +62,6 @@ public class RegistryKastriaEntity {
         FabricDefaultAttributeRegistry.register(BASTION, Bastion.setAttribute());
         FabricDefaultAttributeRegistry.register(BARD, Bard.setAttribute());
         FabricDefaultAttributeRegistry.register(TOBIAS, Tobias.setAttribute());
-        FabricDefaultAttributeRegistry.register(ABYSSAL_COUNTESS, Tobias.setAttribute());
+        FabricDefaultAttributeRegistry.register(ABYSSAL_COUNTESS, AbyssalCountess.setAttribute());
     }
 }

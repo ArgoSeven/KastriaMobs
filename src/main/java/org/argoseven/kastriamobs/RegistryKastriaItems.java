@@ -8,6 +8,7 @@ import net.minecraft.item.SpawnEggItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.argoseven.kastriamobs.items.RangeWand;
 
 public class RegistryKastriaItems {
 
@@ -21,7 +22,7 @@ public class RegistryKastriaItems {
     public static final Item BARD_SPAWN_EGG = registerSpawnEgg("bard_spawn_egg", RegistryKastriaEntity.BARD, 0x940505, 0xDD9E07);
     public static final Item TOBIAS_SPAWN_EGG = registerSpawnEgg("tobias_spawn_egg", RegistryKastriaEntity.TOBIAS, 0xDEDEDE, 0x6F5B75);
     public static final Item ABYSSAL_COUNTESS_SPAWN_EGG = registerSpawnEgg("abyssal_countess_spawn_egg", RegistryKastriaEntity.ABYSSAL_COUNTESS, 0xDEDEDE, 0x6F5B75);
-
+    public static final Item RAGE_WAND = registerItem("rage_wand", new RangeWand(new FabricItemSettings().group(ItemGroup.COMBAT)));
 
     private static Item registerSpawnEgg(String name, net.minecraft.entity.EntityType<?> entityType, int primaryColor, int secondaryColor) {
         return Registry.register(
@@ -31,6 +32,10 @@ public class RegistryKastriaItems {
         );
     }
 
-    public static void registerItem() {
+    private static Item registerItem(String name, Item item) {
+        return Registry.register(Registry.ITEM, new Identifier(KastriaMobs.MOD_ID, name), item);
+    }
+
+    public static void registerItems() {
     }
 }

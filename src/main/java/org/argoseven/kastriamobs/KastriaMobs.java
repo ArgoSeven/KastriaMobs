@@ -26,6 +26,8 @@ public class KastriaMobs implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static Path configPath;
 
+
+
     @Override
     public void onInitialize() {
         configPath = FabricLoader.getInstance().getConfigDir().resolve("kastriamobs").resolve("kastriamobs.toml");
@@ -33,7 +35,7 @@ public class KastriaMobs implements ModInitializer {
         RegistryKastriaEntity.registerEntityAttributes();
         KastriaParticles.registerParticles();
         CommandRegistrationCallback.EVENT.register(KastriaReload::register);
-        RegistryKastriaItems.registerItem();
+        RegistryKastriaItems.registerItems();
 
         registerConfigReloader();
 

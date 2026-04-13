@@ -1,17 +1,28 @@
 package org.argoseven.kastriamobs.goals;
 
+import net.minecraft.advancement.Advancement;
+import net.minecraft.advancement.AdvancementCriterion;
+import net.minecraft.advancement.AdvancementFrame;
+import net.minecraft.advancement.criterion.ImpossibleCriterion;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.AreaEffectCloudEntity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.projectile.SmallFireballEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 import org.argoseven.kastriamobs.KastriaMobs;
-import org.argoseven.kastriamobs.entity.AbyssalCountess;
+import org.argoseven.kastriamobs.entity.FireballProjectile;
 
 import java.util.EnumSet;
 
@@ -24,6 +35,8 @@ public class AbyssalCountessCryGoal extends Goal {
 
     private int areaEffectSize = 10;
     private int areaEffectDuration = 5 * 20;
+
+
 
 
 public <T extends MobEntity> AbyssalCountessCryGoal(T caster) {
@@ -44,6 +57,14 @@ public <T extends MobEntity> AbyssalCountessCryGoal(T caster) {
     @Override
     public void start() {
        // cooldown = 0;
+        FireballProjectile bullet = new FireballProjectile(EntityType.SMALL_FIREBALL, this.caster.world);
+        bullet.refreshPositionAndAngles(caster.getX(), caster.getEyeY() + 0.6, caster.getZ(), 0.0f, 0.0f);
+        bullet.setTarget(caster.getTarget());
+        bullet.setItem(Items.GHAST_TEAR.getDefaultStack());
+        bullet.setOnFire(false);
+
+        caster.world.spawnEntity(bullet);
+
     }
 
     @Override
@@ -86,8 +107,6 @@ public <T extends MobEntity> AbyssalCountessCryGoal(T caster) {
              // Spawn the bullet in the world
             caster.world.spawnEntity(bullet);
         }*/
-
-
 
         if (caster instanceof MutipleAttack ){
             ((MutipleAttack) caster).setAttackAnimation("cry");

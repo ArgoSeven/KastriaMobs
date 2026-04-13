@@ -7,7 +7,6 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import org.argoseven.kastriamobs.KastriaParticles;
-import org.argoseven.kastriamobs.entity.AbyssalCountess;
 
 public class AbyssalCountessMeleeGoal extends MeleeAttackGoal {
 
@@ -30,9 +29,10 @@ public class AbyssalCountessMeleeGoal extends MeleeAttackGoal {
             serverWorld.spawnParticles(KastriaParticles.CLAW_SWEEP,caster.getX(), caster.getEyeY(), caster.getZ(), 0, 0, 0, 0.0, 0);
             this.mob.tryAttack(target);
 
-            if (caster instanceof  MutipleAttack){
+            if (caster instanceof  MutipleAttack) {
                 ((MutipleAttack) caster).setAttackAnimation("melee");
             }
+
             caster.swingHand(Hand.MAIN_HAND);
         }
     }
