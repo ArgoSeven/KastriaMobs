@@ -17,6 +17,7 @@ import org.argoseven.kastriamobs.KastriaUtils;
 import org.argoseven.kastriamobs.entity.AbyssalCountess;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 public class AbyssalCountessRayGoal extends Goal {
@@ -44,18 +45,16 @@ public class AbyssalCountessRayGoal extends Goal {
         AbyssalCountess entity = (AbyssalCountess) caster;
         HashSet<LivingEntity> targets = entity.getTurretTarget();
 
-
-
-        for (LivingEntity target : targets) {
+        Iterator<LivingEntity> iterator = targets.iterator();
+        while (iterator.hasNext()) {
+            LivingEntity target = iterator.next();
             if (!target.isAlive()) {
-                entity.getTurretTarget().remove(target);
+                iterator.remove();
                 continue;
             }
 
-
-
             if (caster.squaredDistanceTo(target) > maxRange * maxRange) {
-                entity.getTurretTarget().remove(target);
+                iterator.remove();
                 continue;
             }
 
