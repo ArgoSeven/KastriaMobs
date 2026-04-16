@@ -1,13 +1,10 @@
 package org.argoseven.kastriamobs.entity;
 
-import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.projectile.AbstractFireballEntity;
-import net.minecraft.entity.projectile.FireballEntity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -20,6 +17,7 @@ public class FireballProjectile extends AbstractFireballEntity {
 
     public FireballProjectile(EntityType<? extends AbstractFireballEntity> entityType, World world) {
         super(entityType, world);
+        maxAge = random.nextInt(maxAge);
         this.setVelocity(0, 0, 0);
     }
 
@@ -28,9 +26,10 @@ public class FireballProjectile extends AbstractFireballEntity {
     public void tick() {
         super.tick();
         if (!this.world.isClient && this.age >= this.getMaxAge()) {
-            if ( target == null || !target.isAlive()){
+            if (target == null || !target.isAlive()){
                 this.setVelocity(0, -1, 0, 1f, 1f);
                 this.velocityModified = true;
+                return;
             }
 
             double f = target.getX() - this.getX();
@@ -58,11 +57,13 @@ public class FireballProjectile extends AbstractFireballEntity {
         }
         Entity entity = entityHitResult.getEntity();
         Entity entity2 = this.getOwner();
-        int i = entity.getFireTicks();
+        entity.damage(DamageSource.fireball(this, entity2), 6.0f);
         if (entity2 instanceof LivingEntity) {
             this.applyDamageEffects((LivingEntity)entity2, entity);
         }
     }
+
+
 
     @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
@@ -71,7 +72,7 @@ public class FireballProjectile extends AbstractFireballEntity {
 
     @Override
     protected boolean canHit(Entity entity) {
-        return !(entity instanceof AbyssalCountess);
+        return (entity != this.getOwner());
     }
     
     @Override

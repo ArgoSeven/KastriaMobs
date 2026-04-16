@@ -24,13 +24,13 @@ public class AbyssalCountessExplosionGoal extends Goal {
     private final MobEntity caster;
     private int cooldown = 0;
     private final int maxCooldown;
-    private int explosionRange = 5;
+    private int explosionRange = 7;
 
 
 public <T extends MobEntity> AbyssalCountessExplosionGoal(T caster) {
             this.caster = caster;
             this.maxCooldown = 100;
-            this.setControls(EnumSet.of(Control.LOOK, Control.MOVE));
+            //this.setControls(EnumSet.of(Control.LOOK, Control.MOVE));
 }
 
     @Override
@@ -45,6 +45,7 @@ public <T extends MobEntity> AbyssalCountessExplosionGoal(T caster) {
 
     @Override
     public void start() {
+        cooldown =  20;
     }
 
     @Override

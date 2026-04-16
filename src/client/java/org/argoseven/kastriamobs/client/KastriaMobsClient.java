@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.argoseven.kastriamobs.KastriaParticles;
@@ -40,6 +41,7 @@ public class KastriaMobsClient implements ClientModInitializer {
         EntityRendererRegistry.register(RegistryKastriaEntity.BARD, BardRender::new);
         EntityRendererRegistry.register(RegistryKastriaEntity.TOBIAS, TobiasRender::new);
         EntityRendererRegistry.register(RegistryKastriaEntity.ABYSSAL_COUNTESS, ctx -> new AbyssalCountessRender(ctx, new KastriaEntityModel<AbyssalCountess>("abyssal_countess")));
+        EntityRendererRegistry.register(RegistryKastriaEntity.FIREBALL_PROJECTILE, FlyingItemEntityRenderer::new);
     }
 
     private void registerParticles() {

@@ -1,5 +1,8 @@
 package org.argoseven.kastriamobs.client.entity;
 
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
@@ -14,6 +17,7 @@ public class AbyssalCountessRender extends KastriaEntityRenderer<AbyssalCountess
 
     @Override
     public void render(AbyssalCountess animatable, float entityYaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
+
         /*
         if (animatable.isFury()){
             Vec3d[] vec3ds = new Vec3d[3];

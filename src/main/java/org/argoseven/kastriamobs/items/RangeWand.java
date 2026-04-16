@@ -60,9 +60,18 @@ public class RangeWand extends Item {
                 mob.setTarget(newTarget);
                 newTarget.setTarget(mob);
                 user.getItemCooldownManager().set(stack.getItem(), 10);
+                newTarget = null;
             }
         }
 
         return super.useOnEntity(stack, user, entity, hand);
     }
+
+    @Override
+    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        boolean b = super.postHit(stack, target, attacker);
+        target.discard();
+        return b;
+    }
+
 }

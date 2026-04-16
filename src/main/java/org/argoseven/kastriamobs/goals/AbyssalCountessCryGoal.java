@@ -22,6 +22,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 import org.argoseven.kastriamobs.KastriaMobs;
+import org.argoseven.kastriamobs.RegistryKastriaEntity;
 import org.argoseven.kastriamobs.entity.FireballProjectile;
 
 import java.util.EnumSet;
@@ -57,14 +58,6 @@ public <T extends MobEntity> AbyssalCountessCryGoal(T caster) {
     @Override
     public void start() {
        // cooldown = 0;
-        FireballProjectile bullet = new FireballProjectile(EntityType.SMALL_FIREBALL, this.caster.world);
-        bullet.refreshPositionAndAngles(caster.getX(), caster.getEyeY() + 0.6, caster.getZ(), 0.0f, 0.0f);
-        bullet.setTarget(caster.getTarget());
-        bullet.setItem(Items.GHAST_TEAR.getDefaultStack());
-        bullet.setOnFire(false);
-
-        caster.world.spawnEntity(bullet);
-
     }
 
     @Override

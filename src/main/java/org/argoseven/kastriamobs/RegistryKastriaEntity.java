@@ -41,6 +41,9 @@ public class RegistryKastriaEntity {
     public static final EntityType<Tobias> TOBIAS = registerEntity(
             "tobias", Tobias::new, EntityDimensions.fixed(0.6f, 1.8f));
 
+    public static final EntityType<FireballProjectile> FIREBALL_PROJECTILE = registerEntity(
+            "fireball_projectile", FireballProjectile::new, EntityDimensions.fixed(0.3125f, 0.3125f));
+
     private static <T extends net.minecraft.entity.Entity> EntityType<T> registerEntity(
             String name, EntityType.EntityFactory<T> factory, EntityDimensions dimensions) {
         return Registry.register(

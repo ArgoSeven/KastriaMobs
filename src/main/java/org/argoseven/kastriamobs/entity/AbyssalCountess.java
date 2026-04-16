@@ -62,10 +62,11 @@ public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAtt
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
 
-        this.goalSelector.add(2, new AbyssalCountessExplosionGoal(this));
-        this.goalSelector.add(3, new AbyssalCountessMeleeGoal(this));
-        this.goalSelector.add(4, new AbyssalCountessCryGoal(this));
-        this.goalSelector.add(5, new AbyssalCountessRayGoal(this));
+        this.goalSelector.add(2, new AbyssalCountessBulletGoal(this));
+        this.goalSelector.add(3, new AbyssalCountessExplosionGoal(this));
+        this.goalSelector.add(4, new AbyssalCountessMeleeGoal(this));
+        this.goalSelector.add(5, new AbyssalCountessCryGoal(this));
+        this.goalSelector.add(6, new AbyssalCountessRayGoal(this));
         //this.goalSelector.add(3, new WanderAroundGoal(this, 1.0));
 
         this.targetSelector.add(1, new RevengeGoal(this));
@@ -86,19 +87,18 @@ public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAtt
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.ENTITY_WARDEN_STEP, 0.15F, 1.2F);
+        this.playSound(SoundEvents.ENTITY_PHANTOM_FLAP, 0.5F, 1.2F);
     }
 
     @Override
     public void playAmbientSound() {
-        this.playSound(SoundEvents.ENTITY_STRAY_AMBIENT, 0.15F, 0.69F);
+        this.playSound(SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 0.15F, 0.69F);
     }
 
     @Override
     protected void playHurtSound(DamageSource source) {
-        this.playSound(SoundEvents.ENTITY_STRAY_HURT, 1.0F, 0.90F);
+        this.playSound(SoundEvents.ENTITY_VEX_HURT, 1.0F, 0.90F);
     }
-
 
 
     @Override
@@ -126,7 +126,7 @@ public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAtt
 
         if (position != null){
             if (LAST_RAGE_POS.isInRange(position, 2)){
-                RAGE_COUNTER = RAGE_COUNTER + 1;
+                //RAGE_COUNTER = RAGE_COUNTER + 1;
             }else {
                 LAST_RAGE_POS = position;
                 RAGE_COUNTER = 0;
@@ -175,10 +175,7 @@ public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAtt
     @Override
     public void onDeath(DamageSource damageSource) {
         super.onDeath(damageSource);
-
         if (damageSource.getSource() == null ) return;
-        damageSource.getSource().sendMessage(Text.of("I learned something about you"));
-
         this.playSound(SoundEvents.ENTITY_STRAY_DEATH, 1.0F, 0.90F);
     }
 
@@ -200,6 +197,5 @@ public class AbyssalCountess extends AbstractKastriaEntity implements MutipleAtt
 
     public void setTurretTarget(LivingEntity o) {
         ranged_entity.add(o);
-        System.out.println(ranged_entity.size());
     }
 }
