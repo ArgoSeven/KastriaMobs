@@ -29,7 +29,7 @@ public class AbyssalCountessExplosionGoal extends Goal {
 
 public <T extends MobEntity> AbyssalCountessExplosionGoal(T caster) {
             this.caster = caster;
-            this.maxCooldown = 100;
+            this.maxCooldown = 20;
             //this.setControls(EnumSet.of(Control.LOOK, Control.MOVE));
 }
 

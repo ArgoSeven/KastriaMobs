@@ -66,7 +66,7 @@ public class AbyssalCountessRayGoal extends Goal {
                 Vec3d startPos = caster.getEyePos().add(0.0, 0.6, 0.0);
                 caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
                 List<LivingEntity> hits = KastriaUtils.findEntitiesUnion(caster, target);
-                KastriaUtils.applyDamageAndAttraction(caster, hits, startPos,2,1);
+                KastriaUtils.applyDamageAndAttraction(caster, hits, startPos,3,2);
                 spawnBeamParticles(serverWorld, startPos, target.getEyePos());
             }
         }

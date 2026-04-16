@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 
 
 public class FireballProjectile extends AbstractFireballEntity {
-    private int maxAge = 126;
+    private int maxAge = 40;
     private LivingEntity target;
 
     public FireballProjectile(EntityType<? extends AbstractFireballEntity> entityType, World world) {
